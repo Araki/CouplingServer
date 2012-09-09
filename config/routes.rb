@@ -1,10 +1,33 @@
 Coupling::Application.routes.draw do
+  get "index/top"
+  get "index/index"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
   # Sample of regular route:
   #   match 'products/:id' => 'catalog#view'
   # Keep in mind you can assign values other than :controller and :action
+
+  match 'api/v1/session/register' => 'session#register'
+  match 'api/v1/session/create' => 'session#create'
+  match 'api/v1/session/destroy' => 'session#destroy'
+
+  match 'api/v1/user/profile' => 'user#profile'
+  match 'api/v1/user/list' => 'user#list'
+  match 'api/v1/user/like' => 'user#like'
+  match 'api/v1/user/likelist' => 'user#likelist'
+  match 'api/v1/user/talk' => 'user#talk'
+  match 'api/v1/user/block' => 'user#block'
+
+  match 'api/v1/iap/pay' => 'iap#pay'
+  match 'api/v1/iap/history' => 'iap#history'
+  
+  match 'api/v1/point/add' => 'point#add'
+  match 'api/v1/point/info' => 'point#info'
+  match 'api/v1/point/use' => 'point#use'
+
+  match 'api/v1/push/add' => 'push#add'
 
   # Sample of named route:
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
