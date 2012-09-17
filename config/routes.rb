@@ -12,6 +12,7 @@ Coupling::Application.routes.draw do
   get 'api/v1/session/register/:facebook_id/' => 'session#register'
   get 'api/v1/session/create/:facebook_id/' => 'session#create'
   get 'api/v1/session/destroy' => 'session#destroy'
+  get 'api/v1/session/show' => 'session#show'
 
   get 'api/v1/user/profile/:facebook_id/' => 'user#profile_get'
   post 'api/v1/user/profile/:facebook_id/' => 'user#profile_post'

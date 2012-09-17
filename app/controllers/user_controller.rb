@@ -15,19 +15,14 @@ class UserController < ApplicationController
   end
 
   def list
-    @users = User.all().limit(5)
-    @return = {:success=>true, :data=>@users}
+    @users = User.limit(10)
+    @return = {:success => true, :data => @users}
     render :json => @return
   end
 
   def like_get
-    @return = {:success => true,
-                "user-12345" => {:something => 'xxxxx'},
-                "user-12346" => {:something => 'xxxxx'},
-                "user-12347" => {:something => 'xxxxx'},
-                "user-12348" => {:something => 'xxxxx'},
-                "user-12349" => {:something => 'xxxxx'}
-              }
+    @likes = Like.limit(10)
+    @return = {:success => true, :data => @likes}
     render :json => @return
   end
 
@@ -36,7 +31,9 @@ class UserController < ApplicationController
   end
 
   def favorite_get
-    render :text => 'this is favorite_get'
+    @favorites = Favorite.limit(10)
+    @return = {:success => true, :data => @favorites}
+    render :json => @return
   end
 
   def favorite_post
@@ -44,13 +41,8 @@ class UserController < ApplicationController
   end
 
   def likelist
-    @return = {:success => true,
-                "user-12345" => {:something => 'xxxxx'},
-                "user-12346" => {:something => 'xxxxx'},
-                "user-12347" => {:something => 'xxxxx'},
-                "user-12348" => {:something => 'xxxxx'},
-                "user-12349" => {:something => 'xxxxx'}
-              }
+    @likes = Like.all().limit(10)
+    @return = {:success => true, :data => @likes}
     render :json => @return
   end
 

@@ -2,6 +2,7 @@
 
 one:
   facebook_id: 1
+  login_token: abcde
   access_token: MyString
   main_picture: MyString
   sub_picture1: MyString
@@ -56,6 +57,7 @@ one:
 two:
   facebook_id: 2
   access_token: MyString
+  login_token: abcde
   main_picture: MyString
   sub_picture1: MyString
   sub_picture2: MyString
