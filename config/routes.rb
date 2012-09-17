@@ -18,6 +18,8 @@ Coupling::Application.routes.draw do
   get 'api/v1/user/list' => 'user#list'
   get 'api/v1/user/like' => 'user#like_get'
   post 'api/v1/user/like' => 'user#like_post'
+  get 'api/v1/user/favorite' => 'user#favorite_get'
+  post 'api/v1/user/favorite' => 'user#favorite_post'
   get 'api/v1/user/likelist' => 'user#likelist'
   get 'api/v1/user/block' => 'user#block_get'
   post 'api/v1/user/block' => 'user#block_post'

@@ -1,11 +1,12 @@
 # coding:utf-8
 class UserController < ApplicationController
   def profile_get
-    @return = {:success => true,
-               'user-123456789'=> {:favebook_id=>'123456789',
-                                   :gender=>'female',
-                                   :birthday=>'1979/7/19',
-                                   :hobby=>'123,147,156'}}
+    @users = User.where(:facebook_id => params[:facebook_id])
+    if @users != []
+      @return = {:success => true, :data => @users}
+    else
+      @return = {:success => false}
+    end
     render :json => @return
   end
 
@@ -14,13 +15,8 @@ class UserController < ApplicationController
   end
 
   def list
-    @return = {:success => true,
-                "user-12345" => {:something => 'xxxxx'},
-                "user-12346" => {:something => 'xxxxx'},
-                "user-12347" => {:something => 'xxxxx'},
-                "user-12348" => {:something => 'xxxxx'},
-                "user-12349" => {:something => 'xxxxx'}
-              }
+    @users = User.all().limit(5)
+    @return = {:success=>true, :data=>@users}
     render :json => @return
   end
 
@@ -37,6 +33,14 @@ class UserController < ApplicationController
 
   def like_post
     render :nothing => true, :status => 202
+  end
+
+  def favorite_get
+    render :text => 'this is favorite_get'
+  end
+
+  def favorite_post
+    render :text => 'this is favorite_post'
   end
 
   def likelist
