@@ -1,3 +1,4 @@
+# coding:utf-8
 class UserController < ApplicationController
   def profile_get
     @return = {:success => true,
@@ -61,7 +62,7 @@ class UserController < ApplicationController
   end
 
   def talk_get
-    @return => {
+    @return = {
                 'talk-2' => {:facebook_id => 12345678,
                              :message => 'こんにちは'},
                 'talk-1' => {:facebook_id => 12345678,
