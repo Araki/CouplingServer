@@ -1,5 +1,7 @@
 Coupling::Application.routes.draw do
   get "push/add"
+  get "index/top"
+  get "index/index"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -7,6 +9,34 @@ Coupling::Application.routes.draw do
   # Sample of regular route:
   #   match 'products/:id' => 'catalog#view'
   # Keep in mind you can assign values other than :controller and :action
+
+  get 'api/v1/session/register/:facebook_id/' => 'session#register'
+  get 'api/v1/session/create/:facebook_id/' => 'session#create'
+  get 'api/v1/session/destroy' => 'session#destroy'
+  get 'api/v1/session/show' => 'session#show'
+
+  get 'api/v1/user/profile/:facebook_id/' => 'user#profile_get'
+  post 'api/v1/user/profile/:facebook_id/' => 'user#profile_post'
+  get 'api/v1/user/list' => 'user#list'
+  get 'api/v1/user/like' => 'user#like_get'
+  post 'api/v1/user/like' => 'user#like_post'
+  get 'api/v1/user/favorite' => 'user#favorite_get'
+  post 'api/v1/user/favorite' => 'user#favorite_post'
+  get 'api/v1/user/likelist' => 'user#likelist'
+  get 'api/v1/user/block' => 'user#block_get'
+  post 'api/v1/user/block' => 'user#block_post'
+  get 'api/v1/user/blocklist' => 'user#blocklist'
+  get 'api/v1/user/talk/:facebook_id/' => 'user#talk_get'
+  post 'api/v1/user/talk/:facebook_id/' => 'user#talk_post'
+
+  match 'api/v1/iap/pay' => 'iap#pay'
+  match 'api/v1/iap/history' => 'iap#history'
+  
+  match 'api/v1/point/add' => 'point#add'
+  match 'api/v1/point/info' => 'point#info'
+  match 'api/v1/point/use' => 'point#use'
+
+  match 'api/v1/push/add' => 'push#add'
 
   # Sample of named route:
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase

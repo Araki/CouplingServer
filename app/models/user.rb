@@ -1,0 +1,3 @@
+class User < ActiveRecord::Base
+  attr_accessible :access_token, :address, :age, :alcohol, :birthplace, :blood_type, :certification, :certification_status, :character, :constellation, :contract_type, :country, :dislike, :email, :facebook_id, :first_login_at, :gender, :have_child, :height, :hobby, :holiday, :income, :industry, :introduction, :invitation_code, :job, :job_description, :language, :last_login_at, :like_point, :main_picture, :marital_history, :marriage_time, :nickname, :point, :profile_status, :proportion, :public_status, :qualification, :relationship, :roommate, :school, :smoking, :sociability, :speciality, :sub_picture1, :sub_picture2, :sub_picture3, :sub_picture4, :want_child, :workplace
+end
