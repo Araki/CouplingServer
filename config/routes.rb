@@ -1,4 +1,6 @@
 Coupling::Application.routes.draw do
+  get "push/add"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
