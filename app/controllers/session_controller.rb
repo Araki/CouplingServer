@@ -11,7 +11,7 @@ class SessionController < ApplicationController
       @graph = Koala::Facebook::API.new(params[:access_token])
       @facebook_profile = @graph.get_object("me")  
       @user.access_token = params[:access_token]
-      @user.id = @facebook_profile["id"]
+      @user.facebook_id = @facebook_profile["id"]
       @user.save
     #対応するアクセストークンのレコードがすでに存在する場合(上書き)
     #TODO FacebookAPIを使ってアクセストークンを使ってデータが取得できることを確認する
@@ -27,7 +27,8 @@ class SessionController < ApplicationController
   def verify
     unless @session == nil
       @return = {:success=> true, 
-                 :session_id => @session.key}
+                 :session_id => @session.key,
+                 :body => @session.value}
     end
     render :json => @return
   end
