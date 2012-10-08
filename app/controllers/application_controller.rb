@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
 
   private
   def check_session_id
-    @session = Session.find_by_key(params[:session_id])
+    @session = Session.where(:key => params[:session_id]).first
     if @session == nil
       render :json => {:success => false, :message => 'session_id not found.'}
     end

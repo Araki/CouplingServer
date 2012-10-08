@@ -11,9 +11,8 @@ Coupling::Application.routes.draw do
   # Keep in mind you can assign values other than :controller and :action
 
   get 'api/v1/session/register' => 'session#register'
-  get 'api/v1/session/create' => 'session#create'
+  get 'api/v1/session/verify' => 'session#verify'
   get 'api/v1/session/destroy' => 'session#destroy'
-  get 'api/v1/session/show' => 'session#show'
 
   get 'api/v1/user/profile/:facebook_id/' => 'user#profile_get'
   post 'api/v1/user/profile/:facebook_id/' => 'user#profile_post'
@@ -80,7 +79,7 @@ Coupling::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+  root :to => 'index#index'
 
   # See how all your routes lay out with "rake routes"
 
