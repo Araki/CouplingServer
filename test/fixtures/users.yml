@@ -1,0 +1,109 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  facebook_id: 1
+  login_token: abcde
+  access_token: MyString
+  main_picture: MyString
+  sub_picture1: MyString
+  sub_picture2: MyString
+  sub_picture3: MyString
+  sub_picture4: MyString
+  profile_status: MyString
+  email: MyString
+  certification: MyString
+  certification_status: MyString
+  public_status: MyString
+  first_login_at: 2012-09-17 15:11:53
+  last_login_at: 2012-09-17 15:11:53
+  invitation_code: MyString
+  contract_type: MyString
+  like_point: 
+  point: 
+  nickname: MyString
+  introduction: MyString
+  gender: 
+  age: 
+  country: MyString
+  language: MyString
+  address: MyString
+  birthplace: MyString
+  roommate: MyString
+  height: 
+  proportion: 
+  constellation: 
+  blood_type: MyString
+  marital_history: 
+  marriage_time: 
+  want_child: 
+  relationship: 
+  have_child: 
+  smoking: 
+  alcohol: 
+  industry: 
+  job: 
+  job_description: MyString
+  workplace: MyString
+  income: 
+  qualification: MyString
+  school: 
+  holiday: 
+  sociability: MyString
+  character: MyString
+  speciality: MyString
+  hobby: MyString
+  dislike: MyString
+
+two:
+  facebook_id: 2
+  access_token: MyString
+  login_token: abcde
+  main_picture: MyString
+  sub_picture1: MyString
+  sub_picture2: MyString
+  sub_picture3: MyString
+  sub_picture4: MyString
+  profile_status: MyString
+  email: MyString
+  certification: MyString
+  certification_status: MyString
+  public_status: MyString
+  first_login_at: 2012-09-17 15:11:53
+  last_login_at: 2012-09-17 15:11:53
+  invitation_code: MyString
+  contract_type: MyString
+  like_point: 
+  point: 
+  nickname: MyString
+  introduction: MyString
+  gender: 
+  age: 
+  country: MyString
+  language: MyString
+  address: MyString
+  birthplace: MyString
+  roommate: MyString
+  height: 
+  proportion: 
+  constellation: 
+  blood_type: MyString
+  marital_history: 
+  marriage_time: 
+  want_child: 
+  relationship: 
+  have_child: 
+  smoking: 
+  alcohol: 
+  industry: 
+  job: 
+  job_description: MyString
+  workplace: MyString
+  income: 
+  qualification: MyString
+  school: 
+  holiday: 
+  sociability: MyString
+  character: MyString
+  speciality: MyString
+  hobby: MyString
+  dislike: MyString
