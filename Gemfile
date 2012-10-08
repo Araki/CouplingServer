@@ -47,5 +47,8 @@ gem 'jquery-rails'
 
 #gem 'activerecord-mysql2-adapter'
 
-gem 'apn_on_rails', :git => 'https://github.com/natescherer/apn_on_rails.git', :branch => 'rails3'
+#gem 'apn_on_rails', :git => 'https://github.com/natescherer/apn_on_rails.git', :branch => 'rails3'
+gem 'configatron'
 gem 'koala'
+
+gem 'rb-readline'
