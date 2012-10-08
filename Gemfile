@@ -41,3 +41,4 @@ gem 'jquery-rails'
 # gem 'debugger'
 
 #gem 'activerecord-mysql2-adapter'
+gem 'koala'

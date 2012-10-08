@@ -10,8 +10,8 @@ Coupling::Application.routes.draw do
   #   match 'products/:id' => 'catalog#view'
   # Keep in mind you can assign values other than :controller and :action
 
-  get 'api/v1/session/register/:facebook_id/' => 'session#register'
-  get 'api/v1/session/create/:facebook_id/' => 'session#create'
+  get 'api/v1/session/register' => 'session#register'
+  get 'api/v1/session/create' => 'session#create'
   get 'api/v1/session/destroy' => 'session#destroy'
   get 'api/v1/session/show' => 'session#show'
 

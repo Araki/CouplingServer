@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  session_id: MyString
-  body: MyString
+  key: MyString
+  value: MyString
 
 two:
-  session_id: MyString
-  body: MyString
+  key: MyString
+  value: MyString

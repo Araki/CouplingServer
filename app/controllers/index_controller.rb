@@ -15,4 +15,8 @@ class IndexController < ApplicationController
   def top
     render :text => "this is top. param is :" + params[:id]
   end
+
+  def facebook
+    
+  end
 end

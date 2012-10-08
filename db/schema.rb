@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120917091613) do
+ActiveRecord::Schema.define(:version => 20121008052723) do
 
   create_table "favorites", :force => true do |t|
     t.integer  "user_id"
@@ -27,22 +27,12 @@ ActiveRecord::Schema.define(:version => 20120917091613) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "my_sessions", :force => true do |t|
-    t.string   "session_id"
-    t.string   "body"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "sessions", :force => true do |t|
-    t.string   "session_id", :null => false
-    t.text     "data"
+    t.string   "key"
+    t.string   "value"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
-
-  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
-  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "users", :force => true do |t|
     t.integer  "facebook_id"
