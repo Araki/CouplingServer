@@ -19,7 +19,7 @@ class SessionController < ApplicationController
     create_session_id
     @return = {:success => :true, 
                :session_id => @session.key, 
-               :facebook_id => @facebook_profile['id']}
+               :facebook_id => @user.id}
     render :json => @return
   end
 
