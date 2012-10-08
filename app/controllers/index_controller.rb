@@ -4,19 +4,9 @@
 # トップページ
 
 class IndexController < ApplicationController
-  # トップページ
+  skip_before_filter :check_session_id
+
   def index
     render :text => "hello rails"
-  end
-
-  # 2枚目のページ
-  # ===Paramaters
-  # *+id+ ID パラメータ
-  def top
-    render :text => "this is top. param is :" + params[:id]
-  end
-
-  def facebook
-    
   end
 end

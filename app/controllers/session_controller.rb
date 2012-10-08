@@ -1,5 +1,5 @@
 class SessionController < ApplicationController
-  skip_before_filter :check_session_id, :only => [:register, :create]
+  skip_before_filter :check_session_id, :only => [:register]
 
   #初期登録。FacebookIDとアクセストークンを渡すと
   #ログイントークン（パスワード）とセッションIDを返す
@@ -11,7 +11,7 @@ class SessionController < ApplicationController
       @graph = Koala::Facebook::API.new(params[:access_token])
       @facebook_profile = @graph.get_object("me")  
       @user.access_token = params[:access_token]
-      @user.id = @facebook_profile["id"]
+      @user.facebook_id = @facebook_profile["id"]
       @user.save
     #対応するアクセストークンのレコードがすでに存在する場合(上書き)
     #TODO FacebookAPIを使ってアクセストークンを使ってデータが取得できることを確認する
@@ -23,20 +23,12 @@ class SessionController < ApplicationController
     render :json => @return
   end
 
-  def show
-    render :text => @session.body
-  end
-
   #セッションIDをverifyする
   def verify
-    @user = User.where(:session_key => params[:session_id]).first
-    logger.debug(@user.inspect)
-    if @user != nil
+    unless @session == nil
       @return = {:success=> true, 
-                 :session_id => @session.session_id}
-    else
-      @return = {:success => false,
-                 :message => "session_id not found."}
+                 :session_id => @session.key,
+                 :body => @session.value}
     end
     render :json => @return
   end

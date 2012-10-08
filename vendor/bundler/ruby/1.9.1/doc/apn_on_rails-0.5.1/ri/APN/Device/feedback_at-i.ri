@@ -1,0 +1,2 @@
+U:RDoc::Attr[iI"feedback_at:EFI"APN::Device#feedback_at;FI"RW;F:publico:RDoc::Markup::Document:@parts[o:RDoc::Markup::Paragraph;	[I"7The <tt>feedback_at</tt> accessor is set when the ;FI";device is marked as potentially disconnected from your;FI"application by Apple.;F:
+@fileI".lib/apn_on_rails/app/models/apn/device.rb;FF@

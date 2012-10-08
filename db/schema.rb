@@ -11,6 +11,32 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
+ActiveRecord::Schema.define(:version => 20121008053552) do
+
+  create_table "apn_devices", :force => true do |t|
+    t.string   "token",              :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.datetime "last_registered_at"
+  end
+
+  add_index "apn_devices", ["token"], :name => "index_apn_devices_on_token", :unique => true
+
+  create_table "apn_notifications", :force => true do |t|
+    t.integer  "device_id",                        :null => false
+    t.integer  "errors_nb",         :default => 0
+    t.string   "device_language"
+    t.string   "sound"
+    t.string   "alert"
+    t.integer  "badge"
+    t.text     "custom_properties"
+    t.datetime "sent_at"
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+  end
+
+  add_index "apn_notifications", ["device_id"], :name => "index_apn_notifications_on_device_id"
+
 ActiveRecord::Schema.define(:version => 20121008052723) do
 
   create_table "favorites", :force => true do |t|
@@ -90,5 +116,6 @@ ActiveRecord::Schema.define(:version => 20121008052723) do
     t.datetime "updated_at",           :null => false
     t.string   "login_token"
   end
+
 
 end

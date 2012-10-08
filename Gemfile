@@ -6,6 +6,10 @@ gem 'rails', '3.2.8'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
+gem 'pg'
+#group :development, :test do
+#  gem 'sqlite3-ruby', :require => 'sqlite3'
+#end
 group :development, :test do
   gem 'sqlite3-ruby', :require => 'sqlite3'
 end
@@ -42,4 +46,6 @@ gem 'jquery-rails'
 # gem 'debugger'
 
 #gem 'activerecord-mysql2-adapter'
+
+gem 'apn_on_rails', :git => 'https://github.com/natescherer/apn_on_rails.git', :branch => 'rails3'
 gem 'koala'
