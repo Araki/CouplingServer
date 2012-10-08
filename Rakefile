@@ -5,3 +5,12 @@
 require File.expand_path('../config/application', __FILE__)
 
 Coupling::Application.load_tasks
+
+require 'apn_on_rails'
+
+
+begin
+  require 'apn_on_rails_tasks'
+rescue MissingSourceFile => e
+  puts e.message
+end
