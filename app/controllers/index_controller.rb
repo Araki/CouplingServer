@@ -6,7 +6,7 @@
 class IndexController < ApplicationController
   # トップページ
   def index
-    render :text => "hello rails"
+    render :text => "hello rails via cap"
   end
 
   # 2枚目のページ
