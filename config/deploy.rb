@@ -1,6 +1,7 @@
 default_run_options[:pty] = true
 set :application, "pairful"
 set :repository,  "git@github.com:Araki/CouplingServer.git"
+set :branch, 'fix_app'
 set :ssh_options, {
   :user => "ec2-user",
   :keys => ["~/.ssh/coupling_tokyo.pem"],
