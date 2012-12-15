@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 Coupling::Application.routes.draw do
   get "push/add"
   get "index/top"
