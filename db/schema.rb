@@ -37,8 +37,6 @@ ActiveRecord::Schema.define(:version => 20121008053552) do
 
   add_index "apn_notifications", ["device_id"], :name => "index_apn_notifications_on_device_id"
 
-ActiveRecord::Schema.define(:version => 20121008052723) do
-
   create_table "favorites", :force => true do |t|
     t.integer  "user_id"
     t.integer  "target_id"
@@ -116,6 +114,5 @@ ActiveRecord::Schema.define(:version => 20121008052723) do
     t.datetime "updated_at",           :null => false
     t.string   "login_token"
   end
-
 
 end
