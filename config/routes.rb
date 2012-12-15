@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 Coupling::Application.routes.draw do
-  get "push/add"
   get "index/top"
   get "index/index"
 
@@ -11,32 +10,35 @@ Coupling::Application.routes.draw do
   #   match 'products/:id' => 'catalog#view'
   # Keep in mind you can assign values other than :controller and :action
 
-  get '/session/register' => 'session#register'
-  get '/session/verify' => 'session#verify'
-  get '/session/destroy' => 'session#destroy'
+  namespace :api do
+    get "push/add" => 'push#add'
+    get '/session/register' => 'session#register'
+    get '/session/verify' => 'session#verify'
+    get '/session/destroy' => 'session#destroy'
 
-  get '/user/profile/:facebook_id/' => 'user#profile_get'
-  post '/user/profile/:facebook_id/' => 'user#profile_post'
-  get '/user/list' => 'user#list'
-  get '/user/like' => 'user#like_get'
-  post '/user/like' => 'user#like_post'
-  get '/user/favorite' => 'user#favorite_get'
-  post '/user/favorite' => 'user#favorite_post'
-  get '/user/likelist' => 'user#likelist'
-  get '/user/block' => 'user#block_get'
-  post '/user/block' => 'user#block_post'
-  get '/user/blocklist' => 'user#blocklist'
-  get '/user/talk/:facebook_id/' => 'user#talk_get'
-  post '/user/talk/:facebook_id/' => 'user#talk_post'
+    get '/user/profile/:facebook_id/' => 'user#profile_get'
+    post '/user/profile/:facebook_id/' => 'user#profile_post'
+    get '/user/list' => 'user#list'
+    get '/user/like' => 'user#like_get'
+    post '/user/like' => 'user#like_post'
+    get '/user/favorite' => 'user#favorite_get'
+    post '/user/favorite' => 'user#favorite_post'
+    get '/user/likelist' => 'user#likelist'
+    get '/user/block' => 'user#block_get'
+    post '/user/block' => 'user#block_post'
+    get '/user/blocklist' => 'user#blocklist'
+    get '/user/talk/:facebook_id/' => 'user#talk_get'
+    post '/user/talk/:facebook_id/' => 'user#talk_post'
 
-  match '/iap/pay' => 'iap#pay'
-  match '/iap/history' => 'iap#history'
-  
-  match '/point/add' => 'point#add'
-  match '/point/info' => 'point#info'
-  match '/point/use' => 'point#use'
+    match '/iap/pay' => 'iap#pay'
+    match '/iap/history' => 'iap#history'
 
-  match '/push/add' => 'push#add'
+    match '/point/add' => 'point#add'
+    match '/point/info' => 'point#info'
+    match '/point/use' => 'point#use'
+
+    match '/push/add' => 'push#add'
+  end
 
   # Sample of named route:
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
