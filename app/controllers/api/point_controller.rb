@@ -1,4 +1,4 @@
-class PointController < ApplicationController
+class Api::PointController < Api::BaseController
   def add
   end
 

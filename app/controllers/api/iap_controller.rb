@@ -1,4 +1,4 @@
-class IapController < ApplicationController
+class Api::IapController < Api::BaseController
   def history
   end
 
