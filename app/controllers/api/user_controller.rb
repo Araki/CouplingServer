@@ -2,38 +2,34 @@
 class Api::UserController < Api::BaseController
   def profile_get
     @users = User.where(:facebook_id => params[:facebook_id])
-    if @users != []
-      @return = {:success => true, :data => @users}
+    if @users.present?
+      render_ok(@users)
     else
-      @return = {:success => false}
+      render_ng
     end
-    render :json => @return
   end
 
   def profile_post
-    render :nothing => true, :status => 202
+    render_ok
   end
 
   def list
     @users = User.limit(10)
-    @return = {:success => true, :data => @users}
-    render :json => @return
+    render_ok(@users)
   end
 
   def like_get
     @likes = Like.limit(10)
-    @return = {:success => true, :data => @likes}
-    render :json => @return
+    render_ok(@likes)
   end
 
   def like_post
-    render :nothing => true, :status => 202
+    render_ok
   end
 
   def favorite_get
     @favorites = Favorite.limit(10)
-    @return = {:success => true, :data => @favorites}
-    render :json => @return
+    render_ok(@favorites)
   end
 
   def favorite_post
@@ -42,8 +38,7 @@ class Api::UserController < Api::BaseController
 
   def likelist
     @likes = Like.all().limit(10)
-    @return = {:success => true, :data => @likes}
-    render :json => @return
+    render_ok(@likes)
   end
 
   def block_get
@@ -51,23 +46,23 @@ class Api::UserController < Api::BaseController
   end
 
   def block_post
-    render :nothing => true, :status => 202
+    redner_ok
   end
 
   def blocklist
   end
 
   def talk_get
-    @return = {
+    return_hash = {
                 'talk-2' => {:facebook_id => 12345678,
                              :message => 'こんにちは'},
                 'talk-1' => {:facebook_id => 12345678,
                              :message => 'はじめまして'}
                }
-    render :json => @return
+    render_ok(return_hash)
   end
 
   def talk_post
-    render :nothing => true, :status => 202
+    render_ok
   end
 end

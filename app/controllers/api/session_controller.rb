@@ -18,27 +18,18 @@ class Api::SessionController < Api::BaseController
     #TODO FacebookAPIを使ってアクセストークンを使ってデータが取得できることを確認する
     end
     create_session_id
-    @return = {:success => :true, 
-               :session_id => @session.key, 
-               :facebook_id => @user.id}
-    render :json => @return
+    render_ok({session_id: @session.key, facebook_id: @user.id})
   end
 
   #セッションIDをverifyする
   def verify
-    unless @session == nil
-      @return = {:success=> true, 
-                 :session_id => @session.key,
-                 :body => @session.value}
-    end
-    render :json => @return
+    render_ok({session_id: @session.key, body: @session.value})
   end
 
   #ログアウト。セッションを破棄する
   def destroy
     @session.destroy
-    @return = {:success => true}
-    render :json => @return
+    render_ok
   end
 
   private
