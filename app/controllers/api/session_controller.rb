@@ -17,7 +17,7 @@ class Api::SessionController < Api::BaseController
     #対応するアクセストークンのレコードがすでに存在する場合(上書き)
     #TODO FacebookAPIを使ってアクセストークンを使ってデータが取得できることを確認する
     end
-    create_session_id
+    @session = Session.create_session
     render_ok({session_id: @session.key, facebook_id: @user.id})
   end
 
@@ -30,13 +30,5 @@ class Api::SessionController < Api::BaseController
   def destroy
     @session.destroy
     render_ok
-  end
-
-  private
-  def create_session_id
-    @session = Session.new
-    @session.key = SecureRandom.hex(4)
-    @session.value = @user.id
-    @session.save()
   end
 end
