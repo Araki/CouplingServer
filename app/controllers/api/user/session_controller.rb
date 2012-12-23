@@ -23,18 +23,26 @@ class Api::User::SessionController < Api::User::BaseController
       render_ng("internal_server_error") and return
     else
       @session = Session.create_session(@user)
-      render_ok({session_id: @session.key, user: @user.id})
+      render_ok(user_hash)
     end
   end
 
   #セッションIDをverifyする
   def verify
-    render_ok({session_id: @session.key, body: @session.value})
+    render_ok(user_hash)
   end
 
   #ログアウト。セッションを破棄する
   def destroy
     @session.destroy
     render_ok
+  end
+
+  private
+  def user_hash
+    {
+      :session => @session.key,
+      :user => @user.to_hash,
+    }
   end
 end
