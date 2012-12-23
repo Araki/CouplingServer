@@ -39,6 +39,7 @@ Coupling::Application.routes.draw do
       match '/point/use' => 'point#use'
 
       match '/push/add' => 'push#add'
+    end
   end
 
   # Sample of named route:
