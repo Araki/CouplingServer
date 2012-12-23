@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-class Api::SessionController < Api::BaseController
+class Api::User::SessionController < Api::User::BaseController
   skip_before_filter :check_session_id, :only => [:register]
 
   #初期登録。FacebookIDとアクセストークンを渡すと

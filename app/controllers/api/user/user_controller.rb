@@ -1,5 +1,5 @@
 # coding:utf-8
-class Api::UserController < Api::BaseController
+class Api::User::UserController < Api::User::BaseController
   def profile_get
     @users = User.where(:facebook_id => params[:facebook_id])
     if @users.present?
