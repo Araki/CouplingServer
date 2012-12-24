@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121223101955) do
+ActiveRecord::Schema.define(:version => 20121223102552) do
 
   create_table "apn_devices", :force => true do |t|
     t.string   "token",              :null => false
@@ -69,11 +69,6 @@ ActiveRecord::Schema.define(:version => 20121223101955) do
   create_table "users", :force => true do |t|
     t.integer  "facebook_id"
     t.string   "access_token"
-    t.string   "main_picture"
-    t.string   "sub_picture1"
-    t.string   "sub_picture2"
-    t.string   "sub_picture3"
-    t.string   "sub_picture4"
     t.string   "profile_status"
     t.string   "email"
     t.string   "certification"
