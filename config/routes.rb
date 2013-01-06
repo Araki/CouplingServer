@@ -28,9 +28,6 @@ Coupling::Application.routes.draw do
       get '/favorite/show' => 'favorite#show'
       post '/favorite/add' => 'favorite#add'
 
-      get '/talk/:facebook_id/' => 'user#talk_get'
-      post '/talk/:facebook_id/' => 'user#talk_post'
-
       match '/iap/pay' => 'iap#pay'
       match '/iap/history' => 'iap#history'
 
