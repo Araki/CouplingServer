@@ -25,7 +25,6 @@ Coupling::Application.routes.draw do
       post '/like/add' => 'like#add'
       get '/favorite' => 'user#favorite_get'
       post '/favorite' => 'user#favorite_post'
-      get '/likelist' => 'user#likelist'
       get '/block' => 'user#block_get'
       post '/block' => 'user#block_post'
       get '/blocklist' => 'user#blocklist'

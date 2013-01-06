@@ -14,11 +14,6 @@ class Api::User::UserController < Api::User::BaseController
     render :text => 'this is favorite_post'
   end
 
-  def likelist
-    @likes = Like.all().limit(10)
-    render_ok(@likes)
-  end
-
   def block_get
 
   end
