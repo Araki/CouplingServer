@@ -51,7 +51,9 @@ class User < ActiveRecord::Base
       :speciality => self.speciality,
       :hobby => self.hobby,
       :dislike => self.dislike,
-      :login_token => self.login_token
+      :login_token => self.login_token,
+      :created_at => self.created_at,
+      :updated_at => self.updated_at
     }
   end
 end
