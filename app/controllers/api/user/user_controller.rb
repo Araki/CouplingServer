@@ -1,18 +1,5 @@
 # coding:utf-8
 class Api::User::UserController < Api::User::BaseController
-  def profile_get
-    @users = User.where(:facebook_id => params[:facebook_id])
-    if @users.present?
-      render_ok(@users)
-    else
-      render_ng
-    end
-  end
-
-  def profile_post
-    render_ok
-  end
-
   def list
     @users = User.limit(10)
     render_ok(@users)

@@ -17,8 +17,8 @@ Coupling::Application.routes.draw do
       get '/session/verify' => 'session#verify'
       get '/session/destroy' => 'session#destroy'
 
-      get '/profile/:facebook_id/' => 'user#profile_get'
-      post '/profile/:facebook_id/' => 'user#profile_post'
+      get '/profile/show' => 'profile#show'
+      post '/profile/edit' => 'profile#edit'
       get '/list' => 'user#list'
       get '/like' => 'user#like_get'
       post '/like' => 'user#like_post'
