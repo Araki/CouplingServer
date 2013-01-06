@@ -5,15 +5,6 @@ class Api::User::UserController < Api::User::BaseController
     render_ok(@users)
   end
 
-  def like_get
-    @likes = Like.limit(10)
-    render_ok(@likes)
-  end
-
-  def like_post
-    render_ok
-  end
-
   def favorite_get
     @favorites = Favorite.limit(10)
     render_ok(@favorites)

@@ -19,9 +19,10 @@ Coupling::Application.routes.draw do
 
       get '/profile/show' => 'profile#show'
       post '/profile/edit' => 'profile#edit'
+
       get '/list' => 'user#list'
-      get '/like' => 'user#like_get'
-      post '/like' => 'user#like_post'
+      get '/like/show' => 'like#show'
+      post '/like/add' => 'like#add'
       get '/favorite' => 'user#favorite_get'
       post '/favorite' => 'user#favorite_post'
       get '/likelist' => 'user#likelist'
