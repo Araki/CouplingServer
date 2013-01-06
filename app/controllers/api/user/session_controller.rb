@@ -15,7 +15,7 @@ class Api::User::SessionController < Api::User::BaseController
         @user.access_token = params[:access_token]
         @user.facebook_id = @facebook_profile["id"]
         @user.save!
-
+      end
     #対応するアクセストークンのレコードがすでに存在する場合(上書き)
     #TODO FacebookAPIを使ってアクセストークンを使ってデータが取得できることを確認する
     rescue Exception => e
