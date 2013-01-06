@@ -13,7 +13,7 @@ Coupling::Application.routes.draw do
   namespace :api do
 
     namespace :user do
-      get '/session/create' => 'session#create'
+      get '/session/create/:access_token' => 'session#create'
       get '/session/verify' => 'session#verify'
       get '/session/destroy' => 'session#destroy'
 
