@@ -6,10 +6,10 @@ class Api::User::SessionController < Api::User::BaseController
   #ログイントークン（パスワード）とセッションIDを返す
   def create
     begin
-      @user = User.where(:access_token => params[:access_token]).first
+      @user = ::User.find_by_access_token(params[:access_token])
       if @user.nil?
         #レコードがまだ無い場合(新規作成)
-        @user = User.new
+        @user = ::User.new
         @graph = Koala::Facebook::API.new(params[:access_token])
         @facebook_profile = @graph.get_object("me")  
         @user.access_token = params[:access_token]
