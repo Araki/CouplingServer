@@ -21,13 +21,13 @@ Coupling::Application.routes.draw do
       post '/profile/edit' => 'profile#edit'
 
       get '/list' => 'user#list'
+
       get '/like/show' => 'like#show'
       post '/like/add' => 'like#add'
+
       get '/favorite' => 'user#favorite_get'
       post '/favorite' => 'user#favorite_post'
-      get '/block' => 'user#block_get'
-      post '/block' => 'user#block_post'
-      get '/blocklist' => 'user#blocklist'
+
       get '/talk/:facebook_id/' => 'user#talk_get'
       post '/talk/:facebook_id/' => 'user#talk_post'
 

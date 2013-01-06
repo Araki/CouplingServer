@@ -17,17 +17,6 @@ class Api::User::UserController < Api::User::BaseController
     render :text => 'this is favorite_post'
   end
 
-  def block_get
-
-  end
-
-  def block_post
-    redner_ok
-  end
-
-  def blocklist
-  end
-
   def talk_get
     return_hash = {
                 'talk-2' => {:facebook_id => 12345678,
