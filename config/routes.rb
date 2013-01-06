@@ -25,8 +25,8 @@ Coupling::Application.routes.draw do
       get '/like/show' => 'like#show'
       post '/like/add' => 'like#add'
 
-      get '/favorite' => 'user#favorite_get'
-      post '/favorite' => 'user#favorite_post'
+      get '/favorite/show' => 'favorite#show'
+      post '/favorite/add' => 'favorite#add'
 
       get '/talk/:facebook_id/' => 'user#talk_get'
       post '/talk/:facebook_id/' => 'user#talk_post'

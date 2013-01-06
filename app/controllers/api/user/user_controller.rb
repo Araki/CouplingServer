@@ -8,15 +8,6 @@ class Api::User::UserController < Api::User::BaseController
     render_ok(user: users)
   end
 
-  def favorite_get
-    @favorites = Favorite.limit(10)
-    render_ok(@favorites)
-  end
-
-  def favorite_post
-    render :text => 'this is favorite_post'
-  end
-
   def talk_get
     return_hash = {
                 'talk-2' => {:facebook_id => 12345678,
