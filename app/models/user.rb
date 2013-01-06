@@ -7,7 +7,6 @@ class User < ActiveRecord::Base
     {
       :id => self.id,
       :facebook_id => self.facebook_id,
-      :access_token => self.access_token,
       :profile_status => self.profile_status,
       :email => self.email,
       :certification => self.certification,
