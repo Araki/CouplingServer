@@ -14,9 +14,9 @@
 ActiveRecord::Schema.define(:version => 20121223102552) do
 
   create_table "apn_devices", :force => true do |t|
-    t.string   "token",              :null => false
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.string   "token",              :default => "", :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.datetime "last_registered_at"
   end
 
