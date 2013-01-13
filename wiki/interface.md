@@ -50,7 +50,9 @@ session_id| o | セッションID
 
 ## profile/show
 
-デフォルトは全てのデータを返す。カラム名指定でそのデータだけを返す
+user_idを指定するとそのユーザのプロフィールを返す。
+
+user_idを指定しなければ現在のセッションのユーザのプロフィールを返す。
 
 ### URL
 
@@ -59,6 +61,7 @@ session_id| o | セッションID
 param | require | description
 ------|---------|------
 session_id| o | セッションID
+user_id| - | ユーザID
 
 ### Request Sample
 
