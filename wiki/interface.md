@@ -2,11 +2,10 @@
 
 初期登録時に叩くAPI。iOSクライアント側でFacebook Connectし、アクセストークンを投げると、サーバー側でセッションIDを生成してレスポンスを返す。ログイントークンはクライアント側でNSUserDefaults等に保存しておいて、以降のログインではそれを使用する。
 
-### API Endpoint and Format
+### URL
 
     GET /api/user/session/create/:access_token
 
-### Params
 param | require | description
 ------|---------|------
 access_token | o | Connectで得られたそのユーザーのFacebookのアクセストークン
@@ -19,7 +18,7 @@ access_token | o | Connectで得られたそのユーザーのFacebookのアク�
 
 すでに初期登録が済んでいた場合（NSUserDefaultsにsession_idがあった場合）にsession_idを使ってログインする。そのsession_idが使えるものであった場合、trueを返す。以降それを使って他のAPIをコールする。
 
-### API Endpoint and Format
+### URL
 
     GET /api/user/session/verify?session_id=#{session_id}
 
@@ -35,7 +34,7 @@ session_id| o |セッションID
 
 ユーザーのほうから明示的にログアウトした場合に呼ばれる。セッションIDを破棄するので、次回ユーザーがアプリを起動したときにはFacebook認証をしなおしsession#createしなければならない。
 
-### API Endpoint and Format
+### URL
 
     GET /api/user/session/destroy?session_id=#{session_id}
 
@@ -53,7 +52,7 @@ session_id| o | セッションID
 
 デフォルトは全てのデータを返す。カラム名指定でそのデータだけを返す
 
-### API Endpoint and Format
+### URL
 
     GET /api/user/profile/show
 
@@ -73,7 +72,7 @@ session_id| o | セッションID
 
 自分のプロフィール情報を追加・更新する。
 
-### API Endpoint and Format
+### URL
 
     POST /api/user/profile/edit
 
@@ -93,7 +92,7 @@ session_id| o | セッションID
 
     GET /user/list/
 
-### API Endpoint and Format
+### URL
 
     GET /api/user/list
 
@@ -118,7 +117,7 @@ session_id| o | セッションID
 
 ## like/add
 
-### API Endpoint and Format
+### URL
 
     POST /api/user/like/add
 
@@ -135,7 +134,7 @@ session_id| o | セッションID
 
 ## like/show
 
-### API Endpoint and Format
+### URL
 
     GET /api/user/like/show
 
@@ -151,7 +150,7 @@ session_id| o | セッションID
 
 ## 特定のユーザーにメッセージを送る
 
-### API Endpoint and Format
+### URL
 
     POST http://coupling.herokuapp.com/api/v1/user/talk/#{facebook_id}/
 
@@ -173,7 +172,7 @@ session_id| o | セッションID
 
 相手のFacebookIDを渡すと、その相手とのメッセージ履歴を返す。
 
-### API Endpoint and Format
+### URL
 
     GET http://coupling.herokuapp.com/api/v1/user/talk/#{facebook_id}/
 
@@ -202,7 +201,7 @@ session_id| o | セッションID
 
 ## In App Purchace購入操作
 
-### API Endpoint and Format
+### URL
 
     POST http://coupling.herokuapp.com/api/v1/iap/pay/#{facebook_id}/
 
@@ -226,7 +225,7 @@ session_id| o | セッションID
 
 ## ポイント付与
 
-### API Endpoint and Format
+### URL
 
     POST http://coupling.herokuapp.com/api/v1/point/add/#{facebook_id}/
 
@@ -246,7 +245,7 @@ session_id| o | セッションID
 
 ## ポイントを使う
 
-### API Endpoint and Format
+### URL
 
     POST http://coupling.herokuapp.com/api/v1/point/use/#{facebook_id}/
 
@@ -266,7 +265,7 @@ session_id| o | セッションID
 
 ## トークン登録
 
-### API Endpoint and Format
+### URL
 
     POST http://coupling.herokuapp.com/api/v1/push/add/#{facebook_id}/
 
