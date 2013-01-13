@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130113115317) do
+ActiveRecord::Schema.define(:version => 20130113124105) do
 
   create_table "apn_devices", :force => true do |t|
     t.string   "token",              :default => "", :null => false
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20130113115317) do
     t.datetime "updated_at",           :null => false
     t.string   "login_token"
     t.integer  "prefecture"
+    t.string   "school_name"
   end
 
 end
