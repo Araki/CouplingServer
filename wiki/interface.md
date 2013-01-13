@@ -200,23 +200,6 @@ session_id| o | セッションID
         }
     }
 
-## 特定のユーザーをブロックする
-
-### API Endpoint and Format
-
-    POST http://coupling.herokuapp.com/api/v1/user/block/#{facebook_id}
-
-* #{facebook_id} ブロックしたい相手のFacebookID 
-* #{session_id} セッションID
-
-### Request Sample
-
-    GET /api/v1/user/block/123456789?session_id=abcd1234
-
-### Response Sample
-
-    202 Accepted
-
 ## In App Purchace購入操作
 
 ### API Endpoint and Format
@@ -240,66 +223,6 @@ session_id| o | セッションID
 ### Response Sample
 
     202 Accepted
-
-## In App Purchaceの履歴を取得する
-
-FacebookIDを渡すと、そのユーザーのIn App Purchaceの履歴を取得する
-
-### API Endpoint and Format
-
-    GET http://coupling.herokuapp.com/api/v1/iap/history/#{facebook_id}/
-
-* #{facebook_id} メッセージ相手のFacebookID
-* #{session_id} セッションID
-
-### Request Sample
-
-    GET /api/v1/iap/history/123456789?session_id=abcd1234
-
-### Response Sample
-
-    200 OK
-    {
-        'seq-5':
-        {
-            'facebook_id':123456789,
-			'item_id':3,
-			'amount':300,
-			'datetime':'2012-08-08 00:00:00',
-			'transaction_id':'xxxxxxxxxxxxxxxxxxx'
-        },
-        'seq-4':
-        {
-            'facebook_id':123456789,
-            'item_id':3,
-			'amount':300,
-			'datetime':'2012-08-08 00:00:00',
-			'transaction_id':'xxxxxxxxxxxxxxxxxxx'
-        },
-        'seq-3':
-        {
-            'facebook_id':123456789,
-            'item_id':3,
-			'amount':300,
-			'transaction_id':'xxxxxxxxxxxxxxxxxxx'
-        },
-        'seq-2':
-        {
-            'facebook_id':123456789,
-            'item_id':3,
-			'amount':300,
-			'datetime':'2012-08-08 00:00:00',
-			'transaction_id':'xxxxxxxxxxxxxxxxxxx'
-        },
-        'seq-1':
-        {
-            'facebook_id':123456789,
-            'item_id':3,
-			'amount':300,
-			'datetime':'2012-08-08 00:00:00',
-			'transaction_id':'xxxxxxxxxxxxxxxxxxx'
-        },
-    }
 
 ## ポイント付与
 
@@ -340,29 +263,6 @@ FacebookIDを渡すと、そのユーザーのIn App Purchaceの履歴を取得�
 ### Response Sample
 
     202 Accepted
-
-## ポイント所持量を取得する
-
-FacebookIDを渡すと、そのユーザーのポイント所持量を取得する
-
-### API Endpoint and Format
-
-    GET http://coupling.herokuapp.com/api/v1/point/info/#{facebook_id}/
-
-* #{facebook_id} 情報取得対象のFacebookID
-* #{session_id} セッションID
-
-### Request Sample
-
-    GET /api/v1/point/info/123456789?session_id=abcd1234
-
-### Response Sample
-
-    200 OK
-    {
-		'facebook_id':123456789,
-		'amount':320
-    }
 
 ## トークン登録
 
