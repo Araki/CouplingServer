@@ -4,8 +4,8 @@
 #   Ensure the SQLite 3 gem is defined in your Gemfile
 #   gem 'sqlite3'
 development:
-  adapter: sqlite3
-  database: db/development.sqlite3
+  adapter: mysql2
+  database: pairful
   pool: 5
   timeout: 5000
 
@@ -18,14 +18,14 @@ test:
 #  database: coupling
 #  pool: 5
 #  timeout: 5000
-  adapter: sqlite3
-  database: db/test.sqlite3
+  adapter: mysql2
+  database: pairful
   pool: 5
   timeout: 5000
 
 production:
   adapter: mysql2
-  database: coupling
+  database: pairful
   user: root
   password: rootpasswd
   pool: 5
