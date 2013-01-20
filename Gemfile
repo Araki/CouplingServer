@@ -51,3 +51,4 @@ gem 'configatron'
 gem 'koala'
 
 gem 'rb-readline'
+gem 'aws-sdk'
