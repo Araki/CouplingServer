@@ -4,7 +4,7 @@
 
 ### URL
 
-    GET /api/user/session/create/:access_token
+    GET /api/user/session/create?access_token=#{access_token}
 
 param | require | description
 ------|---------|------
