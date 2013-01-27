@@ -1,0 +1,2 @@
+class MainImage < Image
+end
