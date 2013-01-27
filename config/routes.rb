@@ -20,6 +20,9 @@ Coupling::Application.routes.draw do
       get '/profile/show' => 'profile#show'
       post '/profile/edit' => 'profile#edit'
 
+      get '/upload/image_parameter' => 'upload#image_parameter'
+      get '/upload/image_url' => 'upload#image_url'
+
       get '/list' => 'user#list'
 
       get '/like/show' => 'like#show'
