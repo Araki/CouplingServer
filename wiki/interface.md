@@ -91,6 +91,46 @@ session_id| o | セッションID
 ### Response Sample
 
 
+## upload/image_parameter
+
+画像アップロードするためののurlとパラメータを得る。
+
+### URL
+
+    POST /api/user/upload/image_parameter
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+
+### Request Sample
+
+    POST /api/user/upload/image_parameter?session_id=abcd1234
+
+### Response Sample
+
+    {"status":"ok","url":"https://pairful-development.s3.amazonaws.com/","fields":{"AWSAccessKeyId":"AKIAIOQ4BVQW426SIRFA","key":"pairful/image/20130127/2.png","policy":"eyJleHBpcmF0aW9uIjoiMjAxMy0wMS0yN1QwODo0NjoyNFoiLCJjb25kaXRpb25zIjpbeyJidWNrZXQiOiJwYWlyZnVsLWRldmVsb3BtZW50In0seyJrZXkiOiJwYWlyZnVsL2ltYWdlLzIwMTMwMTI3LzIucG5nIn0seyJhY2wiOiIifV19","signature":"1hMMAGXxnSfhZdXNN+scpdkZUvI=","acl":""}}
+
+## upload/image_url
+
+画像ダウンロードするためのurlを得る。
+
+### URL
+
+    POST /api/user/upload/image_url
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+
+### Request Sample
+
+    POST /api/user/upload/image_url?session_id=abcd1234
+
+### Response Sample
+
+    {"status":"ok","url":"https://pairful-development.s3.amazonaws.com/pairful/image/20130127/2.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1359276504&Signature=gIHQxBs1ps7rz7ySJhHsk0K%2Bkt8%3D"}
+
 ## user/list
 
     GET /user/list/
