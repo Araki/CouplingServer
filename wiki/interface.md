@@ -1,62 +1,59 @@
-## session/create
+## GET session/create
 
-初期登録時に叩くAPI。iOSクライアント側でFacebook Connectし、アクセストークンを投げると、サーバー側でセッションIDを生成してレスポンスを返す。ログイントークンはクライアント側でNSUserDefaults等に保存しておいて、以降のログインではそれを使用する。
+初期登録時に叩くAPI。Facebookのアクセストークンを投げると、セッションIDを生成して返す。
 
-### URL
-
-    GET /api/user/session/create?access_token=#{access_token}
+### Parameters
 
 param | require | description
 ------|---------|------
-access_token | o | Connectで得られたそのユーザーのFacebookのアクセストークン
+access_token | o | Facebookのアクセストークン
 
-### Example Response
+### Example Request
+
+    http://pairful.com/api/user/session/create?access_token=1234
+***
 
     {"status":"ok","session":"lhzB_XmdfmEP","user":{"id":2,"facebook_id":1319832574,"profile_status":null,"email":null,"certification":null,"certification_status":null,"public_status":null,"first_login_at":null,"last_login_at":null,"invitation_code":null,"contract_type":null,"like_point":null,"point":null,"nickname":null,"introduction":null,"gender":null,"age":null,"country":null,"language":null,"address":null,"birthplace":null,"roommate":null,"height":null,"proportion":null,"constellation":null,"blood_type":null,"marital_history":null,"marriage_time":null,"want_child":null,"relationship":null,"have_child":null,"smoking":null,"alcohol":null,"industry":null,"job":null,"job_description":null,"workplace":null,"income":null,"qualification":null,"school":null,"holiday":null,"sociability":null,"character":null,"speciality":null,"hobby":null,"dislike":null,"login_token":null,"created_at":"2013-01-07T17:06:13Z","updated_at":"2013-01-07T17:06:13Z"}}
 
-## session/verify
+## GET session/verify
 
-すでに初期登録が済んでいた場合（NSUserDefaultsにsession_idがあった場合）にsession_idを使ってログインする。そのsession_idが使えるものであった場合、trueを返す。以降それを使って他のAPIをコールする。
+session_idが有効な場合、trueを、無効な場合、falseを返す。
 
-### URL
-
-    GET /api/user/session/verify?session_id=#{session_id}
+### Parameters
 
 param | require | description
 ------|---------|------
 session_id| o |セッションID
 
-### Example Response
+### Example Request
+
+    http://pairful.com/api/user/session/verify?session_id=1234
+***
 
     {"status":"ok","session":"lhzB_XmdfmEP","user":{"id":2,"facebook_id":1319832574,"profile_status":null,"email":null,"certification":null,"certification_status":null,"public_status":null,"first_login_at":null,"last_login_at":null,"invitation_code":null,"contract_type":null,"like_point":null,"point":null,"nickname":null,"introduction":null,"gender":null,"age":null,"country":null,"language":null,"address":null,"birthplace":null,"roommate":null,"height":null,"proportion":null,"constellation":null,"blood_type":null,"marital_history":null,"marriage_time":null,"want_child":null,"relationship":null,"have_child":null,"smoking":null,"alcohol":null,"industry":null,"job":null,"job_description":null,"workplace":null,"income":null,"qualification":null,"school":null,"holiday":null,"sociability":null,"character":null,"speciality":null,"hobby":null,"dislike":null,"login_token":null,"created_at":"2013-01-07T17:06:13Z","updated_at":"2013-01-07T17:06:13Z"}}
 
-## session/destroy
+## GET session/destroy
 
-ユーザーのほうから明示的にログアウトした場合に呼ばれる。セッションIDを破棄するので、次回ユーザーがアプリを起動したときにはFacebook認証をしなおしsession#createしなければならない。
+セッションIDを無効にする。
 
-### URL
-
-    GET /api/user/session/destroy?session_id=#{session_id}
+### Parameters
 
 param | require | description
 ------|---------|------
 session_id| o | セッションID
 
-### Example Response
+### Example Request
 
-#### Success
+    http://pairful.com/api/user/session/destroy?session_id=#{session_id}
+***
 
     {"status":"ok"}
 
-## profile/show
+## GET profile/show
 
-user_idを指定するとそのユーザのプロフィールを返す。
+user_idを指定するとそのユーザのプロフィールを返す。user_idを指定しなければセッションのユーザのプロフィールを返す。
 
-user_idを指定しなければ現在のセッションのユーザのプロフィールを返す。
-
-### URL
-
-    GET /api/user/profile/show
+### Parameters
 
 param | require | description
 ------|---------|------
@@ -65,19 +62,16 @@ user_id| - | ユーザID
 
 ### Example Request
 
-    GET /api/user/profile/show?session_id=abcd1234
-
-### Example Response
+    http://pairful.com/api/user/profile/show?session_id=abcd1234
+***
 
      {"status":"ok","id":2,"facebook_id":1319832574,"profile_status":null,"email":null,"certification":null,"certification_status":null,"public_status":null,"first_login_at":null,"last_login_at":null,"invitation_code":null,"contract_type":null,"like_point":null,"point":null,"nickname":null,"introduction":null,"gender":null,"age":null,"country":null,"language":null,"address":null,"birthplace":null,"roommate":null,"height":null,"proportion":null,"constellation":null,"blood_type":null,"marital_history":null,"marriage_time":null,"want_child":null,"relationship":null,"have_child":null,"smoking":null,"alcohol":null,"industry":null,"job":null,"job_description":null,"workplace":null,"income":null,"qualification":null,"school":null,"holiday":null,"sociability":null,"character":null,"speciality":null,"hobby":null,"dislike":null,"login_token":null,"created_at":"2013-01-07T17:06:13Z","updated_at":"2013-01-07T17:06:13Z"}
 
-## profile/edit
+## POST profile/edit
 
 自分のプロフィール情報を追加・更新する。
 
-### URL
-
-    POST /api/user/profile/edit
+### Parameters
 
 param | require | description
 ------|---------|------
@@ -88,16 +82,11 @@ session_id| o | セッションID
     POST /api/user/profile/edit
     session_id:abcd1234
 
-### Example Response
-
-
-## upload/image_parameter
+## POST upload/image_parameter
 
 画像アップロードするためののurlとパラメータを得る。
 
-### URL
-
-    POST /api/user/upload/image_parameter
+### Parameters
 
 param | require | description
 ------|---------|------
@@ -105,19 +94,16 @@ session_id| o | セッションID
 
 ### Example Request
 
-    POST /api/user/upload/image_parameter?session_id=abcd1234
-
-### Example Response
+    http://pairful.com/api/user/upload/image_parameter?session_id=abcd1234
+***
 
     {"status":"ok","url":"https://pairful-development.s3.amazonaws.com/","fields":{"AWSAccessKeyId":"AKIAIOQ4BVQW426SIRFA","key":"pairful/image/20130127/2.png","policy":"eyJleHBpcmF0aW9uIjoiMjAxMy0wMS0yN1QwODo0NjoyNFoiLCJjb25kaXRpb25zIjpbeyJidWNrZXQiOiJwYWlyZnVsLWRldmVsb3BtZW50In0seyJrZXkiOiJwYWlyZnVsL2ltYWdlLzIwMTMwMTI3LzIucG5nIn0seyJhY2wiOiIifV19","signature":"1hMMAGXxnSfhZdXNN+scpdkZUvI=","acl":""}}
 
-## upload/image_url
+## POST upload/image_url
 
 画像ダウンロードするためのurlを得る。
 
-### URL
-
-    POST /api/user/upload/image_url
+### Parameters
 
 param | require | description
 ------|---------|------
@@ -125,25 +111,22 @@ session_id| o | セッションID
 
 ### Example Request
 
-    POST /api/user/upload/image_url?session_id=abcd1234
-
-### Example Response
+    http://pairful.com/api/user/upload/image_url?session_id=abcd1234
+***
 
     {"status":"ok","url":"https://pairful-development.s3.amazonaws.com/pairful/image/20130127/2.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1359276504&Signature=gIHQxBs1ps7rz7ySJhHsk0K%2Bkt8%3D"}
 
-## user/list
+## GET user/list
 
-    GET /user/list/
+### Parameters
 
-### URL
-
-    GET /api/user/list
-
-* #{session_id} セッションID
-* #{filter_key} フィルターをかける条件のキーを指定する liked
-* #{filter_value} フィルターをかける条件の値を指定する true
-* #{start_index} 取得するデータのオフセット値　デフォルトは0
-* #{count} 取得する最大件数 デフォルトは50件  
+param | require | description
+------|---------|------
+session_id| o | セッションID
+filter_key| - | フィルターをかける条件のキーを指定する liked
+filter_value| - | フィルターをかける条件の値を指定する true
+start_index| - | 取得するデータのオフセット値　デフォルトは0
+count| - | 取得する最大件数 デフォルトは50件  
 
 ### 仕様の変更を検討（天野：2012年10月20日）
 * https://dev.twitter.com/docs/api/1.1/get/statuses/home_timeline
@@ -152,17 +135,14 @@ session_id| o | セッションID
 
 ### Example Request
 
-    GET /api/user/list?session_id=abcd1234&filter_by=liked&filter_value=true&start_index=0&count=5
-
-### Example Response
+    http://pairful.com/api/user/list?session_id=abcd1234&filter_by=liked&filter_value=true&start_index=0&count=5
+***
 
     {"status":"ok","user":[]}
 
-## like/add
+## POST like/add
 
-### URL
-
-    POST /api/user/like/add
+### Parameters
 
 param | require | description
 ------|---------|------
@@ -170,65 +150,58 @@ session_id| o | セッションID
 
 ### Example Request
 
-    GET /api/user/like/add?session_id=abcd1234
+    http://pairful.com/api/user/like/add?session_id=abcd1234
+***
 
-### Example Response
+## GET like/show
 
+### Parameters
 
-## like/show
-
-### URL
-
-    GET /api/user/like/show
-
-* #{session_id} セッションID
+param | require | description
+------|---------|------
+session_id| o | セッションID
 
 ### Example Request
 
-    GET /api/user/like/show?session_id=abcd1234
-
-### Example Response
+    http://pairful.com/api/user/like/show?session_id=abcd1234
+***
 
     {"status":"ok","like":[]}
 
-## 特定のユーザーにメッセージを送る
+## POST message/new
 
-### URL
+特定のユーザーにメッセージを送る
 
-    POST http://coupling.herokuapp.com/api/v1/user/talk/#{facebook_id}/
+### Parameters
 
-* #{facebook_id} メッセージを送る相手のFacebookID
-* #{session_id} セッションID
-* #{message} メッセージの内容
+param | require | description
+------|---------|------
+facebook_id| o | メッセージを送る相手のFacebookID
+session_id| o | セッションID
+message| o | メッセージの内容
 
 ### Example Request
 
-    POST /api/v1/user/talk/123456789
+    http://pairful.com/api/v1/user/talk/123456789
     session_id:abcd1234
     message:こんにちは
 
-### Example Response
-
-    202 Accepted
-
-## 特定のユーザーと自分の間のメッセージ履歴を取得する
+## GET messages
 
 相手のFacebookIDを渡すと、その相手とのメッセージ履歴を返す。
 
-### URL
+### Parameters
 
-    GET http://coupling.herokuapp.com/api/v1/user/talk/#{facebook_id}/
-
-* #{facebook_id} メッセージ相手のFacebookID
-* #{session_id} セッションID
+param | require | description
+------|---------|------
+facebook_id| o | メッセージ相手のFacebookID
+session_id| o | セッションID
 
 ### Example Request
 
-    GET /api/v1/user/talk/987654321?session_id=abcd1234
+    http://pairful.com/api/v1/user/talk/987654321?session_id=abcd1234
+***
 
-### Example Response
-
-    200 OK
     {
         'talk-2':
         {
@@ -242,85 +215,76 @@ session_id| o | セッションID
         }
     }
 
-## In App Purchace購入操作
+## POST buy/item
 
-### URL
+In App Purchace購入操作
 
-    POST http://coupling.herokuapp.com/api/v1/iap/pay/#{facebook_id}/
+### Paremeters
 
-* #{facebook_id} 購入するユーザーのFacebookID。@meのみ
-* #{session_id} セッションID
-* #{item_id} 購入するアイテムID
-* #{amount} 購入数
-* #{transaction_id} トランザクションID
+param | require | description
+------|---------|------
+facebook_id| o | 購入するユーザーのFacebookID。
+session_id| o | セッションID
+item_id| o | 購入するアイテムID
+amount| o | 購入数
+transaction_id| o | トランザクションID
 
 ### Example Request
 
-    POST /api/v1/iap/pay/@me/
+    POST http://coupling.herokuapp.com/api/v1/iap/pay/#{facebook_id}/
 	session_id:abcd1234
 	item_id:3
 	amount:1
 	transaction_id:xxxxxxxxxxxxxxxxxxxxxx
 
-### Example Response
+## POST add/point
 
-    202 Accepted
+ポイント付与
 
-## ポイント付与
+### Parameters
 
-### URL
+param | require | description
+------|---------|------
+facebook_id| o | ポイントを付与する対象のFacebookID
+session_id| o | セッションID
+amount| o | ポイント付与量
+
+### Example Request
 
     POST http://coupling.herokuapp.com/api/v1/point/add/#{facebook_id}/
-
-* #{facebook_id} ポイントを付与する対象のFacebookID
-* #{session_id} セッションID
-* #{amount} ポイント付与量
-
-### Example Request
-
-    POST /api/v1/point/add/123456789/
     session_id:abcd1234
     amount:300
 
-### Example Response
+## POST consume/point
 
-    202 Accepted
+ポイントを使う
 
-## ポイントを使う
+### Parameters
 
-### URL
+param | require | description
+------|---------|------
+facebook_id| o |  ポイントを使う対象のFacebookID。@meのみ
+session_id| o | セッションID
+amount| o | ポイント消費量
+
+### Example Request
 
     POST http://coupling.herokuapp.com/api/v1/point/use/#{facebook_id}/
-
-* #{facebook_id} ポイントを使う対象のFacebookID。@meのみ
-* #{session_id} セッションID
-* #{amount} ポイント消費量
-
-### Example Request
-
-    POST /api/v1/point/add/@me/
     session_id:abcd1234
     amount:300
 
-### Example Response
+## POST apns/create
 
-    202 Accepted
+APNSトークン登録
 
-## トークン登録
-
-### URL
-
-    POST http://coupling.herokuapp.com/api/v1/push/add/#{facebook_id}/
-
-* #{facebook_id} ポイントを付与する対象のFacebookID
-* #{push_token} PUSH通知用のトークン
+### Parameters
+param | require | description
+------|---------|------
+facebook_id| o | ポイントを付与する対象のFacebookID
+push_token| o | PUSH通知用のトークン
 
 ### Example Request
 
-    POST /api/v1/point/add/123456789/
+    POST http://coupling.herokuapp.com/api/v1/push/add/#{facebook_id}/
     session_id:abcd1234
     push_token:AbCdEfGhIj1234567890AbCdEfGhIj123
-
-### Example Response
-
-    202 Accepted
