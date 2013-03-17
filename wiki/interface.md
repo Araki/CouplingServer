@@ -6,11 +6,11 @@
 
 param | require | description
 ------|---------|------
-access_token | o | Facebookのアクセストークン
+fb_token | o | Facebookのアクセストークン
 
 ### Example Request
 
-    http://pairful.com/api/user/session/create?access_token=1234
+    http://pairful.com/api/user/session/create?fb_token=1234
 ***
 
     {"status":"ok","session":"lhzB_XmdfmEP","user":{"id":2,"facebook_id":1319832574,"profile_status":null,"email":null,"certification":null,"certification_status":null,"public_status":null,"first_login_at":null,"last_login_at":null,"invitation_code":null,"contract_type":null,"like_point":null,"point":null,"nickname":null,"introduction":null,"gender":null,"age":null,"country":null,"language":null,"address":null,"birthplace":null,"roommate":null,"height":null,"proportion":null,"constellation":null,"blood_type":null,"marital_history":null,"marriage_time":null,"want_child":null,"relationship":null,"have_child":null,"smoking":null,"alcohol":null,"industry":null,"job":null,"job_description":null,"workplace":null,"income":null,"qualification":null,"school":null,"holiday":null,"sociability":null,"character":null,"speciality":null,"hobby":null,"dislike":null,"login_token":null,"created_at":"2013-01-07T17:06:13Z","updated_at":"2013-01-07T17:06:13Z"}}
@@ -44,7 +44,7 @@ session_id| o | セッションID
 
 ### Example Request
 
-    http://pairful.com/api/user/session/destroy?session_id=#{session_id}
+    http://pairful.com/api/user/session/destroy?session_id=1234
 ***
 
     {"status":"ok"}
@@ -67,9 +67,9 @@ user_id| - | ユーザID
 
      {"status":"ok","id":2,"facebook_id":1319832574,"profile_status":null,"email":null,"certification":null,"certification_status":null,"public_status":null,"first_login_at":null,"last_login_at":null,"invitation_code":null,"contract_type":null,"like_point":null,"point":null,"nickname":null,"introduction":null,"gender":null,"age":null,"country":null,"language":null,"address":null,"birthplace":null,"roommate":null,"height":null,"proportion":null,"constellation":null,"blood_type":null,"marital_history":null,"marriage_time":null,"want_child":null,"relationship":null,"have_child":null,"smoking":null,"alcohol":null,"industry":null,"job":null,"job_description":null,"workplace":null,"income":null,"qualification":null,"school":null,"holiday":null,"sociability":null,"character":null,"speciality":null,"hobby":null,"dislike":null,"login_token":null,"created_at":"2013-01-07T17:06:13Z","updated_at":"2013-01-07T17:06:13Z"}
 
-## POST profile/edit
+## POST profile/update
 
-自分のプロフィール情報を追加・更新する。
+自分のプロフィールを更新する。
 
 ### Parameters
 
@@ -79,7 +79,7 @@ session_id| o | セッションID
 
 ### Example Request
 
-    POST /api/user/profile/edit
+    http://pairful.com/api/profile/update
     session_id:abcd1234
 
 ## POST upload/image_parameter
@@ -176,30 +176,28 @@ session_id| o | セッションID
 
 param | require | description
 ------|---------|------
-facebook_id| o | メッセージを送る相手のFacebookID
 session_id| o | セッションID
+user_id| o | 相手ユーザのID
 message| o | メッセージの内容
 
 ### Example Request
 
-    http://pairful.com/api/v1/user/talk/123456789
-    session_id:abcd1234
-    message:こんにちは
+    http://pairful.com/api/message/new
 
 ## GET messages
 
-相手のFacebookIDを渡すと、その相手とのメッセージ履歴を返す。
+ユーザと特定ユーザとの間の最近の最大20メッセージを返す。
 
 ### Parameters
 
 param | require | description
 ------|---------|------
-facebook_id| o | メッセージ相手のFacebookID
 session_id| o | セッションID
+user_id| o | 相手ユーザのID
 
 ### Example Request
 
-    http://pairful.com/api/v1/user/talk/987654321?session_id=abcd1234
+    http://pairful.com/api/message/new?session_id=abcd1234
 ***
 
     {
@@ -215,7 +213,7 @@ session_id| o | セッションID
         }
     }
 
-## POST buy/item
+## GET item/buy
 
 In App Purchace購入操作
 
@@ -226,18 +224,12 @@ param | require | description
 facebook_id| o | 購入するユーザーのFacebookID。
 session_id| o | セッションID
 item_id| o | 購入するアイテムID
-amount| o | 購入数
-transaction_id| o | トランザクションID
 
 ### Example Request
 
-    POST http://coupling.herokuapp.com/api/v1/iap/pay/#{facebook_id}/
-	session_id:abcd1234
-	item_id:3
-	amount:1
-	transaction_id:xxxxxxxxxxxxxxxxxxxxxx
+    http://pairful.com/api/item/buy?session_id=abcd1234&item_id=3
 
-## POST add/point
+## GET point/add
 
 ポイント付与
 
@@ -245,17 +237,14 @@ transaction_id| o | トランザクションID
 
 param | require | description
 ------|---------|------
-facebook_id| o | ポイントを付与する対象のFacebookID
 session_id| o | セッションID
 amount| o | ポイント付与量
 
 ### Example Request
 
-    POST http://coupling.herokuapp.com/api/v1/point/add/#{facebook_id}/
-    session_id:abcd1234
-    amount:300
+    http://pairful.com/api/point/add?session_id=abcd1234&amount=300
 
-## POST consume/point
+## GET point/consume
 
 ポイントを使う
 
@@ -263,28 +252,23 @@ amount| o | ポイント付与量
 
 param | require | description
 ------|---------|------
-facebook_id| o |  ポイントを使う対象のFacebookID。@meのみ
 session_id| o | セッションID
 amount| o | ポイント消費量
 
 ### Example Request
 
-    POST http://coupling.herokuapp.com/api/v1/point/use/#{facebook_id}/
-    session_id:abcd1234
-    amount:300
+    http://pairful.com/api/point/consume/?session_id=abcd1234&amount=300
 
-## POST apns/create
+## GET apns/establish
 
 APNSトークン登録
 
 ### Parameters
 param | require | description
 ------|---------|------
-facebook_id| o | ポイントを付与する対象のFacebookID
+session_id| o | セッションID
 push_token| o | PUSH通知用のトークン
 
 ### Example Request
 
-    POST http://coupling.herokuapp.com/api/v1/push/add/#{facebook_id}/
-    session_id:abcd1234
-    push_token:AbCdEfGhIj1234567890AbCdEfGhIj123
+    http://pairful.com/api/apns/establish?session_id=abcd1234&push_token=AbCdEfGhIj1234567890AbCdEfGhIj123
