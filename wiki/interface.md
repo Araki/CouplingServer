@@ -1,3 +1,21 @@
+# contents
+* GET session/create
+* GET session/verify
+* GET session/destroy
+* GET profile/show
+* POST profile/update
+* POST upload/image_parameter
+* POST upload/image_url
+* GET user/list
+* POST like/add
+* GET like/show
+* POST message/new
+* GET messages
+* GET item/buy
+* GET point/add
+* GET point/consume
+* GET apns/establish
+
 ## GET session/create
 
 初期登録時に叩くAPI。Facebookのアクセストークンを投げると、セッションIDを生成して返す。
