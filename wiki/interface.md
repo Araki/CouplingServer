@@ -10,7 +10,7 @@ param | require | description
 ------|---------|------
 access_token | o | Connectで得られたそのユーザーのFacebookのアクセストークン
 
-### Response Sample
+### Example Response
 
     {"status":"ok","session":"lhzB_XmdfmEP","user":{"id":2,"facebook_id":1319832574,"profile_status":null,"email":null,"certification":null,"certification_status":null,"public_status":null,"first_login_at":null,"last_login_at":null,"invitation_code":null,"contract_type":null,"like_point":null,"point":null,"nickname":null,"introduction":null,"gender":null,"age":null,"country":null,"language":null,"address":null,"birthplace":null,"roommate":null,"height":null,"proportion":null,"constellation":null,"blood_type":null,"marital_history":null,"marriage_time":null,"want_child":null,"relationship":null,"have_child":null,"smoking":null,"alcohol":null,"industry":null,"job":null,"job_description":null,"workplace":null,"income":null,"qualification":null,"school":null,"holiday":null,"sociability":null,"character":null,"speciality":null,"hobby":null,"dislike":null,"login_token":null,"created_at":"2013-01-07T17:06:13Z","updated_at":"2013-01-07T17:06:13Z"}}
 
@@ -26,7 +26,7 @@ param | require | description
 ------|---------|------
 session_id| o |セッションID
 
-### Response Sample
+### Example Response
 
     {"status":"ok","session":"lhzB_XmdfmEP","user":{"id":2,"facebook_id":1319832574,"profile_status":null,"email":null,"certification":null,"certification_status":null,"public_status":null,"first_login_at":null,"last_login_at":null,"invitation_code":null,"contract_type":null,"like_point":null,"point":null,"nickname":null,"introduction":null,"gender":null,"age":null,"country":null,"language":null,"address":null,"birthplace":null,"roommate":null,"height":null,"proportion":null,"constellation":null,"blood_type":null,"marital_history":null,"marriage_time":null,"want_child":null,"relationship":null,"have_child":null,"smoking":null,"alcohol":null,"industry":null,"job":null,"job_description":null,"workplace":null,"income":null,"qualification":null,"school":null,"holiday":null,"sociability":null,"character":null,"speciality":null,"hobby":null,"dislike":null,"login_token":null,"created_at":"2013-01-07T17:06:13Z","updated_at":"2013-01-07T17:06:13Z"}}
 
@@ -42,7 +42,7 @@ param | require | description
 ------|---------|------
 session_id| o | セッションID
 
-### Response Sample
+### Example Response
 
 #### Success
 
@@ -63,11 +63,11 @@ param | require | description
 session_id| o | セッションID
 user_id| - | ユーザID
 
-### Request Sample
+### Example Request
 
     GET /api/user/profile/show?session_id=abcd1234
 
-### Response Sample
+### Example Response
 
      {"status":"ok","id":2,"facebook_id":1319832574,"profile_status":null,"email":null,"certification":null,"certification_status":null,"public_status":null,"first_login_at":null,"last_login_at":null,"invitation_code":null,"contract_type":null,"like_point":null,"point":null,"nickname":null,"introduction":null,"gender":null,"age":null,"country":null,"language":null,"address":null,"birthplace":null,"roommate":null,"height":null,"proportion":null,"constellation":null,"blood_type":null,"marital_history":null,"marriage_time":null,"want_child":null,"relationship":null,"have_child":null,"smoking":null,"alcohol":null,"industry":null,"job":null,"job_description":null,"workplace":null,"income":null,"qualification":null,"school":null,"holiday":null,"sociability":null,"character":null,"speciality":null,"hobby":null,"dislike":null,"login_token":null,"created_at":"2013-01-07T17:06:13Z","updated_at":"2013-01-07T17:06:13Z"}
 
@@ -83,12 +83,12 @@ param | require | description
 ------|---------|------
 session_id| o | セッションID
 
-### Request Sample
+### Example Request
 
     POST /api/user/profile/edit
     session_id:abcd1234
 
-### Response Sample
+### Example Response
 
 
 ## upload/image_parameter
@@ -103,11 +103,11 @@ param | require | description
 ------|---------|------
 session_id| o | セッションID
 
-### Request Sample
+### Example Request
 
     POST /api/user/upload/image_parameter?session_id=abcd1234
 
-### Response Sample
+### Example Response
 
     {"status":"ok","url":"https://pairful-development.s3.amazonaws.com/","fields":{"AWSAccessKeyId":"AKIAIOQ4BVQW426SIRFA","key":"pairful/image/20130127/2.png","policy":"eyJleHBpcmF0aW9uIjoiMjAxMy0wMS0yN1QwODo0NjoyNFoiLCJjb25kaXRpb25zIjpbeyJidWNrZXQiOiJwYWlyZnVsLWRldmVsb3BtZW50In0seyJrZXkiOiJwYWlyZnVsL2ltYWdlLzIwMTMwMTI3LzIucG5nIn0seyJhY2wiOiIifV19","signature":"1hMMAGXxnSfhZdXNN+scpdkZUvI=","acl":""}}
 
@@ -123,11 +123,11 @@ param | require | description
 ------|---------|------
 session_id| o | セッションID
 
-### Request Sample
+### Example Request
 
     POST /api/user/upload/image_url?session_id=abcd1234
 
-### Response Sample
+### Example Response
 
     {"status":"ok","url":"https://pairful-development.s3.amazonaws.com/pairful/image/20130127/2.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1359276504&Signature=gIHQxBs1ps7rz7ySJhHsk0K%2Bkt8%3D"}
 
@@ -150,11 +150,11 @@ session_id| o | セッションID
 * #{max_id} #{since_id}を指定してリストの読み込み範囲を指定するようにする
 * #{start_index}と#{count}ではリアルタイムな更新があるとどこから読み込めばいいかわからなくなる。
 
-### Request Sample
+### Example Request
 
     GET /api/user/list?session_id=abcd1234&filter_by=liked&filter_value=true&start_index=0&count=5
 
-### Response Sample
+### Example Response
 
     {"status":"ok","user":[]}
 
@@ -168,11 +168,11 @@ param | require | description
 ------|---------|------
 session_id| o | セッションID
 
-### Request Sample
+### Example Request
 
     GET /api/user/like/add?session_id=abcd1234
 
-### Response Sample
+### Example Response
 
 
 ## like/show
@@ -183,11 +183,11 @@ session_id| o | セッションID
 
 * #{session_id} セッションID
 
-### Request Sample
+### Example Request
 
     GET /api/user/like/show?session_id=abcd1234
 
-### Response Sample
+### Example Response
 
     {"status":"ok","like":[]}
 
@@ -201,13 +201,13 @@ session_id| o | セッションID
 * #{session_id} セッションID
 * #{message} メッセージの内容
 
-### Request Sample
+### Example Request
 
     POST /api/v1/user/talk/123456789
     session_id:abcd1234
     message:こんにちは
 
-### Response Sample
+### Example Response
 
     202 Accepted
 
@@ -222,11 +222,11 @@ session_id| o | セッションID
 * #{facebook_id} メッセージ相手のFacebookID
 * #{session_id} セッションID
 
-### Request Sample
+### Example Request
 
     GET /api/v1/user/talk/987654321?session_id=abcd1234
 
-### Response Sample
+### Example Response
 
     200 OK
     {
@@ -254,7 +254,7 @@ session_id| o | セッションID
 * #{amount} 購入数
 * #{transaction_id} トランザクションID
 
-### Request Sample
+### Example Request
 
     POST /api/v1/iap/pay/@me/
 	session_id:abcd1234
@@ -262,7 +262,7 @@ session_id| o | セッションID
 	amount:1
 	transaction_id:xxxxxxxxxxxxxxxxxxxxxx
 
-### Response Sample
+### Example Response
 
     202 Accepted
 
@@ -276,13 +276,13 @@ session_id| o | セッションID
 * #{session_id} セッションID
 * #{amount} ポイント付与量
 
-### Request Sample
+### Example Request
 
     POST /api/v1/point/add/123456789/
     session_id:abcd1234
     amount:300
 
-### Response Sample
+### Example Response
 
     202 Accepted
 
@@ -296,13 +296,13 @@ session_id| o | セッションID
 * #{session_id} セッションID
 * #{amount} ポイント消費量
 
-### Request Sample
+### Example Request
 
     POST /api/v1/point/add/@me/
     session_id:abcd1234
     amount:300
 
-### Response Sample
+### Example Response
 
     202 Accepted
 
@@ -315,12 +315,12 @@ session_id| o | セッションID
 * #{facebook_id} ポイントを付与する対象のFacebookID
 * #{push_token} PUSH通知用のトークン
 
-### Request Sample
+### Example Request
 
     POST /api/v1/point/add/123456789/
     session_id:abcd1234
     push_token:AbCdEfGhIj1234567890AbCdEfGhIj123
 
-### Response Sample
+### Example Response
 
     202 Accepted
