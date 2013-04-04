@@ -1,22 +1,31 @@
 # contents
-* GET session/create
-* GET session/verify
-* GET session/destroy
-* GET profile/show
-* POST profile/update
-* POST upload/image_parameter
-* POST upload/image_url
-* GET user/list
-* POST like/add
-* GET like/show
-* POST message/new
-* GET messages
-* GET item/buy
-* GET point/add
-* GET point/consume
-* GET apns/establish
+* POST sessions#create
+* GET  sessions#verify
+* POST sessions#destroy
+* GET  account#show_profile
+* POST account#update_profile
+* POST account#destroy
+* GET  users#list
+* GET  users#show
+* GET  images#list
+* POST images#create
+* POST images#destroy
+* POST images#set_main
+* GET  likes#list
+* GET  matches#list
+* POST likes#create
+* GET  favorites#list
+* POST favorites#create
+* POST favorites#destroy
+* GET  messages#list
+* POST messages#create
+* GET  items#list
+* POST items#purchase
+* POST points#add
+* POST points#consume
 
-## GET session/create
+
+## POST sessions#create
 
 初期登録時に叩くAPI。Facebookのアクセストークンを投げると、セッションIDを生成して返す。
 
@@ -28,12 +37,13 @@ fb_token | o | Facebookのアクセストークン
 
 ### Example Request
 
-    http://pairful.com/api/user/session/create?fb_token=1234
-***
+    http://pairful.com/api/sessions/create
 
-    {"status":"ok","session":"lhzB_XmdfmEP","user":{"id":2,"facebook_id":1319832574,"profile_status":null,"email":null,"certification":null,"certification_status":null,"public_status":null,"first_login_at":null,"last_login_at":null,"invitation_code":null,"contract_type":null,"like_point":null,"point":null,"nickname":null,"introduction":null,"gender":null,"age":null,"country":null,"language":null,"address":null,"birthplace":null,"roommate":null,"height":null,"proportion":null,"constellation":null,"blood_type":null,"marital_history":null,"marriage_time":null,"want_child":null,"relationship":null,"have_child":null,"smoking":null,"alcohol":null,"industry":null,"job":null,"job_description":null,"workplace":null,"income":null,"qualification":null,"school":null,"holiday":null,"sociability":null,"character":null,"speciality":null,"hobby":null,"dislike":null,"login_token":null,"created_at":"2013-01-07T17:06:13Z","updated_at":"2013-01-07T17:06:13Z"}}
+### Example Response
 
-## GET session/verify
+    {単独ユーザーのレスポンス例(後述)}
+
+## GET sessions#verify
 
 session_idが有効な場合、trueを、無効な場合、falseを返す。
 
@@ -45,12 +55,12 @@ session_id| o |セッションID
 
 ### Example Request
 
-    http://pairful.com/api/user/session/verify?session_id=1234
-***
+    http://pairful.com/api/sessions/verify?session_id=abc
+### Example Response
 
-    {"status":"ok","session":"lhzB_XmdfmEP","user":{"id":2,"facebook_id":1319832574,"profile_status":null,"email":null,"certification":null,"certification_status":null,"public_status":null,"first_login_at":null,"last_login_at":null,"invitation_code":null,"contract_type":null,"like_point":null,"point":null,"nickname":null,"introduction":null,"gender":null,"age":null,"country":null,"language":null,"address":null,"birthplace":null,"roommate":null,"height":null,"proportion":null,"constellation":null,"blood_type":null,"marital_history":null,"marriage_time":null,"want_child":null,"relationship":null,"have_child":null,"smoking":null,"alcohol":null,"industry":null,"job":null,"job_description":null,"workplace":null,"income":null,"qualification":null,"school":null,"holiday":null,"sociability":null,"character":null,"speciality":null,"hobby":null,"dislike":null,"login_token":null,"created_at":"2013-01-07T17:06:13Z","updated_at":"2013-01-07T17:06:13Z"}}
+    {単独ユーザーのレスポンス例(後述)}
 
-## GET session/destroy
+## POST sessions#destroy
 
 セッションIDを無効にする。
 
@@ -62,30 +72,49 @@ session_id| o | セッションID
 
 ### Example Request
 
-    http://pairful.com/api/user/session/destroy?session_id=1234
-***
+    http://pairful.com/api/sessions/destroy
+
+### Example Response
 
     {"status":"ok"}
 
-## GET profile/show
+## GET account#show_profile
 
-user_idを指定するとそのユーザのプロフィールを返す。user_idを指定しなければセッションのユーザのプロフィールを返す。
+セッションのユーザのプロフィールを返す。
 
 ### Parameters
 
 param | require | description
 ------|---------|------
 session_id| o | セッションID
-user_id| - | ユーザID
 
 ### Example Request
 
-    http://pairful.com/api/user/profile/show?session_id=abcd1234
-***
+    http://pairful.com/api/account/show_profile?session_id=abc
 
-     {"status":"ok","id":2,"facebook_id":1319832574,"profile_status":null,"email":null,"certification":null,"certification_status":null,"public_status":null,"first_login_at":null,"last_login_at":null,"invitation_code":null,"contract_type":null,"like_point":null,"point":null,"nickname":null,"introduction":null,"gender":null,"age":null,"country":null,"language":null,"address":null,"birthplace":null,"roommate":null,"height":null,"proportion":null,"constellation":null,"blood_type":null,"marital_history":null,"marriage_time":null,"want_child":null,"relationship":null,"have_child":null,"smoking":null,"alcohol":null,"industry":null,"job":null,"job_description":null,"workplace":null,"income":null,"qualification":null,"school":null,"holiday":null,"sociability":null,"character":null,"speciality":null,"hobby":null,"dislike":null,"login_token":null,"created_at":"2013-01-07T17:06:13Z","updated_at":"2013-01-07T17:06:13Z"}
+### Example Response
 
-## POST profile/update
+    {単独ユーザーのレスポンス例(後述)}
+
+## POST user/account#destroy
+
+退会する。
+
+### Parameters
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+
+### Example Request
+
+    http://pairful.com/api/account/destroy
+
+### Example Response
+ 
+    {"status":"ok"}
+
+## POST account#update_profile
 
 自分のプロフィールを更新する。
 
@@ -94,57 +123,32 @@ user_id| - | ユーザID
 param | require | description
 ------|---------|------
 session_id| o | セッションID
+user[xxx]| o | 更新するユーザーのパラメータ
+
+    {nickname: 'maru', height: 200} # => x
+    {user[nickname]: 'maru', user[height]: 200} # => o Railsによるバリデーションのため
 
 ### Example Request
 
-    http://pairful.com/api/profile/update
-    session_id:abcd1234
+    http://pairful.com/api/account/update_profile
 
-## POST upload/image_parameter
+### Example Response
+ 
+    {単独ユーザーのレスポンス例(後述)}
 
-画像アップロードするためののurlとパラメータを得る。
+## GET  users#list
+
+異性のリストを最新登録順に返す。
 
 ### Parameters
 
 param | require | description
 ------|---------|------
 session_id| o | セッションID
-
-### Example Request
-
-    http://pairful.com/api/user/upload/image_parameter?session_id=abcd1234
-***
-
-    {"status":"ok","url":"https://pairful-development.s3.amazonaws.com/","fields":{"AWSAccessKeyId":"AKIAIOQ4BVQW426SIRFA","key":"pairful/image/20130127/2.png","policy":"eyJleHBpcmF0aW9uIjoiMjAxMy0wMS0yN1QwODo0NjoyNFoiLCJjb25kaXRpb25zIjpbeyJidWNrZXQiOiJwYWlyZnVsLWRldmVsb3BtZW50In0seyJrZXkiOiJwYWlyZnVsL2ltYWdlLzIwMTMwMTI3LzIucG5nIn0seyJhY2wiOiIifV19","signature":"1hMMAGXxnSfhZdXNN+scpdkZUvI=","acl":""}}
-
-## POST upload/image_url
-
-画像ダウンロードするためのurlを得る。
-
-### Parameters
-
-param | require | description
-------|---------|------
-session_id| o | セッションID
-
-### Example Request
-
-    http://pairful.com/api/user/upload/image_url?session_id=abcd1234
-***
-
-    {"status":"ok","url":"https://pairful-development.s3.amazonaws.com/pairful/image/20130127/2.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1359276504&Signature=gIHQxBs1ps7rz7ySJhHsk0K%2Bkt8%3D"}
-
-## GET user/list
-
-### Parameters
-
-param | require | description
-------|---------|------
-session_id| o | セッションID
-filter_key| - | フィルターをかける条件のキーを指定する liked
-filter_value| - | フィルターをかける条件の値を指定する true
-start_index| - | 取得するデータのオフセット値　デフォルトは0
-count| - | 取得する最大件数 デフォルトは50件  
+filter_key| - | フィルターをかける条件のキーを指定する liked(未実装)
+filter_value| - | フィルターをかける条件の値を指定する true(未実装)
+page| - | 取得するデータのオフセット値　デフォルトは1
+per| - | 取得する最大件数 デフォルトは25件  
 
 ### 仕様の変更を検討（天野：2012年10月20日）
 * https://dev.twitter.com/docs/api/1.1/get/statuses/home_timeline
@@ -153,12 +157,51 @@ count| - | 取得する最大件数 デフォルトは50件
 
 ### Example Request
 
-    http://pairful.com/api/user/list?session_id=abcd1234&filter_by=liked&filter_value=true&start_index=0&count=5
-***
+    http://pairful.com/api/users/list?session_id=abc  
 
-    {"status":"ok","user":[]}
+### Example Response
 
-## POST like/add
+    {後述:ユーザーリストのレスポンス例}
+
+## GET users#show
+
+特定のユーザーのプロフィールの詳細を取得
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+
+### Example Request
+
+    http://pairful.com/api/users/(:id)/show?session_id=abc 
+
+### Example Response
+
+    {単独ユーザーのレスポンス例(後述)}
+
+## GET images#list
+
+メイン画像の一覧を取得
+
+### Parameters
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+page| - | 取得するデータのオフセット値　デフォルトは1
+per| - | 取得する最大件数 デフォルトは25件  
+
+### Example Request
+
+    http://pairful.com/api/images/list?session_id=abc 
+
+### Example Response
+
+    {"status":"ok","images":[{"created_at":"2013-04-04T08:24:11Z","id":361,"is_main":true,"order_number":0,"user_id":702,"url":"https://pairful-development.s3.amazonaws.com/pairful/image/20130404/361.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365078609&Signature=8f1aqjMVrdp0Qh5VWxn3waMyz8I%3D"},{"created_at":"2013-04-04T08:24:11Z","id":351,"is_main":true,"order_number":0,"user_id":701,"url":"https://pairful-development.s3.amazonaws.com/pairful/image/20130404/351.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365078609&Signature=TVKkMAgfo%2Bu6LTTxVbNfFEG3uuI%3D"}],"current_page":1,"last_page":false}
+
+## POST images#create
+
+Imageを作成しアップロードするためののurlとパラメータを得る。
 
 ### Parameters
 
@@ -168,25 +211,193 @@ session_id| o | セッションID
 
 ### Example Request
 
-    http://pairful.com/api/user/like/add?session_id=abcd1234
-***
+    http://pairful.com/api/images/create 
 
-## GET like/show
+### Example Response
+
+    {"status":"ok","url":"https://pairful-development.s3.amazonaws.com/","fields":{"AWSAccessKeyId":"AKIAIOQ4BVQW426SIRFA","key":"pairful/image/20130404/211.png","policy":"eyJleHBpcmF0aW9uIjoiMjAxMy0wNC0wNFQxMzo1NDoyNFoiLCJjb25kaXRpb25zIjpbeyJidWNrZXQiOiJwYWlyZnVsLWRldmVsb3BtZW50In0seyJrZXkiOiJwYWlyZnVsL2ltYWdlLzIwMTMwNDA0LzIxMS5wbmcifSx7ImFjbCI6IiJ9XX0=","signature":"uEPmU6R3fJvv5gQQUt9gImZTE+s=","acl":""}}
+
+## POST images#destroy
+
+画像を削除する
 
 ### Parameters
 
 param | require | description
 ------|---------|------
 session_id| o | セッションID
+id| o | 画像ID
 
 ### Example Request
 
-    http://pairful.com/api/user/like/show?session_id=abcd1234
-***
+    http://pairful.com/api/images/(:id)/destroy 
 
-    {"status":"ok","like":[]}
+### Example Response
+    {"status":"ok"}
+    {"status":"ng", "code":"permission_denied"}
 
-## POST message/new
+## POST images#set_main
+
+画像をメインにする
+
+### Parameters
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+id| o | 画像ID
+
+### Example Request
+
+    http://pairful.com/api/images/(:id)/set_main
+
+### Example Response
+
+    {"status":"ok"}
+    {"status":"ng", "code":"permission_denied"}
+    {"status":"ng", "code":"not_found"}
+
+## GET likes#list
+
+「いいね」をした(された)ユーザーのリストを取得。
+
+### Parameters
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+page| - | 取得するデータのオフセット値　デフォルトは1
+per| - | 取得する最大件数 デフォルトは25件
+type| - | 'liked'(いいねをしてくれたユーザー)
+
+### Example Request
+
+    http://pairful.com/api/likes/list?session_id=abc 
+    http://pairful.com/api/likes/list?session_id=abc&type=liked
+
+### Example Response
+
+    {後述:ユーザーリストのレスポンス例}
+
+## GET matches#list
+
+マッチングしたユーザーのリストを取得。
+
+### Parameters
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+page| - | 取得するデータのオフセット値　デフォルトは1
+per| - | 取得する最大件数 デフォルトは25件  
+
+### Example Request
+
+    http://pairful.com/api/matches/list?session_id=abc 
+
+### Example Response
+
+    {後述:ユーザーリストのレスポンス例}
+
+## POST likes#create
+
+特定のユーザーに「いいね」をする。
+
+### Parameters
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+target_id| o | 相手のユーザーID
+
+### Example Request
+
+    http://pairful.com/api/likes/create
+
+### Example Response
+
+    {"status":"ok"}
+
+## GET favorites#list
+
+「お気に入り」のユーザーのリストを取得。
+
+### Parameters
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+page| - | 取得するデータのオフセット値　デフォルトは1
+per| - | 取得する最大件数 デフォルトは25件  
+
+### Example Request
+
+    http://pairful.com/api/favorites/list?session_id=abc 
+
+### Example Response
+
+    {後述:ユーザーリストのレスポンス例}
+
+## POST favorites#create
+
+特定のユーザーを「お気に入り」にする。
+
+### Parameters
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+target_id| o | 相手のユーザーID
+
+### Example Request
+
+    http://pairful.com/api/favorites/create
+
+### Example Response
+
+    {"status":"ok"}
+
+## POST favorites#destroy
+
+「お気に入り」を解除する。
+
+### Parameters
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+target_id| o | 相手のユーザーID
+
+### Example Request
+
+    http://pairful.com/api/favorites/destroy
+
+### Example Response
+
+    {"status":"ok"}
+
+## GET messages#list
+
+特定のユーザーとのトークのリストを取得。
+
+### Parameters
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+target_id| o | 相手のユーザーID
+page| - | 取得するデータのオフセット値　デフォルトは1
+per| - | 取得する最大件数 デフォルトは25件  
+
+### Example Request
+
+    http://pairful.com/api/messages/list?session_id=abc&target_id=2
+
+### Example Response
+
+    {"status":"ok","messages":[{"body":"Qui adipisci dolorum architecto tenetur voluptatibus voluptatem molestias dolorem sunt sequi at.","created_at":"2013-04-04T14:35:05Z","id":4,"match_id":12,"talk_key":"1_2","updated_at":"2013-04-04T14:35:05Z","match":{"can_open_profile":false,"created_at":"2013-04-04T14:35:05Z","id":12,"messages_count":13,"target_id":1,"updated_at":"2013-04-04T14:35:05Z","user_id":2}},{"body":"Sed et omnis quo et aut error in perspiciatis ipsum et.","created_at":"2013-04-04T14:35:05Z","id":5,"match_id":11,"talk_key":"1_2","updated_at":"2013-04-04T14:35:05Z","match":{"can_open_profile":false,"created_at":"2013-04-04T14:35:05Z","id":11,"messages_count":7,"target_id":2,"updated_at":"2013-04-04T14:35:05Z","user_id":1}}],"current_page":1,"last_page":true}
+
+## POST messages#create
 
 特定のユーザーにメッセージを送る
 
@@ -195,43 +406,29 @@ session_id| o | セッションID
 param | require | description
 ------|---------|------
 session_id| o | セッションID
-user_id| o | 相手ユーザのID
-message| o | メッセージの内容
+target_id| o | 相手のユーザーID
+body| o | メッセージの内容
 
 ### Example Request
 
-    http://pairful.com/api/message/new
+    http://pairful.com/api/messages/create
 
-## GET messages
+### Example Response
 
-ユーザと特定ユーザとの間の最近の最大20メッセージを返す。
+    {"status":"ok"}
 
-### Parameters
+## GET items#list
 
-param | require | description
-------|---------|------
-session_id| o | セッションID
-user_id| o | 相手ユーザのID
+購入可能なアイテムのリスト
 
-### Example Request
+    http://pairful.com/api/items/list?session_id=abc
 
-    http://pairful.com/api/message/new?session_id=abcd1234
-***
+### Example Response
 
-    {
-        'talk-2':
-        {
-            'facebook_id':12345678,
-            'message':'こんにちは'
-        },
-        'talk-1':
-        {
-            'facebook_id':987654321,
-            'message':'はじめまして'
-        }
-    }
+    {未}
 
-## GET item/buy
+
+## POST items#purchase
 
 In App Purchace購入操作
 
@@ -239,15 +436,36 @@ In App Purchace購入操作
 
 param | require | description
 ------|---------|------
-facebook_id| o | 購入するユーザーのFacebookID。
 session_id| o | セッションID
 item_id| o | 購入するアイテムID
 
 ### Example Request
 
-    http://pairful.com/api/item/buy?session_id=abcd1234&item_id=3
+    http://pairful.com/api/items/purchase
 
-## GET point/add
+### Example Response
+
+    {未}
+
+## GET receipts#list
+
+In App Purchaceの購入履歴
+
+### Paremeters
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+
+### Example Request
+
+    http://pairful.com/api/receipts/list?session_id=abc
+
+### Example Response
+
+    {未}
+
+## POST points#add
 
 ポイント付与
 
@@ -260,9 +478,13 @@ amount| o | ポイント付与量
 
 ### Example Request
 
-    http://pairful.com/api/point/add?session_id=abcd1234&amount=300
+    http://pairful.com/api/points/add
 
-## GET point/consume
+### Example Response
+    
+    {"status":"ok","point":178}
+
+## POST points#consume
 
 ポイントを使う
 
@@ -275,9 +497,13 @@ amount| o | ポイント消費量
 
 ### Example Request
 
-    http://pairful.com/api/point/consume/?session_id=abcd1234&amount=300
+    http://pairful.com/api/points/consume
 
-## GET apns/establish
+### Example Response
+
+    {"status":"ok","point":158}
+
+## POST apns/establish
 
 APNSトークン登録
 
@@ -289,4 +515,231 @@ push_token| o | PUSH通知用のトークン
 
 ### Example Request
 
-    http://pairful.com/api/apns/establish?session_id=abcd1234&push_token=AbCdEfGhIj1234567890AbCdEfGhIj123
+    http://pairful.com/api/apns/establish
+
+### Example Response
+
+    {未}
+
+## POST apns/dissolve
+
+APNSトークン解除
+
+### Parameters
+param | require | description
+------|---------|------
+session_id| o | セッションID
+push_token| o | PUSH通知用のトークン
+
+### Example Request
+
+    http://pairful.com/api/apns/dissolve
+
+### Example Response
+
+    {未}
+
+
+## 単独ユーザーのレスポンス例
+
+    {
+        "session": "abc", 
+        "status": "ok", 
+        "user": {
+            "address": "Kory", 
+            "age": 24, 
+            "alcohol": 2, 
+            "birthplace": "0", 
+            "blood_type": "AB", 
+            "certification": "???", 
+            "certification_status": "???", 
+            "character": null, 
+            "constellation": 0, 
+            "contract_type": "???", 
+            "country": "Japan", 
+            "created_at": "2013-04-04T08:24:09Z", 
+            "dislike": "goki", 
+            "first_login_at": "2012-09-04T08:24:09Z", 
+            "gender": 0, 
+            "have_child": 0, 
+            "height": 166, 
+            "hobby": null, 
+            "holiday": 1, 
+            "id": 1, 
+            "images": [
+                {
+                    "created_at": "2013-04-04T08:24:09Z", 
+                    "id": 211, 
+                    "is_main": true, 
+                    "order_number": 0, 
+                    "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/211.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365078115&Signature=5jD3KVnyHQBB3TrPtmbv%2BBnEuWQ%3D", 
+                    "user_id": 1
+                }, 
+                {
+                    "created_at": "2013-04-04T08:24:09Z", 
+                    "id": 212, 
+                    "is_main": false, 
+                    "order_number": 1, 
+                    "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/212.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365078115&Signature=%2BZi5oe%2BmlWwfzkO6Zr0oipLf1oQ%3D", 
+                    "user_id": 1
+                }, 
+                {
+                    "created_at": "2013-04-04T08:24:09Z", 
+                    "id": 213, 
+                    "is_main": false, 
+                    "order_number": 2, 
+                    "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/213.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365078115&Signature=s2S%2Bb0BMK7FuyWRdqlvzeu8TXnk%3D", 
+                    "user_id": 1
+                }, 
+                {
+                    "created_at": "2013-04-04T08:24:09Z", 
+                    "id": 214, 
+                    "is_main": false, 
+                    "order_number": 3, 
+                    "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/214.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365078115&Signature=EsP4rV7G0Ty9nk7SVfQL3nnvsFc%3D", 
+                    "user_id": 1
+                }, 
+                {
+                    "created_at": "2013-04-04T08:24:09Z", 
+                    "id": 215, 
+                    "is_main": false, 
+                    "order_number": 4, 
+                    "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/215.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365078115&Signature=msxhFVo%2Bbkokfn088SQofJVk1%2BY%3D", 
+                    "user_id": 1
+                }
+            ], 
+            "income": 4, 
+            "industry": 0, 
+            "introduction": "Aut rerum eum qui fugit harum sequi velit totam quis exercitationem veniam sed accusantium.", 
+            "invitation_code": "", 
+            "job": 19, 
+            "job_description": "公務員", 
+            "language": "Japanese", 
+            "last_login_at": "2013-03-24T08:24:09Z", 
+            "like_point": 0, 
+            "login_token": "abcdefg1234567", 
+            "marital_history": 0, 
+            "marriage_time": 0, 
+            "nickname": "taro", 
+            "prefecture": 39, 
+            "profile_status": "???", 
+            "proportion": 1, 
+            "public_status": "???", 
+            "qualification": "普通自動車免許", 
+            "relationship": 0, 
+            "roommate": "???", 
+            "school": null, 
+            "school_name": "辻調理師専門学校", 
+            "smoking": 0, 
+            "sociability": "???", 
+            "speciality": null, 
+            "updated_at": "2013-04-04T08:24:09Z", 
+            "want_child": 0, 
+            "workplace": "渋谷区"
+        }
+    }
+
+
+## ユーザーリストのレスポンス例
+
+    {
+        "current_page": 1, 
+        "users": [
+            {
+                "address": "Pearline", 
+                "age": 34, 
+                "alcohol": 3, 
+                "birthplace": "22", 
+                "blood_type": "O", 
+                "certification": "???", 
+                "certification_status": "???", 
+                "character": null, 
+                "constellation": 0, 
+                "contract_type": "???", 
+                "country": "Japan", 
+                "created_at": "2013-04-04T07:49:58Z", 
+                "dislike": "goki", 
+                "first_login_at": "2012-10-04T07:49:58Z", 
+                "gender": 1, 
+                "have_child": 0, 
+                "height": 181, 
+                "hobby": null, 
+                "holiday": 3, 
+                "id": 565, 
+                "images": [
+                    {
+                        "created_at": "2013-04-04T07:49:59Z", 
+                        "id": 206, 
+                        "is_main": true, 
+                        "order_number": 0, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/206.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365062978&Signature=ErlR03bPUgb4avR%2BKPtB9fu8dR8%3D", 
+                        "user_id": 565
+                    }, 
+                    {
+                        "created_at": "2013-04-04T07:49:59Z", 
+                        "id": 207, 
+                        "is_main": false, 
+                        "order_number": 1, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/207.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365062978&Signature=U12l1YZhzPgJTk8MfIYsf9lbwqc%3D", 
+                        "user_id": 565
+                    }, 
+                    {
+                        "created_at": "2013-04-04T07:49:59Z", 
+                        "id": 208, 
+                        "is_main": false, 
+                        "order_number": 2, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/208.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365062978&Signature=%2FNeqzd7t5MC%2FwL8%2FMCg4WDRshZ4%3D", 
+                        "user_id": 565
+                    }, 
+                    {
+                        "created_at": "2013-04-04T07:49:59Z", 
+                        "id": 209, 
+                        "is_main": false, 
+                        "order_number": 3, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/209.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365062978&Signature=i0BwMVxtAYv0sJeMRE7xj%2FGXfhQ%3D", 
+                        "user_id": 565
+                    }, 
+                    {
+                        "created_at": "2013-04-04T07:49:59Z", 
+                        "id": 210, 
+                        "is_main": false, 
+                        "order_number": 4, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/210.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365062978&Signature=D16pLPyxmLl5Xh8rb1OwAP%2Bk67U%3D", 
+                        "user_id": 565
+                    }
+                ], 
+                "income": 3, 
+                "industry": 0, 
+                "introduction": "Eum eos assumenda vitae nobis eligendi maxime numquam animi quae qui aliquam hic commodi.", 
+                "invitation_code": "", 
+                "job": 25, 
+                "job_description": "クリエイター ", 
+                "language": "Japanese", 
+                "last_login_at": "2013-03-26T07:49:58Z", 
+                "like_point": 0, 
+                "login_token": "db9qa63nld", 
+                "marital_history": 0, 
+                "marriage_time": 0, 
+                "nickname": "Darron", 
+                "prefecture": 38, 
+                "profile_status": "???", 
+                "proportion": 1, 
+                "public_status": "???", 
+                "qualification": "普通自動車免許", 
+                "relationship": 0, 
+                "roommate": "???", 
+                "school": null, 
+                "school_name": "辻調理師専門学校", 
+                "smoking": 0, 
+                "sociability": "???", 
+                "speciality": null, 
+                "updated_at": "2013-04-04T07:49:58Z", 
+                "want_child": 0, 
+                "workplace": "渋谷区"
+            }
+        ], 
+        "last_page": true, 
+        "status": "ok"
+    }
+
+

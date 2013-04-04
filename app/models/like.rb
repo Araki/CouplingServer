@@ -1,13 +1,6 @@
 class Like < ActiveRecord::Base
-  attr_accessible :target_id, :user_id
+  belongs_to :user, :dependent => :destroy
+  belongs_to :target_user, :class_name => "User", :foreign_key => "target_id", :dependent => :destroy
 
-  def to_hash
-    {
-      :id => self.id,
-      :user_id => self.user_id,
-      :target_id => self.target_id,
-      :created_at => self.created_at,
-      :updated_at => self.updated_at
-    }
-  end
+  # validates :user_id, :uniqueness => {:scope => :target_id }
 end
