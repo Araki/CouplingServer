@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130127101744) do
+ActiveRecord::Schema.define(:version => 20130401094857) do
 
   create_table "apn_devices", :force => true do |t|
     t.string   "token",              :default => "", :null => false
@@ -38,26 +38,55 @@ ActiveRecord::Schema.define(:version => 20130127101744) do
   add_index "apn_notifications", ["device_id"], :name => "index_apn_notifications_on_device_id"
 
   create_table "favorites", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "target_id"
+    t.integer  "user_id",    :null => false
+    t.integer  "target_id",  :null => false
     t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
   end
+
+  add_index "favorites", ["target_id"], :name => "index_favorites_on_target_id"
+  add_index "favorites", ["user_id"], :name => "index_favorites_on_user_id"
 
   create_table "images", :force => true do |t|
-    t.integer "user_id",      :null => false
-    t.string  "type",         :null => false
-    t.integer "order_number", :null => false
+    t.integer  "user_id",      :null => false
+    t.boolean  "is_main",      :null => false
+    t.integer  "order_number", :null => false
+    t.datetime "created_at",   :null => false
   end
 
-  add_index "images", ["user_id", "type", "order_number"], :name => "index_images_on_user_id_and_type_and_order_number", :unique => true
+  add_index "images", ["user_id", "is_main"], :name => "index_images_on_user_id_and_is_main"
+  add_index "images", ["user_id", "order_number"], :name => "index_images_on_user_id_and_order_number"
 
   create_table "likes", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "target_id"
+    t.integer  "user_id",    :null => false
+    t.integer  "target_id",  :null => false
     t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
   end
+
+  add_index "likes", ["target_id"], :name => "index_likes_on_target_id"
+  add_index "likes", ["user_id", "target_id"], :name => "index_likes_on_user_id_and_target_id", :unique => true
+  add_index "likes", ["user_id"], :name => "index_likes_on_user_id"
+
+  create_table "matches", :force => true do |t|
+    t.integer  "user_id",                             :null => false
+    t.integer  "target_id",                           :null => false
+    t.integer  "messages_count",   :default => 0
+    t.boolean  "can_open_profile", :default => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+  end
+
+  add_index "matches", ["user_id", "target_id"], :name => "index_matches_on_user_id_and_target_id", :unique => true
+  add_index "matches", ["user_id"], :name => "index_matches_on_user_id"
+
+  create_table "messages", :force => true do |t|
+    t.string   "body"
+    t.integer  "match_id",   :null => false
+    t.string   "talk_key",   :null => false
+    t.datetime "created_at", :null => false
+  end
+
+  add_index "messages", ["match_id"], :name => "index_messages_on_match_id"
+  add_index "messages", ["talk_key"], :name => "index_messages_on_talk_key"
 
   create_table "mst_prefectures", :force => true do |t|
     t.string   "name"
@@ -65,20 +94,13 @@ ActiveRecord::Schema.define(:version => 20130127101744) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "pictures", :force => true do |t|
-    t.integer  "user_id",                       :null => false
-    t.string   "name",                          :null => false
-    t.boolean  "is_main",    :default => false
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+  create_table "sessions", :force => true do |t|
+    t.string   "key",        :null => false
+    t.string   "value",      :null => false
+    t.datetime "created_at", :null => false
   end
 
-  create_table "sessions", :force => true do |t|
-    t.string   "key"
-    t.string   "value"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
+  add_index "sessions", ["key"], :name => "index_sessions_on_key"
 
   create_table "users", :force => true do |t|
     t.integer  "facebook_id"
@@ -127,11 +149,11 @@ ActiveRecord::Schema.define(:version => 20130127101744) do
     t.string   "speciality"
     t.string   "hobby"
     t.string   "dislike"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
     t.string   "login_token"
     t.integer  "prefecture"
     t.string   "school_name"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
   end
 
 end

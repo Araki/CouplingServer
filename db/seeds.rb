@@ -1,11 +1,94 @@
 # -*- coding: utf-8 -*-
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+
+require 'factory_girl_rails'
+
+User.delete_all
+Session.delete_all
+Like.delete_all
+Match.delete_all
+Favorite.delete_all
+Message.delete_all
+Image.delete_all
+# Item.delete_all
+MstPrefecture.delete_all
+
+def create_images(user_id)
+  0.upto(4) do |num|
+    is_main = num > 0 ? false : true
+    FactoryGirl.create(:image, {user_id: user_id, order_number: num, is_main: is_main})
+  end
+end
+
+case Rails.env
+when "development"
+  
+  # 主人公:session_id=abc
+  user = FactoryGirl.create(:user, {
+    id: 1,
+    gender: 0, 
+    nickname: 'taro',
+    access_token: 'abcdefg',
+    facebook_id: '1234567',
+    login_token: 'abcdefg1234567'
+    })
+  session = FactoryGirl.create(:session, {
+   value: user.id.to_s,
+   key: 'abc' 
+   })
+  create_images(user.id)
+
+  # お相手:session_id=xyz
+  target_user = FactoryGirl.create(:user, {
+    id: 2,
+    gender: 1, 
+    nickname: 'atsuko',
+    access_token: 'abcdefgxxx',
+    facebook_id: '1234567xxx',
+    login_token: 'abcdefg1234567xxx'
+    })
+  target_user_session = FactoryGirl.create(:session, {
+   value: user.id.to_s,
+   key: 'xyz'
+   })
+  create_images(target_user.id)
+
+  # モブ:男女50人づつ、そのうち20人は画像を準備。
+  boys = FactoryGirl.create_list(:boys, 50, {})
+  boys.sample(20).each do |boy|
+    create_images(boy.id)
+  end
+  girls = FactoryGirl.create_list(:girls, 50, {})
+  girls.sample(20).each do |girl|
+    create_images(girl.id)
+  end
+
+  # 主人公は10人のお気に入りと5人のmatchと10人のlikeと5人のlikedを持つ
+  girls.sample(20).each_with_index do |girl, i|
+    if i < 10
+      user.favorite_users << girl
+    end
+
+    if i < 5
+      user.match_users << girl
+      girl.match_users << user
+    elsif i < 15
+      user.like_users << girl
+    else
+      girl.like_users << user 
+    end    
+  end
+
+  #お相手との間のmatch
+  match = FactoryGirl.create(:match, {user_id: user.id, target_id: target_user.id})
+  target_match = FactoryGirl.create(:match, {user_id: target_user.id, target_id: user.id})
+
+  #20回talkしている
+  20.times do
+    FactoryGirl.create(:message, {talk_key: "#{user.id}_#{target_user.id}", match_id: [match.id, target_match.id].sample})
+  end
+
+when "production"
+end
 
 MstPrefecture.create(name: "北海道")
 MstPrefecture.create(name: "青森県")

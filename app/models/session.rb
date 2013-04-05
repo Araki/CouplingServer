@@ -3,11 +3,10 @@ class Session < ActiveRecord::Base
 
   class << self
     def create_session(user)
-      session = Session.new
-      session.key = SecureRandom.urlsafe_base64(12 * 3 / 4)
-      session.value = user.id
-      session.save!
-      session
+      Session.create!({
+        key: SecureRandom.urlsafe_base64(12 * 3 / 4),
+        value: user.id
+        })
     end
   end
 end
