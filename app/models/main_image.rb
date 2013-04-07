@@ -1,2 +1,0 @@
-class MainImage < Image
-end

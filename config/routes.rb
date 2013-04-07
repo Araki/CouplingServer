@@ -3,92 +3,43 @@ Coupling::Application.routes.draw do
   get "index/top"
   get "index/index"
 
-  # The priority is based upon order of creation:
-  # first created -> highest priority.
-
-  # Sample of regular route:
-  #   match 'products/:id' => 'catalog#view'
-  # Keep in mind you can assign values other than :controller and :action
-
   namespace :api do
 
-    namespace :user do
-      get '/session/create' => 'session#create'
-      get '/session/verify' => 'session#verify'
-      get '/session/destroy' => 'session#destroy'
+    post '/sessions/create' => 'user/sessions#create'
+    get  '/sessions/verify' => 'user/sessions#verify'
+    post '/sessions/destroy' => 'user/sessions#destroy'
 
-      get '/profile/show' => 'profile#show'
-      post '/profile/edit' => 'profile#edit'
+    get  '/account/show_profile' => 'user/account#show_profile'
+    post '/account/update_profile' => 'user/account#update_profile'
+    post '/account/destroy' => 'user/account#destroy'
 
-      get '/upload/image_parameter' => 'upload#image_parameter'
-      get '/upload/image_url' => 'upload#image_url'
+    get  '/users/list' => 'user/users#list'
+    get  '/users/:id/show' => 'user/users#show'
 
-      get '/list' => 'user#list'
+    get  '/images/list' => 'images#list'
+    post '/images/create' => 'images#create'
+    post '/images/:id/destroy' => 'images#destroy'
+    post '/images/:id/set_main' => 'images#set_main'
 
-      get '/like/show' => 'like#show'
-      post '/like/add' => 'like#add'
+    get  '/likes/list' => 'likes#list'
+    post '/likes/create' => 'likes#create'
+    
+    get  '/favorites/list' => 'favorites#list'
+    post '/favorites/create' => 'favorites#create'
+    post '/favorites/destroy' => 'favorites#destroy', :as => 'favorites_destroy'
 
-      get '/favorite/show' => 'favorite#show'
-      post '/favorite/add' => 'favorite#add'
+    get  '/items/list' => 'items#list'
+    post '/items/purchase' => 'items#purchase'
 
-      match '/iap/pay' => 'iap#pay'
-      match '/iap/history' => 'iap#history'
+    post '/points/add' => 'points#add'
+    post '/points/consume' => 'points#consume'
 
-      match '/point/add' => 'point#add'
-      match '/point/info' => 'point#info'
-      match '/point/use' => 'point#use'
+    get  '/matches/list' => 'matches#list'
 
-      match '/push/add' => 'push#add'
-    end
+    get  '/messages/list' => 'messages#list'
+    post '/messages/create' => 'messages#create'
+
   end
 
-  # Sample of named route:
-  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
-  # This route can be invoked with purchase_url(:id => product.id)
-
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Sample resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Sample resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Sample resource route with more complex sub-resources
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', :on => :collection
-  #     end
-  #   end
-
-  # Sample resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
-
-  # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
   root :to => 'index#index'
-
-  # See how all your routes lay out with "rake routes"
-
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id))(.:format)'
 end

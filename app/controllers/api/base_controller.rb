@@ -1,4 +1,6 @@
 class Api::BaseController < ApplicationController
+  before_filter :verify_session
+
   protected
   def render_ok(entities = {})
     content = {status: 'ok'}
@@ -12,7 +14,30 @@ class Api::BaseController < ApplicationController
     render json: ret
   end
 
+  def render_pagenate_data(key, data, format)
+    render json: {
+      :status => 'ok',
+      key => data.as_json(format),
+      :current_page => data.current_page,
+      :last_page => data.last_page?
+    }    
+  end
+
+  def render_users_list(data)
+    render_pagenate_data(:users, data, {:except => [:email, :facebook_id, :access_token, :point]})
+  end
+
   def render_not_found
     render_ng('not_found')
+  end
+
+  def verify_session
+    @session = Session.find_by_key(params[:session_id])
+    render_ng('invalid_session') and return if @session.nil?    
+    @user = ::User.find_by_id(@session.value)
+    unless @user
+      @session.destroy
+      render_ng('invalid_session') and return if @user.nil?    
+    end
   end
 end

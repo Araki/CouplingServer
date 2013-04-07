@@ -1,0 +1,76 @@
+# -*r coding: utf-8 -*-
+require 'spec_helper'
+
+describe Api::PointsController do
+  before do
+    @user = FactoryGirl.create(:user, :point => 100)
+    @session = FactoryGirl.create(:session, { value: @user.id.to_s })
+
+    @target_user = FactoryGirl.create(:user, {gender: 1, nickname: 'atsuko'})
+  end
+
+  describe '#add' do
+
+    context '正常な値を送った場合' do
+      before do
+        post :add, {amount: 5, session_id: @session.key}
+      end
+
+      it 'Pointがamount分追加されること' do
+        JSON.parse(response.body)["point"].should == 105
+      end
+    end
+
+    context '不正な値だった場合' do
+      before do
+        user = mock(:user)
+        User.should_receive(:find_by_id).with(@session.value).and_return(user)
+        user.should_receive(:add_point).with(-44).and_return({message: 'invalid_arguments'})
+
+        post :add, {amount: -44, session_id: @session.key}
+      end
+
+      it 'invalid_argumentsが返ること' do
+        JSON.parse(response.body)['code'].should == 'invalid_arguments'
+      end
+    end
+
+  end
+
+  describe '#consume' do
+
+    context '正常な値を送った場合' do
+      before do
+        post :consume, {amount: 5, session_id: @session.key}
+      end
+
+      it 'Pointがamount分引かれること'  do
+        JSON.parse(response.body)["point"].should == 95
+      end
+    end
+
+    context '持ちポイント以上を使おうとした場合' do
+      before do
+        post :consume, {amount: 1000, session_id: @session.key}
+      end
+
+      it 'invalid_argumentsが返ること' do
+        JSON.parse(response.body)['code'].should == 'invalid_arguments'
+      end
+    end
+
+    context '保存に失敗した場合' do
+      before do
+        user = mock(:user)
+        User.should_receive(:find_by_id).with(@session.value).and_return(user)
+        user.should_receive(:consume_point).with(99).and_return({message: 'internal_server_error'})
+
+        post :consume, {amount: 99, session_id: @session.key}
+      end
+
+      it 'internal_server_errorが返ること' do
+        JSON.parse(response.body)['code'].should == 'internal_server_error'
+      end
+    end
+  end
+end
