@@ -107,7 +107,7 @@ describe Api::LikesController do
           user = session_verified_user(@session)
           User.should_receive(:find_by_id).with(@target_user.id.to_s).and_return(@target_user)
           user.should_receive(:gender).and_return(0)
-          user.should_receive(:over_favorite_limit_per_day?).and_return(false)
+          user.should_receive(:over_likes_limit_per_day?).and_return(false)
           user.stub!(:create_like).with(@target_user).and_return({message: "internal_server_error"})          
 
           post :create, {target_id: @target_user.id, session_id: @session.key}
@@ -122,7 +122,7 @@ describe Api::LikesController do
         before do
           user = session_verified_user(@session)
           user.should_receive(:gender).and_return(0)
-          user.should_receive(:over_favorite_limit_per_day?).and_return(true)
+          user.should_receive(:over_likes_limit_per_day?).and_return(true)
  
           post :create, {target_id: @target_user.id, session_id: @session.key}
         end

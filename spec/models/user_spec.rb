@@ -93,23 +93,27 @@ describe User do
     end
   end
 
-  describe "#over_favorite_limit_per_day?" do
+  describe "#over_likes_limit_per_day?" do
     before do
-      FactoryGirl.create_list(:girls, 10)
+      @girls = FactoryGirl.create_list(:girls, 10)
     end
-    subject { @user.over_favorite_limit_per_day? }
+    subject { @user.over_likes_limit_per_day? }
 
-    context '当日のlikeの数が4以下だったら' do
+    context '当日のlikeの数がlikes_limit_per_day以下だったら' do
       before do
-        FactoryGirl.create_list(:favorite_target_girls, 4, {user_id: @user.id})
+        (configatron.likes_limit_per_day - 1).times do |n|
+          FactoryGirl.create(:like_target_girls, {user_id: @user.id, target_id: @girls[n].id})
+        end
       end
 
       it { should be_false }
     end
 
-    context '当日のlikeの数が5以上だったら' do
+    context '当日のlikeの数がlikes_limit_per_day以上だったら' do
       before do
-        FactoryGirl.create_list(:favorite_target_girls, 5, {user_id: @user.id})
+        configatron.likes_limit_per_day.times do |n|
+          FactoryGirl.create(:like_target_girls, {user_id: @user.id, target_id: @girls[n].id})
+        end
       end
 
       it { should be_true }

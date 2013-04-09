@@ -13,7 +13,7 @@ class Api::LikesController < Api::BaseController
 
   def create
     if @user.gender == 0
-      render_ng("over_limit") and return if @user.over_favorite_limit_per_day?
+      render_ng("over_limit") and return if @user.over_likes_limit_per_day?
     end
 
     target_user = User.find_by_id(params[:target_id])

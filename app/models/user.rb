@@ -66,8 +66,8 @@ class User < ActiveRecord::Base
     Match.find_by_user_id_and_target_id(self.id, target.id).present?
   end
 
-  def over_favorite_limit_per_day?
-    self.favorites.where('created_at > ?', Date.today).count > 4
+  def over_likes_limit_per_day?
+    self.likes.where('created_at > ?', Date.today).count > configatron.likes_limit_per_day - 1
   end
 
   # targetに対するLikeを作る
