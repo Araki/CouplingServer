@@ -93,6 +93,29 @@ describe User do
     end
   end
 
+  describe "#over_favorite_limit_per_day?" do
+    before do
+      FactoryGirl.create_list(:girls, 10)
+    end
+    subject { @user.over_favorite_limit_per_day? }
+
+    context '当日のlikeの数が4以下だったら' do
+      before do
+        FactoryGirl.create_list(:favorite_target_girls, 4, {user_id: @user.id})
+      end
+
+      it { should be_false }
+    end
+
+    context '当日のlikeの数が5以上だったら' do
+      before do
+        FactoryGirl.create_list(:favorite_target_girls, 5, {user_id: @user.id})
+      end
+
+      it { should be_true }
+    end
+  end
+
   describe "#create_match" do
     before do
       @target_user.like_users << @user

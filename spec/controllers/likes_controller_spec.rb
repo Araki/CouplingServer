@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Api::LikesController do
   before do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryGirl.create(:user, gender: 0)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
 
     @target_user = FactoryGirl.create(:user, {gender: 1, nickname: 'atsuko'})
@@ -105,6 +105,8 @@ describe Api::LikesController do
           user = mock(:user)
           User.should_receive(:find_by_id).with(@session.value.to_s).and_return(user)
           User.should_receive(:find_by_id).with(@target_user.id.to_s).and_return(@target_user)
+          user.should_receive(:gender).and_return(0)
+          user.should_receive(:over_favorite_limit_per_day?).and_return(false)
           user.stub!(:create_like).with(@target_user).and_return({message: "internal_server_error"})          
 
           post :create, {target_id: @target_user.id, session_id: @session.key}
@@ -112,6 +114,21 @@ describe Api::LikesController do
 
         it 'internal_server_errorが返されること' do
           JSON.parse(response.body)["code"].should == "internal_server_error"
+        end 
+      end
+
+      context '当日の作成数の上限を超えていると' do
+        before do
+          user = mock(:user)
+          User.should_receive(:find_by_id).with(@session.value.to_s).and_return(user)
+          user.should_receive(:gender).and_return(0)
+          user.should_receive(:over_favorite_limit_per_day?).and_return(true)
+ 
+          post :create, {target_id: @target_user.id, session_id: @session.key}
+        end
+
+        it 'over_limitが返されること' do
+          JSON.parse(response.body)["code"].should == "over_limit"
         end 
       end
     end

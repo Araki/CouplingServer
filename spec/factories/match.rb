@@ -6,11 +6,11 @@ FactoryGirl.define do
     messages_count 0
 
     factory :match_target_boys do
-      target_id {User.find(:all, gender: 0).to_a.map(&:id).sample}
+      target_id {User.find_all_by_gender(0).sample.id}
     end
 
     factory :match_target_girls do
-      target_id {User.find(:all, gender: 1).to_a.map(&:id).sample}
+      target_id {User.find_all_by_gender(1).sample.id}
     end
   end
 end
