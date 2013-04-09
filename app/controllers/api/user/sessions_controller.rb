@@ -18,6 +18,9 @@ class Api::User::SessionsController < Api::BaseController
 
   #セッションIDをverifyする
   def verify
+    if @login_bonus > 0
+      @user.update_attribute(:point, @user.point + @login_bonus)
+    end
     render_ok(user_hash)
   end
 
@@ -33,6 +36,7 @@ class Api::User::SessionsController < Api::BaseController
     {
       :session => @session.key,
       :user => @user.as_json(:except => [:email, :facebook_id, :access_token, :point]),
+      :login_bonus => @login_bonus
     }
   end
 end

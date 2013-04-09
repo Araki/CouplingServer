@@ -37,6 +37,7 @@ class Api::BaseController < ApplicationController
     
     @user = ::User.find_by_id(@session.value)
     if  @user.present?
+      @login_bonus = @user.last_login_at < Date.today ? configatron.login_bonus : 0
       @user.update_attribute(:last_login_at, Time.now)
     else
       @session.destroy

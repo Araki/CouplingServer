@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Api::User::SessionsController do
   before do
-    @user = FactoryGirl.create(:user, {nickname: 'akira'})
+    @user = FactoryGirl.create(:user, {nickname: 'akira', point: 100})
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
   end
 
@@ -78,6 +78,33 @@ describe Api::User::SessionsController do
       subject { JSON.parse(response.body) }
 
       its (["code"]) {should ==  "invalid_session"}
+    end
+
+    context '本日はじめてのログイン後の場合' do
+      before do
+        user = FactoryGirl.create(:user, {nickname: 'akira', point: 100, last_login_at: Time.local(2013,4,5,14,0,0)})
+        session = FactoryGirl.create(:session, { value: user.id.to_s })
+        Time.stub!(:now).and_return(Time.local(2013,4,6,14,0,0))
+
+        get :verify, {:session_id => session.key}
+      end
+      subject { JSON.parse(response.body) }
+
+      its (["login_bonus"]) {should ==  configatron.login_bonus}
+    end
+
+    context '二回目以降のログインの場合' do
+      before do
+        user = FactoryGirl.create(:user, {nickname: 'akira', point: 100, last_login_at: Time.local(2013,4,6,10,0,0)})
+        session = FactoryGirl.create(:session, { value: user.id.to_s })
+        Time.stub!(:now).and_return(Time.local(2013,4,6,14,0,0))
+        Date.stub!(:today).and_return(Date.new(2013, 4, 6))
+
+        get :verify, {:session_id => session.key}
+      end
+      subject { JSON.parse(response.body) }
+
+      its (["login_bonus"]) {should ==  0}
     end
   end
 
