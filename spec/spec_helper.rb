@@ -32,6 +32,18 @@ Spork.prefork do
       DatabaseCleaner.clean
     end    
   end
+
+  module Helpers
+    def session_verified_user(session)
+      time_now = Time.local(2008,12,3,15,0,0)
+      Time.stub!(:now).and_return(time_now)
+
+      user = mock(:user)
+      User.should_receive(:find_by_id).with(session.value.to_s).and_return(user)
+      user.stub!(:update_attribute).with(:last_login_at, time_now).and_return(true)
+      user
+    end
+  end
 end
 
 Spork.each_run do

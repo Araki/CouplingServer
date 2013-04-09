@@ -2,6 +2,8 @@
 require 'spec_helper'
 
 describe Api::FavoritesController do
+  include Helpers
+
   before do
     @user = FactoryGirl.create(:user)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
@@ -67,10 +69,9 @@ describe Api::FavoritesController do
 
       context '保存に失敗すると' do
         before do
-          user = mock(:user)
-          User.should_receive(:find_by_id).with(@session.value.to_s).and_return(user)
-          User.should_receive(:find_by_id).with(@target_user.id.to_s).and_return(@target_user)
-          user.stub!(:<<).with(@target_user).and_raise(Exception)          
+          user = session_verified_user(@session)
+          user.stub!(:<<).with(@target_user).and_raise(Exception)
+          User.should_receive(:find_by_id).with(@target_user.id.to_s).and_return(@target_user)      
 
           post :create, {target_id: @target_user.id, session_id: @session.key}
         end
@@ -107,8 +108,7 @@ describe Api::FavoritesController do
 
     context 'okが返されること' do
       before do
-        user = mock(:user)
-        User.should_receive(:find_by_id).with(@session.value.to_s).and_return(user)
+        user = session_verified_user(@session)
         User.should_receive(:find_by_id).with(@target_user.id.to_s).and_return(@target_user)
         user.stub!(:favorite_users).and_return([@target_user])
         [@target_user].stub!(:delete).with(@target_user)

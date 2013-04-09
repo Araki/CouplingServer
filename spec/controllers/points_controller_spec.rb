@@ -2,6 +2,8 @@
 require 'spec_helper'
 
 describe Api::PointsController do
+  include Helpers
+
   before do
     @user = FactoryGirl.create(:user, :point => 100)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
@@ -23,8 +25,7 @@ describe Api::PointsController do
 
     context '不正な値だった場合' do
       before do
-        user = mock(:user)
-        User.should_receive(:find_by_id).with(@session.value).and_return(user)
+        user = session_verified_user(@session)
         user.should_receive(:add_point).with(-44).and_return({message: 'invalid_arguments'})
 
         post :add, {amount: -44, session_id: @session.key}
@@ -61,8 +62,7 @@ describe Api::PointsController do
 
     context '保存に失敗した場合' do
       before do
-        user = mock(:user)
-        User.should_receive(:find_by_id).with(@session.value).and_return(user)
+        user = session_verified_user(@session)
         user.should_receive(:consume_point).with(99).and_return({message: 'internal_server_error'})
 
         post :consume, {amount: 99, session_id: @session.key}

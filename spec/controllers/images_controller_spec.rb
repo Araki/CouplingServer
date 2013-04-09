@@ -2,6 +2,8 @@
 require 'spec_helper'
 
 describe Api::ImagesController do
+  include Helpers
+  
   before do
     @user = FactoryGirl.create(:user)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
@@ -100,8 +102,7 @@ describe Api::ImagesController do
       before do
         image = FactoryGirl.create(:image, {user_id: @user.id})
 
-        user = mock(:user)
-        User.should_receive(:find_by_id).with(@session.value.to_s).and_return(user)
+        user = session_verified_user(@session)
         user.stub!(:==).with(@user).and_return(true)          
         user.stub!(:set_main_image).with(image).and_return(false)          
 

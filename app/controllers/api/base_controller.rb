@@ -33,9 +33,12 @@ class Api::BaseController < ApplicationController
 
   def verify_session
     @session = Session.find_by_key(params[:session_id])
-    render_ng('invalid_session') and return if @session.nil?    
+    render_ng('invalid_session') and return if @session.nil?
+    
     @user = ::User.find_by_id(@session.value)
-    unless @user
+    if  @user.present?
+      @user.update_attribute(:last_login_at, Time.now)
+    else
       @session.destroy
       render_ng('invalid_session') and return if @user.nil?    
     end

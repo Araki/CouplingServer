@@ -2,6 +2,8 @@
 require 'spec_helper'
 
 describe Api::LikesController do
+  include Helpers
+
   before do
     @user = FactoryGirl.create(:user, gender: 0)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
@@ -102,8 +104,7 @@ describe Api::LikesController do
 
       context '作成に失敗すると' do
         before do
-          user = mock(:user)
-          User.should_receive(:find_by_id).with(@session.value.to_s).and_return(user)
+          user = session_verified_user(@session)
           User.should_receive(:find_by_id).with(@target_user.id.to_s).and_return(@target_user)
           user.should_receive(:gender).and_return(0)
           user.should_receive(:over_favorite_limit_per_day?).and_return(false)
@@ -119,8 +120,7 @@ describe Api::LikesController do
 
       context '当日の作成数の上限を超えていると' do
         before do
-          user = mock(:user)
-          User.should_receive(:find_by_id).with(@session.value.to_s).and_return(user)
+          user = session_verified_user(@session)
           user.should_receive(:gender).and_return(0)
           user.should_receive(:over_favorite_limit_per_day?).and_return(true)
  
