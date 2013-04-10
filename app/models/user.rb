@@ -55,6 +55,10 @@ class User < ActiveRecord::Base
     user.save!
   end
 
+  def infos
+    Info.find(:all, :conditions => ['target_id IN (?,?)', -1, self.id] , :order => 'created_at desc')
+  end
+
   def like?(target)
     Like.find_by_user_id_and_target_id(self.id, target.id).present?
   end

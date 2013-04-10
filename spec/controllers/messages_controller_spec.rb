@@ -10,8 +10,6 @@ describe Api::MessagesController do
   end
 
   describe '#list' do
-    it '女性の場合の本人確認の有無'
-
     context 'matchの関係がない場合' do
       before do
         get :list, {target_id: @target_user.id, session_id: @session.key}

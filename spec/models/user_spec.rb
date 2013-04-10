@@ -42,6 +42,19 @@ describe User do
     end
   end
 
+  describe "#infos" do
+    context '自分宛と全員あてがとれること' do
+      subject { @user.infos() }
+      before do
+        FactoryGirl.create_list(:info, 5, {:body => 'lalala', :target_id => @user.id})
+        FactoryGirl.create_list(:info, 6, {:body => 'lalala', :target_id => -1})
+        FactoryGirl.create_list(:info, 7, {:body => 'lalala', :target_id => 100})
+      end
+
+      its(:count) { should eq 11 }
+    end
+  end
+
   describe "#like?" do
     subject { @user.like?(@target_user) }
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130409134155) do
+ActiveRecord::Schema.define(:version => 20130410130114) do
 
   create_table "apn_devices", :force => true do |t|
     t.string   "token",              :default => "", :null => false
@@ -55,6 +55,14 @@ ActiveRecord::Schema.define(:version => 20130409134155) do
 
   add_index "images", ["user_id", "is_main"], :name => "index_images_on_user_id_and_is_main"
   add_index "images", ["user_id", "order_number"], :name => "index_images_on_user_id_and_order_number"
+
+  create_table "infos", :force => true do |t|
+    t.integer  "target_id",  :default => -1, :null => false
+    t.string   "body",                       :null => false
+    t.datetime "created_at",                 :null => false
+  end
+
+  add_index "infos", ["target_id"], :name => "index_infos_on_target_id"
 
   create_table "items", :force => true do |t|
     t.string   "title",                         :null => false

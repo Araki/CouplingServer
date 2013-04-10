@@ -36,6 +36,8 @@ Coupling::Application.routes.draw do
     get  '/messages/list' => 'messages#list'
     post '/messages/create' => 'messages#create'
 
+    get  '/infos/list' => 'infos#list'
+
     get  'receipts/list' => 'receipts#list'
     post 'receipts/validate' => 'receipts#validate'
   end
