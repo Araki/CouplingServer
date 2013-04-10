@@ -6,6 +6,8 @@ class Receipt < ActiveRecord::Base
   belongs_to :user, :dependent => :destroy
   belongs_to :item, :dependent => :destroy, :counter_cache => true
 
+  #itunes storeで発行されたreceiptコードを受け取り有効なレシートかを調べて確認出来れば
+  #ポイントを追加して、Receiptを生成する。
   def valid_and_save
     begin
       iap_receipt = Itunes::Receipt.verify! self.receipt_code, :allow_sandbox
@@ -22,6 +24,7 @@ class Receipt < ActiveRecord::Base
         self.save!
       end
       true
+
     rescue ActiveRecord::RecordInvalid => e
       self.errors.add :base, "internal_server_error"
       false

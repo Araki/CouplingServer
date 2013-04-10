@@ -3,7 +3,6 @@
 FactoryGirl.define do
   factory :match, class: Match do
     can_open_profile false
-    messages_count 0
 
     factory :match_target_boys do
       target_id {User.find_all_by_gender(0).sample.id}

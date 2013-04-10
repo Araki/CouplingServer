@@ -87,12 +87,7 @@ describe Api::MessagesController do
 
       context 'messageを作成できなかった場合' do
         before do
-          match = mock(:match)
-          Match.should_receive(:find_by_user_id_and_target_id).with(@user.id, @target_user.id).and_return(match)
-          match.should_receive(:present?).and_return(true)
-          match.should_receive(:create_message).with({body: 'lalala'}).and_return(false)
-
-          post :create, {target_id: @target_user.id, body: 'lalala', session_id: @session.key}
+          post :create, {target_id: @target_user.id, body: '', session_id: @session.key}
         end
 
         it { JSON.parse(response.body)["code"].should == "internal_server_error" }

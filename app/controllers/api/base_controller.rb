@@ -9,7 +9,8 @@ class Api::BaseController < ApplicationController
   end
 
   def render_ng(message, ps = nil)
-    ret = {status: "ng", code: message}
+    code = message.kind_of?(String) ? message : message[:base][0]
+    ret = {status: "ng", code: code}
     ret = ret.merge({ps: ps}) if ps
     render json: ret
   end

@@ -19,14 +19,15 @@ describe Api::PointsController do
       end
 
       it 'Pointがamount分追加されること' do
-        JSON.parse(response.body)["point"].should == 105
+        JSON.parse(response.body)["user"]["point"].should == 105
       end
     end
 
     context '不正な値だった場合' do
       before do
         user = session_verified_user(@session)
-        user.should_receive(:add_point).with(-44).and_return({message: 'invalid_arguments'})
+        user.should_receive(:errors).and_return({base: ["invalid_arguments"]})
+        user.should_receive(:add_point).with(-44).and_return(false)
 
         post :add, {amount: -44, session_id: @session.key}
       end
@@ -46,7 +47,7 @@ describe Api::PointsController do
       end
 
       it 'Pointがamount分引かれること'  do
-        JSON.parse(response.body)["point"].should == 95
+        JSON.parse(response.body)["user"]["point"].should == 95
       end
     end
 
@@ -63,7 +64,8 @@ describe Api::PointsController do
     context '保存に失敗した場合' do
       before do
         user = session_verified_user(@session)
-        user.should_receive(:consume_point).with(99).and_return({message: 'internal_server_error'})
+        user.should_receive(:errors).and_return({base: ["internal_server_error"]})
+        user.should_receive(:consume_point).with(99).and_return(false)
 
         post :consume, {amount: 99, session_id: @session.key}
       end

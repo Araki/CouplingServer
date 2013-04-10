@@ -262,41 +262,51 @@ describe User do
 
   describe "#add_point" do
     let(:user) { FactoryGirl.create(:user, :point => 100) }
-    subject { user.add_point(point) }
+    subject { user.reload.point }
 
     context '正の整数を渡されたら' do
-      let(:point) { 50 }
+      before do
+        user.add_point(50)
+      end
 
-      it { should eq({:point => 150}) }
+      it { should eq 150 }
     end
 
     context '負の整数を渡されたら' do
-      let(:point) { -50 }
+      before do
+        user.add_point(-50)
+      end
 
-      it { should eq({:message => "invalid_arguments"}) }
+      it { should eq 100 }
     end
   end
 
   describe "#consume_point" do
     let(:user) { FactoryGirl.create(:user, :point => 100) }
-    subject { user.consume_point(point) }
+    subject { user.reload.point }
 
     context '正の整数を渡されたら' do
-      let(:point) { 50 }
+      before do
+        user.consume_point(50)
+      end
 
-      it { should eq({:point => 50}) }
+      it { should eq 50 }
     end
 
     context '持ちポイントより多く使われたら' do
-      let(:point) { 150 }
+      before do
+        user.consume_point(150)
+      end
 
-      it { should eq({:message => "invalid_arguments"}) }
+      it { should eq 100 }
     end
 
     context '負の整数を渡されたら' do
-      let(:point) { -50 }
+      before do
+        user.consume_point(-50)
+      end
 
-      it { should eq({:message => "invalid_arguments"}) }
+      it { should eq 100 }
     end
   end
 

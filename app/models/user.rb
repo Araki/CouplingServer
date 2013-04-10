@@ -115,27 +115,31 @@ class User < ActiveRecord::Base
 
   def add_point(amount)
     if amount > 0
-      self.point += amount
-      if self.save
-        return {point: self.point}
-      else
-        return {message: "internal_server_error"}
+      begin
+        self.point += amount
+        self.save!
+      rescue ActiveRecord::RecordInvalid => e
+        self.errors.add :base, "internal_server_error"
+        false
       end
     else
-      return {message: "invalid_arguments"}
+      self.errors.add :base, "invalid_arguments"
+      false
     end
   end
 
   def consume_point(amount)
     if amount > 0 && amount < self.point
-      self.point -= amount
-      if self.save
-        return {point: self.point}
-      else
-        return {message: "internal_server_error"}
+      begin
+        self.point -= amount
+        self.save!
+      rescue ActiveRecord::RecordInvalid => e
+        self.errors.add :base, "internal_server_error"
+        false
       end
     else
-      return {message: "invalid_arguments"}
+      self.errors.add :base, "invalid_arguments"
+      false
     end
   end
 

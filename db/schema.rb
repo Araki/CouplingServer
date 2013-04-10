@@ -78,7 +78,6 @@ ActiveRecord::Schema.define(:version => 20130409134155) do
   create_table "matches", :force => true do |t|
     t.integer "user_id",                             :null => false
     t.integer "target_id",                           :null => false
-    t.integer "messages_count",   :default => 0
     t.boolean "can_open_profile", :default => false
   end
 
