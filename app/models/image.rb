@@ -1,5 +1,5 @@
 class Image < ActiveRecord::Base
-  attr_accessible :user_id, :is_main, :order_number
+  attr_accessible :user_id, :is_main
 
   belongs_to :user
 
@@ -12,8 +12,7 @@ class Image < ActiveRecord::Base
   def self.create_user_iamge(user) 
     self.create!({
       user_id: user.id,
-      is_main: user.main_image.nil?,
-      order_number: user.images.count + 1      
+      is_main: user.main_image.nil?
       })
   end
 

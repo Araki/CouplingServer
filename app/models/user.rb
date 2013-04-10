@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
     :want_child, :workplace
 
   has_one  :main_image, :class_name => "Image", :conditions => { :is_main => true }
-  has_many :images, :dependent => :delete_all, :order => 'order_number'
+  has_many :images, :dependent => :delete_all
   has_many :receipts, :dependent => :delete_all, :order => 'created_at desc'
   has_many :favorites, :dependent => :delete_all, :order => 'created_at desc'
   has_many :likes, :dependent => :delete_all, :order => 'created_at desc'

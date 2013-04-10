@@ -13,7 +13,6 @@ describe Image do
       it { should be_a_kind_of Image }
       its(:is_main) { should be_true }
       its(:user_id) { should eq @user.id }
-      its(:order_number) { should eq 1 }
     end
 
     context 'imageがあった場合' do
@@ -25,7 +24,6 @@ describe Image do
       it { should be_a_kind_of Image }
       its(:is_main) { should be_false }
       its(:user_id) { should eq @user.id }
-      its(:order_number) { should eq 2 }
     end
   end
 

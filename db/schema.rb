@@ -47,14 +47,12 @@ ActiveRecord::Schema.define(:version => 20130410130114) do
   add_index "favorites", ["user_id"], :name => "index_favorites_on_user_id"
 
   create_table "images", :force => true do |t|
-    t.integer  "user_id",      :null => false
-    t.boolean  "is_main",      :null => false
-    t.integer  "order_number", :null => false
-    t.datetime "created_at",   :null => false
+    t.integer  "user_id",    :null => false
+    t.boolean  "is_main",    :null => false
+    t.datetime "created_at", :null => false
   end
 
   add_index "images", ["user_id", "is_main"], :name => "index_images_on_user_id_and_is_main"
-  add_index "images", ["user_id", "order_number"], :name => "index_images_on_user_id_and_order_number"
 
   create_table "infos", :force => true do |t|
     t.integer  "target_id",  :default => -1, :null => false

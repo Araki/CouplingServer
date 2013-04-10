@@ -15,7 +15,7 @@ MstPrefecture.delete_all
 def create_images(user_id)
   0.upto(4) do |num|
     is_main = num > 0 ? false : true
-    FactoryGirl.create(:image, {user_id: user_id, order_number: num, is_main: is_main})
+    FactoryGirl.create(:image, {user_id: user_id, is_main: is_main})
   end
 end
 
