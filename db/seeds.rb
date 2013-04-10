@@ -28,8 +28,7 @@ when "development"
     gender: 0, 
     nickname: 'taro',
     access_token: 'abcdefg',
-    facebook_id: '1234567',
-    login_token: 'abcdefg1234567'
+    facebook_id: '1234567'
     })
   session = FactoryGirl.create(:session, {
    value: user.id.to_s,
@@ -43,8 +42,7 @@ when "development"
     gender: 1, 
     nickname: 'atsuko',
     access_token: 'abcdefgxxx',
-    facebook_id: '1234567xxx',
-    login_token: 'abcdefg1234567xxx'
+    facebook_id: '1234567xxx'
     })
   target_user_session = FactoryGirl.create(:session, {
    value: user.id.to_s,

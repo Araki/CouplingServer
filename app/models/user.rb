@@ -1,14 +1,13 @@
 # -*r coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  # attr_protected :access_token, :age, :email, :facebook_id, :certification_status, :certification, :like_point, 
-  #   :gender, :point, :first_login_at, :last_login_at, :invitation_code
+  # attr_protected :access_token, :age, :email, :facebook_id, :like_point, 
+  #   :gender, :point, :last_login_at, :invitation_code
 
-  attr_accessible :address, :alcohol, :birthplace, :blood_type, :character, :constellation, :contract_type, 
-    :country, :dislike, :have_child, :height, :hobby, :holiday, :income, :industry, :introduction, :job, 
-    :job_description, :language, :marital_history, :marriage_time, :nickname, :profile_status, 
-    :proportion, :public_status, :qualification, :relationship, :roommate, :school, :smoking, :sociability, :speciality, 
-    :want_child, :workplace
+  attr_accessible :alcohol, :birthplace, :blood_type, :character, :contract_type, :prefecture,
+    :dislike, :height, :holiday, :income, :industry, :introduction, :job, 
+    :job_description, :marital_history, :marriage_time, :nickname, :status, 
+    :proportion, :public_status, :roommate, :school, :smoking, :sociability, :workplace
 
   has_one  :main_image, :class_name => "Image", :conditions => { :is_main => true }
   has_many :images, :dependent => :delete_all
@@ -23,21 +22,20 @@ class User < ActiveRecord::Base
   has_many :liked_users, :through => :likeds, :source => :user, :include => [:images], :uniq => true
   has_many :match_users, :through => :matches, :source => :target_user, :include => [:images], :uniq => true
 
-  # validates :gender, :numericality => true
-  # validates :height, :numericality => true
-  
   validates :access_token, :presence => true
   validates :age, :presence => true
   validates :email, :presence => true
   validates :facebook_id, :presence => true
-  validates :gender, :presence => true
-  validates :gender, :inclusion => { :in => [0, 1] }
-  validates :nickname, :presence => true
-  validates :nickname, :length => { :minimum => 1, :maximum => 50 }
+  validates :gender, 
+    :presence => true,
+    :inclusion => { :in => [0, 1] }
+  validates :nickname, 
+    :presence => true,
+    :length => { :minimum => 1, :maximum => 50 }
 
-  validates :address, :length => { :maximum => 50 }, :allow_nil => true
   validates :alcohol, :inclusion => { :in => 0..3 }, :allow_nil => true
-  # validates :birthplace, :inclusion => { :in => 0..46 }, :allow_nil => true
+  validates :birthplace, :inclusion => { :in => 1..47 }, :allow_nil => true
+  validates :prefecture, :inclusion => { :in => 1..47 }, :allow_nil => true
   # validates :character, :inclusion => { :in => 0..46 }, :allow_nil => true
   validates :holiday, :inclusion => { :in => 0..3 }, :allow_nil => true
   validates :income, :inclusion => { :in => 0..7 }, :allow_nil => true
