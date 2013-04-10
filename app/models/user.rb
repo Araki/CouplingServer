@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
 
   has_one  :main_image, :class_name => "Image", :conditions => { :is_main => true }
   has_many :images, :dependent => :delete_all, :order => 'order_number'
+  has_many :receipts, :dependent => :delete_all, :order => 'created_at desc'
   has_many :favorites, :dependent => :delete_all, :order => 'created_at desc'
   has_many :likes, :dependent => :delete_all, :order => 'created_at desc'
   has_many :likeds, :class_name => "Like", :foreign_key => "target_id", :dependent => :delete_all, :order => 'created_at desc'

@@ -28,9 +28,6 @@ Coupling::Application.routes.draw do
     post '/favorites/create' => 'favorites#create'
     post '/favorites/destroy' => 'favorites#destroy', :as => 'favorites_destroy'
 
-    get  '/items/list' => 'items#list'
-    post '/items/purchase' => 'items#purchase'
-
     post '/points/add' => 'points#add'
     post '/points/consume' => 'points#consume'
 
@@ -39,6 +36,12 @@ Coupling::Application.routes.draw do
     get  '/messages/list' => 'messages#list'
     post '/messages/create' => 'messages#create'
 
+    get  'receipts/list' => 'receipts#list'
+    post 'receipts/validate' => 'receipts#validate'
+  end
+
+  namespace :admin do
+    get  '/items/list' => 'items#list'
   end
 
   root :to => 'index#index'

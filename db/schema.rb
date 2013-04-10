@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130401094857) do
+ActiveRecord::Schema.define(:version => 20130409134155) do
 
   create_table "apn_devices", :force => true do |t|
     t.string   "token",              :default => "", :null => false
@@ -56,6 +56,15 @@ ActiveRecord::Schema.define(:version => 20130401094857) do
   add_index "images", ["user_id", "is_main"], :name => "index_images_on_user_id_and_is_main"
   add_index "images", ["user_id", "order_number"], :name => "index_images_on_user_id_and_order_number"
 
+  create_table "items", :force => true do |t|
+    t.string   "title",                         :null => false
+    t.string   "pid",                           :null => false
+    t.integer  "point",          :default => 0
+    t.integer  "receipts_count", :default => 0
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
   create_table "likes", :force => true do |t|
     t.integer  "user_id",    :null => false
     t.integer  "target_id",  :null => false
@@ -67,12 +76,10 @@ ActiveRecord::Schema.define(:version => 20130401094857) do
   add_index "likes", ["user_id"], :name => "index_likes_on_user_id"
 
   create_table "matches", :force => true do |t|
-    t.integer  "user_id",                             :null => false
-    t.integer  "target_id",                           :null => false
-    t.integer  "messages_count",   :default => 0
-    t.boolean  "can_open_profile", :default => false
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.integer "user_id",                             :null => false
+    t.integer "target_id",                           :null => false
+    t.integer "messages_count",   :default => 0
+    t.boolean "can_open_profile", :default => false
   end
 
   add_index "matches", ["user_id", "target_id"], :name => "index_matches_on_user_id_and_target_id", :unique => true
@@ -93,6 +100,16 @@ ActiveRecord::Schema.define(:version => 20130401094857) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "receipts", :force => true do |t|
+    t.string   "receipt_code", :null => false
+    t.integer  "user_id",      :null => false
+    t.integer  "item_id",      :null => false
+    t.datetime "created_at",   :null => false
+  end
+
+  add_index "receipts", ["receipt_code"], :name => "index_receipts_on_receipt_code"
+  add_index "receipts", ["user_id"], :name => "index_receipts_on_user_id"
 
   create_table "sessions", :force => true do |t|
     t.string   "key",        :null => false
