@@ -4,11 +4,13 @@ class User < ActiveRecord::Base
   # attr_protected :access_token, :age, :email, :facebook_id, :like_point, 
   #   :gender, :point, :last_login_at, :invitation_code
 
-  attr_accessible :alcohol, :birthplace, :blood_type, :character, :contract_type, :prefecture,
+  attr_accessible :alcohol, :birthplace, :blood_type, :character, :contract_type, :group_id,
     :dislike, :height, :holiday, :income, :industry, :introduction, :job, 
-    :job_description, :marital_history, :marriage_time, :nickname, :status, 
+    :job_description, :marital_history, :marriage_time, :nickname, :status, :prefecture,
     :proportion, :public_status, :roommate, :school, :smoking, :sociability, :workplace
 
+  belongs_to :group
+  
   has_one  :main_image, :class_name => "Image", :conditions => { :is_main => true }
   has_many :images, :dependent => :delete_all
   has_many :receipts, :dependent => :delete_all, :order => 'created_at desc'

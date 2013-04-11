@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130411050131) do
+ActiveRecord::Schema.define(:version => 20130411054620) do
 
   create_table "apn_devices", :force => true do |t|
     t.string   "token",              :default => "", :null => false
@@ -49,6 +49,17 @@ ActiveRecord::Schema.define(:version => 20130411050131) do
 
   add_index "favorites", ["target_id"], :name => "index_favorites_on_target_id"
   add_index "favorites", ["user_id"], :name => "index_favorites_on_user_id"
+
+  create_table "groups", :force => true do |t|
+    t.integer "max_age",          :null => false
+    t.integer "min_age",          :null => false
+    t.integer "head_count",       :null => false
+    t.string  "relationship",     :null => false
+    t.string  "request"
+    t.time    "opening_hour"
+    t.integer "target_age_range"
+    t.string  "area"
+  end
 
   create_table "hobbies", :force => true do |t|
     t.string "name", :null => false
@@ -161,6 +172,7 @@ ActiveRecord::Schema.define(:version => 20130411050131) do
   add_index "user_specialities", ["user_id"], :name => "index_user_specialities_on_user_id"
 
   create_table "users", :force => true do |t|
+    t.integer  "group_id"
     t.integer  "facebook_id"
     t.string   "access_token"
     t.string   "status"
@@ -198,5 +210,8 @@ ActiveRecord::Schema.define(:version => 20130411050131) do
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
   end
+
+  add_index "users", ["access_token"], :name => "index_users_on_access_token"
+  add_index "users", ["group_id"], :name => "index_users_on_group_id"
 
 end

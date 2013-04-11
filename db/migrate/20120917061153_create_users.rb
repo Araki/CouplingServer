@@ -1,6 +1,7 @@
 class CreateUsers < ActiveRecord::Migration
   def change
     create_table :users do |t|
+      t.integer  "group_id"
       t.integer  "facebook_id"
       t.string   "access_token"
       t.string   "status"
@@ -38,5 +39,7 @@ class CreateUsers < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :users, :group_id
+    add_index :users, :access_token
   end
 end
