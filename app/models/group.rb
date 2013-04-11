@@ -5,6 +5,8 @@ class Group < ActiveRecord::Base
   has_many :users
   has_many :group_group_images
   has_many :group_images, :through => :group_group_images
+  has_many :group_days
+  has_many :days, :through => :group_days
 
   validates :max_age, :inclusion => { :in => 0..100 }, :presence => true
   validates :min_age, :inclusion => { :in => 0..100 }, :presence => true

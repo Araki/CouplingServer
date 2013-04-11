@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130411130632) do
+ActiveRecord::Schema.define(:version => 20130411132541) do
 
   create_table "apn_devices", :force => true do |t|
     t.string   "token",              :default => "", :null => false
@@ -41,6 +41,10 @@ ActiveRecord::Schema.define(:version => 20130411130632) do
     t.string "name", :null => false
   end
 
+  create_table "days", :force => true do |t|
+    t.string "name", :null => false
+  end
+
   create_table "favorites", :force => true do |t|
     t.integer  "user_id",    :null => false
     t.integer  "target_id",  :null => false
@@ -49,6 +53,14 @@ ActiveRecord::Schema.define(:version => 20130411130632) do
 
   add_index "favorites", ["target_id"], :name => "index_favorites_on_target_id"
   add_index "favorites", ["user_id"], :name => "index_favorites_on_user_id"
+
+  create_table "group_days", :force => true do |t|
+    t.integer "group_id", :null => false
+    t.integer "day_id",   :null => false
+  end
+
+  add_index "group_days", ["day_id"], :name => "index_group_days_on_day_id"
+  add_index "group_days", ["group_id"], :name => "index_group_days_on_group_id"
 
   create_table "group_group_images", :force => true do |t|
     t.integer "group_id",       :null => false

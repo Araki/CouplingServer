@@ -7,18 +7,36 @@ describe Group do
   end
 
   describe "#group_images" do
-    context 'hobbyを追加する前' do
+    context 'group_imageを追加する前' do
       subject { @group.group_images }
 
       its(:count) { should eq 0 }      
     end
-    context 'hobbyを追加後' do
+    context 'group_imageを追加後' do
       before do
         5.times do
           @group.group_images << FactoryGirl.create(:group_image)
         end
       end
       subject { @group.group_images }
+
+      its(:count) { should eq 5 }      
+    end
+  end
+
+  describe "#days" do
+    context 'dayを追加する前' do
+      subject { @group.days }
+
+      its(:count) { should eq 0 }      
+    end
+    context 'dayを追加後' do
+      before do
+        5.times do
+          @group.days << FactoryGirl.create(:day)
+        end
+      end
+      subject { @group.days }
 
       its(:count) { should eq 5 }      
     end
