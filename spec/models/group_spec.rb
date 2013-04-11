@@ -41,4 +41,22 @@ describe Group do
       its(:count) { should eq 5 }      
     end
   end
+
+  describe "#mst_prefectures" do
+    context 'mst_prefectureを追加する前' do
+      subject { @group.mst_prefectures }
+
+      its(:count) { should eq 0 }      
+    end
+    context 'mst_prefectureを追加後' do
+      before do
+        5.times do
+          @group.mst_prefectures << FactoryGirl.create(:mst_prefecture)
+        end
+      end
+      subject { @group.mst_prefectures }
+
+      its(:count) { should eq 5 }      
+    end
+  end
 end

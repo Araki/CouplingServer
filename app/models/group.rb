@@ -7,6 +7,8 @@ class Group < ActiveRecord::Base
   has_many :group_images, :through => :group_group_images
   has_many :group_days
   has_many :days, :through => :group_days
+  has_many :group_mst_prefectures
+  has_many :mst_prefectures, :through => :group_mst_prefectures
 
   validates :max_age, :inclusion => { :in => 0..100 }, :presence => true
   validates :min_age, :inclusion => { :in => 0..100 }, :presence => true

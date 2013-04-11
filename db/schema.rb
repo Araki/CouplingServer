@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130411132541) do
+ActiveRecord::Schema.define(:version => 20130411134548) do
 
   create_table "apn_devices", :force => true do |t|
     t.string   "token",              :default => "", :null => false
@@ -73,6 +73,14 @@ ActiveRecord::Schema.define(:version => 20130411132541) do
   create_table "group_images", :force => true do |t|
     t.string "name", :null => false
   end
+
+  create_table "group_mst_prefectures", :force => true do |t|
+    t.integer "group_id",          :null => false
+    t.integer "mst_prefecture_id", :null => false
+  end
+
+  add_index "group_mst_prefectures", ["group_id"], :name => "index_group_mst_prefectures_on_group_id"
+  add_index "group_mst_prefectures", ["mst_prefecture_id"], :name => "index_group_mst_prefectures_on_mst_prefecture_id"
 
   create_table "groups", :force => true do |t|
     t.integer "max_age",          :null => false
@@ -144,9 +152,7 @@ ActiveRecord::Schema.define(:version => 20130411132541) do
   add_index "messages", ["talk_key"], :name => "index_messages_on_talk_key"
 
   create_table "mst_prefectures", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string "name"
   end
 
   create_table "receipts", :force => true do |t|
