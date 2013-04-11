@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130411054620) do
+ActiveRecord::Schema.define(:version => 20130411130632) do
 
   create_table "apn_devices", :force => true do |t|
     t.string   "token",              :default => "", :null => false
@@ -49,6 +49,18 @@ ActiveRecord::Schema.define(:version => 20130411054620) do
 
   add_index "favorites", ["target_id"], :name => "index_favorites_on_target_id"
   add_index "favorites", ["user_id"], :name => "index_favorites_on_user_id"
+
+  create_table "group_group_images", :force => true do |t|
+    t.integer "group_id",       :null => false
+    t.integer "group_image_id", :null => false
+  end
+
+  add_index "group_group_images", ["group_id"], :name => "index_group_group_images_on_group_id"
+  add_index "group_group_images", ["group_image_id"], :name => "index_group_group_images_on_group_image_id"
+
+  create_table "group_images", :force => true do |t|
+    t.string "name", :null => false
+  end
 
   create_table "groups", :force => true do |t|
     t.integer "max_age",          :null => false
