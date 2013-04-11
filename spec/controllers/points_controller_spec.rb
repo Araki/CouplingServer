@@ -33,7 +33,7 @@ describe Api::PointsController do
       end
 
       it 'invalid_argumentsが返ること' do
-        JSON.parse(response.body)['code'].should == 'invalid_arguments'
+        JSON.parse(response.body)['code']["base"][0].should == 'invalid_arguments'
       end
     end
 
@@ -57,7 +57,7 @@ describe Api::PointsController do
       end
 
       it 'invalid_argumentsが返ること' do
-        JSON.parse(response.body)['code'].should == 'invalid_arguments'
+        JSON.parse(response.body)['code']["base"][0].should == 'invalid_arguments'
       end
     end
 
@@ -71,7 +71,7 @@ describe Api::PointsController do
       end
 
       it 'internal_server_errorが返ること' do
-        JSON.parse(response.body)['code'].should == 'internal_server_error'
+        JSON.parse(response.body)['code']["base"][0].should == 'internal_server_error'
       end
     end
   end

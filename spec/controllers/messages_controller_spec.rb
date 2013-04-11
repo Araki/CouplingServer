@@ -88,7 +88,7 @@ describe Api::MessagesController do
           post :create, {target_id: @target_user.id, body: '', session_id: @session.key}
         end
 
-        it { JSON.parse(response.body)["code"].should == "internal_server_error" }
+        it { JSON.parse(response.body)["code"]["base"][0].should == "internal_server_error" }
       end      
     end
   end
