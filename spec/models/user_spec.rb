@@ -25,6 +25,24 @@ describe User do
     end
   end
 
+  describe "#specialities" do
+    context 'specialityを追加する前' do
+      subject { @user.specialities }
+
+      its(:count) { should eq 0 }      
+    end
+    context 'specialityを追加後' do
+      before do
+        5.times do
+          @user.specialities << FactoryGirl.create(:speciality)
+        end
+      end
+      subject { @user.specialities }
+
+      its(:count) { should eq 5 }      
+    end
+  end
+
   describe ".create_or_find_by_access_token" do
     before do
       graph = mock("graph")

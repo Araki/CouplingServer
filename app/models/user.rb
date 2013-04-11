@@ -24,6 +24,8 @@ class User < ActiveRecord::Base
 
   has_many :user_hobbies
   has_many :hobbies, :through => :user_hobbies
+  has_many :user_specialities
+  has_many :specialities, :through => :user_specialities
 
   validates :access_token, :presence => true
   validates :age, :presence => true
