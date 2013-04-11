@@ -43,6 +43,24 @@ describe User do
     end
   end
 
+  describe "#characters" do
+    context 'characterを追加する前' do
+      subject { @user.characters }
+
+      its(:count) { should eq 0 }      
+    end
+    context 'specialityを追加後' do
+      before do
+        5.times do
+          @user.characters << FactoryGirl.create(:character)
+        end
+      end
+      subject { @user.characters }
+
+      its(:count) { should eq 5 }      
+    end
+  end
+
   describe ".create_or_find_by_access_token" do
     before do
       graph = mock("graph")
