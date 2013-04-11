@@ -7,6 +7,24 @@ describe User do
     @target_user = FactoryGirl.create(:user)
   end
 
+  describe "#hobbies" do
+    context 'hobbyを追加する前' do
+      subject { @user.hobbies }
+
+      its(:count) { should eq 0 }      
+    end
+    context 'hobbyを追加後' do
+      before do
+        5.times do
+          @user.hobbies << FactoryGirl.create(:hobby)
+        end
+      end
+      subject { @user.hobbies }
+
+      its(:count) { should eq 5 }      
+    end
+  end
+
   describe ".create_or_find_by_access_token" do
     before do
       graph = mock("graph")

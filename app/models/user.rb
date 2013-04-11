@@ -22,6 +22,9 @@ class User < ActiveRecord::Base
   has_many :liked_users, :through => :likeds, :source => :user, :include => [:images], :uniq => true
   has_many :match_users, :through => :matches, :source => :target_user, :include => [:images], :uniq => true
 
+  has_many :user_hobbies
+  has_many :hobbies, :through => :user_hobbies
+
   validates :access_token, :presence => true
   validates :age, :presence => true
   validates :email, :presence => true

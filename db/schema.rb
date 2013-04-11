@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130410130114) do
+ActiveRecord::Schema.define(:version => 20130411025230) do
 
   create_table "apn_devices", :force => true do |t|
     t.string   "token",              :default => "", :null => false
@@ -45,6 +45,10 @@ ActiveRecord::Schema.define(:version => 20130410130114) do
 
   add_index "favorites", ["target_id"], :name => "index_favorites_on_target_id"
   add_index "favorites", ["user_id"], :name => "index_favorites_on_user_id"
+
+  create_table "hobbies", :force => true do |t|
+    t.string "name", :null => false
+  end
 
   create_table "images", :force => true do |t|
     t.integer  "user_id",    :null => false
@@ -123,6 +127,14 @@ ActiveRecord::Schema.define(:version => 20130410130114) do
   end
 
   add_index "sessions", ["key"], :name => "index_sessions_on_key"
+
+  create_table "user_hobbies", :force => true do |t|
+    t.integer "user_id",  :null => false
+    t.integer "hobby_id", :null => false
+  end
+
+  add_index "user_hobbies", ["hobby_id"], :name => "index_user_hobbies_on_hobby_id"
+  add_index "user_hobbies", ["user_id"], :name => "index_user_hobbies_on_user_id"
 
   create_table "users", :force => true do |t|
     t.integer  "facebook_id"
