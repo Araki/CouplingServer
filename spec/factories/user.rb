@@ -2,15 +2,16 @@
 
 FactoryGirl.define do
   factory :user do
-    access_token      { Faker::Lorem.characters(10) }
+    access_token      { Faker::Lorem.characters(100) }
     age               { 15 + rand(30) }
     alcohol           { rand(4) }
     birthplace        { rand(47) + 1 }
     blood_type        ['A', 'B', 'O', 'AB'].sample
     contract_type    nil
+    device_token      { Faker::Lorem.characters(30) }
     dislike         'goki'
     email             {Faker::Internet.email}
-    facebook_id       { Faker::Lorem.characters(10) }
+    facebook_id       { Faker::Base.numerify('##########').to_i }
     gender            { rand(1) }
     height            { rand(40) + 150 }
     holiday          { rand(4) }

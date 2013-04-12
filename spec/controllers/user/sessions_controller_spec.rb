@@ -11,8 +11,8 @@ describe Api::User::SessionsController do
     context '有効なアクセストークンが渡された場合' do
       context 'ユーザーが見つかるか作成された場合' do
         before do
-          User.stub!(:create_or_find_by_access_token).with('xxx').and_return(@user)
-          post :create, {:access_token => 'xxx'}
+          User.stub!(:create_or_find_by_access_token).with('xxx', 'yyy').and_return(@user)
+          post :create, {:access_token => 'xxx', :device_token => 'yyy'}
         end
         subject { JSON.parse(response.body)["user"] }
 
@@ -21,23 +21,43 @@ describe Api::User::SessionsController do
 
       context 'ユーザーが見つかるか作成された場合' do
         before do
-          User.stub!(:create_or_find_by_access_token).with('xxx').and_return(@user)
+          User.stub!(:create_or_find_by_access_token).with('xxx', 'yyy').and_return(@user)
         end
         it 'sessionが作成されること' do
           expect{
-            post :create, {access_token: 'xxx'}
+            post :create, {access_token: 'xxx', :device_token => 'yyy'}
           }.to change(Session, :count).by(1)
         end
       end
 
+      context 'FBで認証できなかった場合' do
+        before do
+          post :create, {:access_token => 'abc', :device_token => 'yyy'}
+        end
+        subject { JSON.parse(response.body)['code'] }
+
+        its (['response_body']){should include "Invalid OAuth access token."}
+      end
+
       context 'ユーザーを保存できなかった場合' do
         before do
-          User.stub!(:create_or_find_by_access_token).with('abc').and_raise(ActiveRecord::RecordInvalid.new(@user))
-          post :create, {:access_token => 'abc'}
-        end
-        subject { JSON.parse(response.body) }
+          graph = mock("graph")
+          Koala::Facebook::API.stub!(:new).with('facebookaccesstoken').and_return(graph)
+          profile = {
+            id: nil,
+            email: 'test@example.com',
+            first_name: "First", 
+            last_name: "Last", 
+            gender: "male",
+            birthday: 28.years.ago.strftime("%m/%d/%Y")
+          }
+          graph.stub!(:get_object).with('me').and_return(profile)
 
-        its (["code"]) {should ==  "internal_server_error"}
+          post :create, {:access_token => 'facebookaccesstoken', :device_token => 'yyy'}
+        end
+        subject { JSON.parse(response.body)['code'] }
+
+        it {should_not be_nil }
       end
     end
 

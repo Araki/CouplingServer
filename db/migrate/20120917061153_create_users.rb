@@ -2,16 +2,18 @@ class CreateUsers < ActiveRecord::Migration
   def change
     create_table :users do |t|
       t.integer  "group_id"
-      t.integer  "facebook_id"
-      t.string   "access_token"
-      t.string   "status"
+      t.integer  "facebook_id", :limit=>8
       t.string   "email"
+      t.string   "access_token"
+      t.string   "device_token"
+      t.string   "status"
       t.string   "public_status"
       t.datetime "last_login_at"
       t.string   "invitation_code"
       t.string   "contract_type"
       t.integer  "like_point"
       t.integer  "point",          :default => 0
+
       t.string   "nickname"
       t.string   "introduction"
       t.integer  "gender"
@@ -23,7 +25,6 @@ class CreateUsers < ActiveRecord::Migration
       t.string   "blood_type"
       t.integer  "marital_history"
       t.integer  "marriage_time"
-      t.integer  "relationship"
       t.integer  "smoking"
       t.integer  "alcohol"
       t.integer  "industry"
@@ -33,7 +34,7 @@ class CreateUsers < ActiveRecord::Migration
       t.integer  "income"
       t.integer  "school"
       t.integer  "holiday"
-      t.string   "sociability"
+      t.integer  "sociability"
       t.string   "dislike"
       t.integer  "prefecture"
 

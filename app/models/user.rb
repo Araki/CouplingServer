@@ -2,12 +2,12 @@
 class User < ActiveRecord::Base
 
   # attr_protected :access_token, :age, :email, :facebook_id, :like_point, 
-  #   :gender, :point, :last_login_at, :invitation_code
+  #   :gender, :point, :last_login_at, :invitation_code, :status, :public_status
 
   attr_accessible :alcohol, :birthplace, :blood_type, :character, :contract_type, :group_id,
     :dislike, :height, :holiday, :income, :industry, :introduction, :job, 
-    :job_description, :marital_history, :marriage_time, :nickname, :status, :prefecture,
-    :proportion, :public_status, :roommate, :school, :smoking, :sociability, :workplace
+    :job_description, :marital_history, :marriage_time, :nickname, :prefecture,
+    :proportion, :roommate, :school, :smoking, :sociability, :workplace
 
   belongs_to :group
   
@@ -55,11 +55,15 @@ class User < ActiveRecord::Base
   validates :smoking, :inclusion => { :in => 0..2 }, :allow_nil => true
 
 
-  def self.create_or_find_by_access_token(access_token)
-    user = self.find_by_access_token(access_token)
+  def self.create_or_find_by_access_token(access_token, device_token)
+    graph = Koala::Facebook::API.new(access_token)
+    profile = graph.get_object("me") 
+
+    user = self.find_by_facebook_id(profile[:id].to_i)
     user = self.new if user.nil?
-    user.assign_fb_attributes(access_token)
+    user.assign_fb_attributes(profile, access_token, device_token)
     user.save!
+    user
   end
 
   def infos
@@ -191,16 +195,15 @@ class User < ActiveRecord::Base
       "updated_time"=>"2012-02-24T04:18:05+0000"
     }
 =end
-  def assign_fb_attributes(access_token)
-    graph = Koala::Facebook::API.new(access_token)
-    profile = graph.get_object("me") 
+  def assign_fb_attributes(profile, access_token, device_token)
     params = {access_token: access_token}
       # params.picture = graph.get_picture(uid) 
-    params[:email] =     profile[:email] 
-    params[:nickname]    = self.nickname || get_initial(profile)
-    params[:facebook_id] = self.facebook_id || profile[:id]
-    params[:gender] =    profile[:gender] == "male" ? 0 : 1
-    params[:age] =       get_age(profile)      
+    params[:device_token] = device_token unless device_token.nil?      
+    params[:age] =          get_age(profile)      
+    params[:email] =        profile[:email] 
+    params[:gender] =       profile[:gender] == "male" ? 0 : 1
+    params[:nickname] =     self.nickname || get_initial(profile)
+    params[:facebook_id] =  self.facebook_id || profile[:id]
     params[:last_login_at] = Time.now      
 
     self.assign_attributes(params, :without_protection => true)

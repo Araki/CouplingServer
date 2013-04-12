@@ -62,37 +62,50 @@ describe User do
   end
 
   describe ".create_or_find_by_access_token" do
-    before do
-      graph = mock("graph")
-      Koala::Facebook::API.stub!(:new).with('xxx').and_return(graph)
-      profile = {
-        id: '12345678900',
-        email: 'test@example.com',
-        first_name: "First", 
-        last_name: "Last", 
-        gender: "male",
-        birthday: 28.years.ago.strftime("%m/%d/%Y"),
-        id: '12345678900',
-      }
-      graph.stub!(:get_object).with('me').and_return(profile)
-    end
-
-    context '既存のユーザーがあれば' do
+    context 'facebook認証に成功した場合' do
       before do
-        FactoryGirl.create(:user, {access_token: 'xxx'})
+        graph = mock("graph")
+        Koala::Facebook::API.stub!(:new).with('facebookaccesstoken').and_return(graph)
+        profile = {
+          id: '1234567890',
+          email: 'test@example.com',
+          first_name: "First", 
+          last_name: "Last", 
+          gender: "male",
+          birthday: 28.years.ago.strftime("%m/%d/%Y")
+        }
+        graph.stub!(:get_object).with('me').and_return(profile)
       end
 
-      it {expect{User.create_or_find_by_access_token('xxx') }.to change(User, :count).by(0)}
-    end
+      context '既存のユーザーがあれば' do
+        before do
+          FactoryGirl.create(:user, {facebook_id: 1234567890})
+        end
 
-    context '既存のユーザーがなければ' do
-      before do
-        User.stub!(:find_by_access_token).with('xxx').and_return(nil)
-        user = User.new
-        User.stub!(:new).and_return(user)
+        it {expect{User.create_or_find_by_access_token('facebookaccesstoken', 'appledevicetoken') }.to change(User, :count).by(0)}
       end
 
-      it {expect{User.create_or_find_by_access_token('xxx')}.to change(User, :count).by(1)}
+      context '既存のユーザーがなければ' do
+        before do
+          User.stub!(:find_by_access_token).with('facebookaccesstoken').and_return(nil)
+          user = User.new
+          User.stub!(:new).and_return(user)
+        end
+
+        it {expect{User.create_or_find_by_access_token('facebookaccesstoken', 'appledevicetoken')}.to change(User, :count).by(1)}
+      end      
+    end
+    context 'facebook認証に成功しなかった場合' do
+      before do
+        graph = mock("graph")
+        Koala::Facebook::API.stub!(:new).with('facebookaccesstoken').and_return(graph)
+        profile = {}
+        graph.stub!(:get_object).with('me').and_return(profile)
+      end
+
+      context 'エラーになること' do
+        it {expect{User.create_or_find_by_access_token('facebookaccesstoken', 'appledevicetoken') }.to raise_error}
+      end
     end
   end
 
@@ -380,24 +393,22 @@ describe User do
   describe "#assign_fb_attributes" do
     before do
       graph = mock("graph")
-      Koala::Facebook::API.stub!(:new).with('xxx').and_return(graph)
-      profile = {
-        id: '12345678900',
+      Koala::Facebook::API.stub!(:new).with('facebookaccesstoken').and_return(graph)
+      @profile = {
+        id: '1234567890',
         email: 'test@example.com',
         first_name: "First", 
         last_name: "Last", 
         gender: "male",
-        birthday: 28.years.ago.strftime("%m/%d/%Y"),
-        id: '12345678900',
+        birthday: 28.years.ago.strftime("%m/%d/%Y")
       }
-      graph.stub!(:get_object).with('me').and_return(profile)
     end
 
     context '作成できたら' do
       let(:user) { User.new() }
-      subject { user.send(:assign_fb_attributes, 'xxx') }
+      subject { user.send(:assign_fb_attributes, @profile, 'facebookaccesstoken', 'appledevicetoken') }
 
-      its (:facebook_id) { should eq 12345678900 }
+      its (:facebook_id) { should eq 1234567890 }
       its (:email) { should eq 'test@example.com' }
       its (:gender) { should eq 0 }
       its (:nickname) { should eq 'F.L' }
@@ -406,7 +417,7 @@ describe User do
 
     context '既存のユーザーの場合' do
       let(:user) { FactoryGirl.create(:user, {nickname: 'akira', gender: 1, facebook_id: 999}) }
-      subject { user.send(:assign_fb_attributes, 'xxx') }
+      subject { user.send(:assign_fb_attributes, @profile, 'facebookaccesstoken', 'appledevicetoken') }
 
       its (:facebook_id) { should eq 999 }
       its (:email) { should eq 'test@example.com' }

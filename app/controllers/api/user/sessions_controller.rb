@@ -6,12 +6,14 @@ class Api::User::SessionsController < Api::BaseController
     render_ng('invalid_access_token') and return unless params[:access_token]
 
     begin
-      @user = User.create_or_find_by_access_token(params[:access_token])
-    rescue Exception => e
-      ActiveRecord::Rollback
-      render_ng("internal_server_error") and return
-    else
+      @user = User.create_or_find_by_access_token(params[:access_token], params[:device_token])
       @session = Session.create_session(@user)
+    rescue ActiveRecord::RecordInvalid => e
+      ActiveRecord::Rollback
+      render_ng(e.record.errors) and return
+    rescue Exception => e
+      render_ng(e) and return
+    else
       render_ok(user_hash)
     end
   end

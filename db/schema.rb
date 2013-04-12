@@ -203,8 +203,9 @@ ActiveRecord::Schema.define(:version => 20130411134548) do
 
   create_table "users", :force => true do |t|
     t.integer  "group_id"
-    t.integer  "facebook_id"
+    t.integer  "facebook_id",     :limit => 8
     t.string   "access_token"
+    t.string   "device_token"
     t.string   "status"
     t.string   "email"
     t.string   "public_status"
@@ -212,7 +213,7 @@ ActiveRecord::Schema.define(:version => 20130411134548) do
     t.string   "invitation_code"
     t.string   "contract_type"
     t.integer  "like_point"
-    t.integer  "point",           :default => 0
+    t.integer  "point",                        :default => 0
     t.string   "nickname"
     t.string   "introduction"
     t.integer  "gender"
@@ -237,8 +238,8 @@ ActiveRecord::Schema.define(:version => 20130411134548) do
     t.string   "sociability"
     t.string   "dislike"
     t.integer  "prefecture"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
   end
 
   add_index "users", ["access_token"], :name => "index_users_on_access_token"
