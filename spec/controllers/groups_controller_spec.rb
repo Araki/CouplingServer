@@ -7,8 +7,6 @@ describe Api::GroupsController do
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
   end
 
-  it 'ユーザーとグループを結びつけていないので'
-
   describe '#list' do
     before do
       10.times do |n|

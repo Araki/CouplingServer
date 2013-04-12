@@ -2,7 +2,10 @@
 class Group < ActiveRecord::Base
   attr_accessible :max_age, :min_age, :head_count,:relationship, :request, :opening_hour, :target_age_range, :area, :user_id
 
-  has_many :users
+  has_one  :user
+  has_many :friends
+  has_many :members
+
   has_many :group_group_images
   has_many :group_images, :through => :group_group_images
   has_many :group_days

@@ -20,6 +20,9 @@ Coupling::Application.routes.draw do
     post '/groups/create' => 'groups#create'
     post '/groups/update' => 'groups#update'
 
+    post '/friends/create' => 'friends#create'
+    post '/friends/:id/update' => 'friends#update'
+
     get  '/images/list' => 'images#list'
     post '/images/create' => 'images#create'
     post '/images/:id/destroy' => 'images#destroy'

@@ -1,5 +1,7 @@
 # coding:utf-8
 class Friend < Member
+  attr_accessible :age, :gender
+
   belongs_to :group
 
   def as_json(options = {})

@@ -9,6 +9,7 @@ class Api::GroupsController < Api::BaseController
   def create
     render_ng("internal_server_error") and return if @user.group.present?
 
+    params[:group][:user_id] = @user.id
     group = Group.new(params[:group])
     if group.save
       render_ok({group: group})

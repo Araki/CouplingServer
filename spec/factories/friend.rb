@@ -1,8 +1,8 @@
 # coding: utf-8
 
 FactoryGirl.define do
-  factory :member do
-    type              'Profile'
+  factory :friend do
+    type             'Friend'
     group_id          1
     age               { 15 + rand(30) }
     alcohol           { rand(4) }
@@ -26,18 +26,5 @@ FactoryGirl.define do
     smoking           { rand(3) }
     sociability      '???'
     workplace        '渋谷区'
-
-    # factory :profile do
-    #   type    'Profile'
-    #   user_id          1
-    # end
-
-    # factory :friend do
-    #   type    'Friend'
-    # end    
   end
-
-  # factory :invalid_user, parent: :user do
-  #   nickname nil
-  # end  
 end

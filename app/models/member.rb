@@ -1,6 +1,6 @@
 # coding:utf-8
 class Member < ActiveRecord::Base
-  attr_accessible :alcohol, :birthplace, :blood_type, :character, :group_id,
+  attr_accessible :type, :alcohol, :birthplace, :blood_type, :character, :group_id,
     :dislike, :height, :holiday, :income, :industry, :introduction, :job, 
     :job_description, :marital_history, :marriage_time, :nickname, :prefecture,
     :proportion, :roommate, :school, :smoking, :sociability, :workplace
@@ -14,6 +14,7 @@ class Member < ActiveRecord::Base
   has_many :member_characters
   has_many :characters, :through => :member_characters
 
+  validates :type, :inclusion => { :in => ['Friend','Profile'] }, :presence => true
   validates :age, :presence => true
   validates :gender, 
     :presence => true,
