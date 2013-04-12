@@ -7,7 +7,9 @@ Session.delete_all
 Like.delete_all
 Match.delete_all
 Favorite.delete_all
+Group.delete_all
 Message.delete_all
+Member.delete_all
 Image.delete_all
 # Item.delete_all
 MstPrefecture.delete_all
@@ -25,10 +27,13 @@ when "development"
   # 主人公:session_id=abc
   user = FactoryGirl.create(:user, {
     id: 1,
-    gender: 0, 
-    nickname: 'taro',
     access_token: 'abcdefg',
     facebook_id: '1234567'
+    })
+  user_profile = FactoryGirl.create(:profile, {
+    user_id: 1,
+    gender: 0, 
+    nickname: 'taro',
     })
   session = FactoryGirl.create(:session, {
    value: user.id.to_s,
@@ -39,10 +44,13 @@ when "development"
   # お相手:session_id=xyz
   target_user = FactoryGirl.create(:user, {
     id: 2,
-    gender: 1, 
-    nickname: 'atsuko',
     access_token: 'abcdefgxxx',
     facebook_id: '1234567xxx'
+    })
+  target_user_profile = FactoryGirl.create(:profile, {
+    user_id: 2,
+    gender: 1, 
+    nickname: 'atsuko',
     })
   target_user_session = FactoryGirl.create(:session, {
    value: user.id.to_s,
@@ -50,40 +58,40 @@ when "development"
    })
   create_images(target_user.id)
 
-  # モブ:男女50人づつ、そのうち20人は画像を準備。
-  boys = FactoryGirl.create_list(:boys, 50, {})
-  boys.sample(20).each do |boy|
-    create_images(boy.id)
-  end
-  girls = FactoryGirl.create_list(:girls, 50, {})
-  girls.sample(20).each do |girl|
-    create_images(girl.id)
-  end
+  # # モブ:男女50人づつ、そのうち20人は画像を準備。
+  # boys = FactoryGirl.create_list(:boys, 50, {})
+  # boys.sample(20).each do |boy|
+  #   create_images(boy.id)
+  # end
+  # girls = FactoryGirl.create_list(:girls, 50, {})
+  # girls.sample(20).each do |girl|
+  #   create_images(girl.id)
+  # end
 
-  # 主人公は10人のお気に入りと5人のmatchと10人のlikeと5人のlikedを持つ
-  girls.sample(20).each_with_index do |girl, i|
-    if i < 10
-      user.favorite_users << girl
-    end
+  # # 主人公は10人のお気に入りと5人のmatchと10人のlikeと5人のlikedを持つ
+  # girls.sample(20).each_with_index do |girl, i|
+  #   if i < 10
+  #     user.favorite_users << girl
+  #   end
 
-    if i < 5
-      user.match_users << girl
-      girl.match_users << user
-    elsif i < 15
-      user.like_users << girl
-    else
-      girl.like_users << user 
-    end    
-  end
+  #   if i < 5
+  #     user.match_users << girl
+  #     girl.match_users << user
+  #   elsif i < 15
+  #     user.like_users << girl
+  #   else
+  #     girl.like_users << user 
+  #   end    
+  # end
 
-  #お相手との間のmatch
-  match = FactoryGirl.create(:match, {user_id: user.id, target_id: target_user.id})
-  target_match = FactoryGirl.create(:match, {user_id: target_user.id, target_id: user.id})
+  # #お相手との間のmatch
+  # match = FactoryGirl.create(:match, {user_id: user.id, target_id: target_user.id})
+  # target_match = FactoryGirl.create(:match, {user_id: target_user.id, target_id: user.id})
 
-  #20回talkしている
-  20.times do
-    FactoryGirl.create(:message, {talk_key: "#{user.id}_#{target_user.id}", match_id: [match.id, target_match.id].sample})
-  end
+  # #20回talkしている
+  # 20.times do
+  #   FactoryGirl.create(:message, {talk_key: "#{user.id}_#{target_user.id}", match_id: [match.id, target_match.id].sample})
+  # end
 
 when "production"
 end

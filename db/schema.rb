@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130411134548) do
+ActiveRecord::Schema.define(:version => 20130412073152) do
 
   create_table "apn_devices", :force => true do |t|
     t.string   "token",              :default => "", :null => false
@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(:version => 20130411134548) do
   add_index "group_mst_prefectures", ["mst_prefecture_id"], :name => "index_group_mst_prefectures_on_mst_prefecture_id"
 
   create_table "groups", :force => true do |t|
+    t.integer "user_id",          :null => false
     t.integer "max_age",          :null => false
     t.integer "min_age",          :null => false
     t.integer "head_count",       :null => false
@@ -141,6 +142,64 @@ ActiveRecord::Schema.define(:version => 20130411134548) do
   add_index "matches", ["user_id", "target_id"], :name => "index_matches_on_user_id_and_target_id", :unique => true
   add_index "matches", ["user_id"], :name => "index_matches_on_user_id"
 
+  create_table "member_characters", :force => true do |t|
+    t.integer "member_id",    :null => false
+    t.integer "character_id", :null => false
+  end
+
+  add_index "member_characters", ["character_id"], :name => "index_member_characters_on_character_id"
+  add_index "member_characters", ["member_id"], :name => "index_member_characters_on_member_id"
+
+  create_table "member_hobbies", :force => true do |t|
+    t.integer "member_id", :null => false
+    t.integer "hobby_id",  :null => false
+  end
+
+  add_index "member_hobbies", ["hobby_id"], :name => "index_member_hobbies_on_hobby_id"
+  add_index "member_hobbies", ["member_id"], :name => "index_member_hobbies_on_member_id"
+
+  create_table "member_specialities", :force => true do |t|
+    t.integer "member_id",     :null => false
+    t.integer "speciality_id", :null => false
+  end
+
+  add_index "member_specialities", ["member_id"], :name => "index_member_specialities_on_member_id"
+  add_index "member_specialities", ["speciality_id"], :name => "index_member_specialities_on_speciality_id"
+
+  create_table "members", :force => true do |t|
+    t.string   "type"
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.string   "nickname"
+    t.string   "introduction"
+    t.integer  "gender"
+    t.integer  "age"
+    t.integer  "birthplace"
+    t.string   "roommate"
+    t.integer  "height"
+    t.integer  "proportion"
+    t.string   "blood_type"
+    t.integer  "marital_history"
+    t.integer  "marriage_time"
+    t.integer  "smoking"
+    t.integer  "alcohol"
+    t.integer  "industry"
+    t.integer  "job"
+    t.string   "job_description"
+    t.string   "workplace"
+    t.integer  "income"
+    t.integer  "school"
+    t.integer  "holiday"
+    t.integer  "sociability"
+    t.string   "dislike"
+    t.integer  "prefecture"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "members", ["group_id"], :name => "index_members_on_group_id"
+  add_index "members", ["user_id"], :name => "index_members_on_user_id"
+
   create_table "messages", :force => true do |t|
     t.string   "body"
     t.integer  "match_id",   :null => false
@@ -177,67 +236,20 @@ ActiveRecord::Schema.define(:version => 20130411134548) do
     t.string "name", :null => false
   end
 
-  create_table "user_characters", :force => true do |t|
-    t.integer "user_id",      :null => false
-    t.integer "character_id", :null => false
-  end
-
-  add_index "user_characters", ["character_id"], :name => "index_user_characters_on_character_id"
-  add_index "user_characters", ["user_id"], :name => "index_user_characters_on_user_id"
-
-  create_table "user_hobbies", :force => true do |t|
-    t.integer "user_id",  :null => false
-    t.integer "hobby_id", :null => false
-  end
-
-  add_index "user_hobbies", ["hobby_id"], :name => "index_user_hobbies_on_hobby_id"
-  add_index "user_hobbies", ["user_id"], :name => "index_user_hobbies_on_user_id"
-
-  create_table "user_specialities", :force => true do |t|
-    t.integer "user_id",       :null => false
-    t.integer "speciality_id", :null => false
-  end
-
-  add_index "user_specialities", ["speciality_id"], :name => "index_user_specialities_on_speciality_id"
-  add_index "user_specialities", ["user_id"], :name => "index_user_specialities_on_user_id"
-
   create_table "users", :force => true do |t|
+    t.integer  "gender"
     t.integer  "group_id"
     t.integer  "facebook_id",     :limit => 8
+    t.string   "email"
     t.string   "access_token"
     t.string   "device_token"
     t.string   "status"
-    t.string   "email"
     t.string   "public_status"
     t.datetime "last_login_at"
     t.string   "invitation_code"
     t.string   "contract_type"
     t.integer  "like_point"
     t.integer  "point",                        :default => 0
-    t.string   "nickname"
-    t.string   "introduction"
-    t.integer  "gender"
-    t.integer  "age"
-    t.integer  "birthplace"
-    t.string   "roommate"
-    t.integer  "height"
-    t.integer  "proportion"
-    t.string   "blood_type"
-    t.integer  "marital_history"
-    t.integer  "marriage_time"
-    t.integer  "relationship"
-    t.integer  "smoking"
-    t.integer  "alcohol"
-    t.integer  "industry"
-    t.integer  "job"
-    t.string   "job_description"
-    t.string   "workplace"
-    t.integer  "income"
-    t.integer  "school"
-    t.integer  "holiday"
-    t.string   "sociability"
-    t.string   "dislike"
-    t.integer  "prefecture"
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
   end

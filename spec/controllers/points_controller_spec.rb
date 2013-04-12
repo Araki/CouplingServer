@@ -8,7 +8,7 @@ describe Api::PointsController do
     @user = FactoryGirl.create(:user, :point => 100)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
 
-    @target_user = FactoryGirl.create(:user, {gender: 1, nickname: 'atsuko'})
+    @target_user = FactoryGirl.create(:user, {gender: 1})
   end
 
   describe '#add' do

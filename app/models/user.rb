@@ -3,14 +3,9 @@ class User < ActiveRecord::Base
 
   # attr_protected :access_token, :age, :email, :facebook_id, :like_point, 
   #   :gender, :point, :last_login_at, :invitation_code, :status, :public_status
-
-  attr_accessible :alcohol, :birthplace, :blood_type, :character, :contract_type, :group_id,
-    :dislike, :height, :holiday, :income, :industry, :introduction, :job, 
-    :job_description, :marital_history, :marriage_time, :nickname, :prefecture,
-    :proportion, :roommate, :school, :smoking, :sociability, :workplace
-
-  belongs_to :group
   
+  has_one  :profile
+  has_one  :group
   has_one  :main_image, :class_name => "Image", :conditions => { :is_main => true }
   has_many :images, :dependent => :delete_all
   has_many :receipts, :dependent => :delete_all, :order => 'created_at desc'
@@ -24,45 +19,21 @@ class User < ActiveRecord::Base
   has_many :liked_users, :through => :likeds, :source => :user, :include => [:images], :uniq => true
   has_many :match_users, :through => :matches, :source => :target_user, :include => [:images], :uniq => true
 
-  has_many :user_hobbies
-  has_many :hobbies, :through => :user_hobbies
-  has_many :user_specialities
-  has_many :specialities, :through => :user_specialities
-  has_many :user_characters
-  has_many :characters, :through => :user_characters
-
   validates :access_token, :presence => true
-  validates :age, :presence => true
   validates :email, :presence => true
   validates :facebook_id, :presence => true
-  validates :gender, 
-    :presence => true,
-    :inclusion => { :in => [0, 1] }
-  validates :nickname, 
-    :presence => true,
-    :length => { :minimum => 1, :maximum => 50 }
-
-  validates :alcohol, :inclusion => { :in => 0..3 }, :allow_nil => true
-  validates :birthplace, :inclusion => { :in => 1..47 }, :allow_nil => true
-  validates :prefecture, :inclusion => { :in => 1..47 }, :allow_nil => true
-  # validates :character, :inclusion => { :in => 0..46 }, :allow_nil => true
-  validates :holiday, :inclusion => { :in => 0..3 }, :allow_nil => true
-  validates :income, :inclusion => { :in => 0..7 }, :allow_nil => true
-  validates :introduction, :length => { :minimum => 70, :maximum => 500 }, :allow_nil => true
-  validates :height, :inclusion => { :in => 130..210 }, :allow_nil => true
-  validates :proportion, :inclusion => { :in => 0..7 }, :allow_nil => true
-  # validates :roommate, :inclusion => { :in => 0..3 }, :allow_nil => true
-  validates :smoking, :inclusion => { :in => 0..2 }, :allow_nil => true
-
 
   def self.create_or_find_by_access_token(access_token, device_token)
     graph = Koala::Facebook::API.new(access_token)
-    profile = graph.get_object("me") 
+    fb_profile = graph.get_object("me") 
 
-    user = self.find_by_facebook_id(profile[:id].to_i)
+    user = self.find_by_facebook_id(fb_profile[:id].to_i)
     user = self.new if user.nil?
-    user.assign_fb_attributes(profile, access_token, device_token)
+    user.assign_fb_attributes(fb_profile, access_token, device_token)
     user.save!
+    profile = user.profile.nil? ? Profile.new : user.profile
+    profile.assign_fb_attributes(user, fb_profile)
+    profile.save!
     user
   end
 
@@ -195,17 +166,14 @@ class User < ActiveRecord::Base
       "updated_time"=>"2012-02-24T04:18:05+0000"
     }
 =end
-  def assign_fb_attributes(profile, access_token, device_token)
+  def assign_fb_attributes(fb_profile, access_token, device_token)
     params = {access_token: access_token}
       # params.picture = graph.get_picture(uid) 
     params[:device_token] = device_token unless device_token.nil?      
-    params[:age] =          get_age(profile)      
-    params[:email] =        profile[:email] 
-    params[:gender] =       profile[:gender] == "male" ? 0 : 1
-    params[:nickname] =     self.nickname || get_initial(profile)
-    params[:facebook_id] =  self.facebook_id || profile[:id]
+    params[:email] =        fb_profile[:email] 
+    params[:facebook_id] =  self.facebook_id || fb_profile[:id]
+    params[:gender] =  fb_profile[:gender] == "male" ? 0 : 1
     params[:last_login_at] = Time.now      
-
     self.assign_attributes(params, :without_protection => true)
     self
   end
@@ -213,18 +181,7 @@ class User < ActiveRecord::Base
   def as_json(options = {})
       json = super(options)
       json['images'] = self.images.as_json
+      json['profile'] = self.profile.as_json
       json
-  end  
-
-
-  private
-
-  def get_initial(profile)
-    "#{profile[:first_name][0, 1].capitalize}.#{profile[:last_name][0, 1].capitalize}"
-  end
-
-  #age 誕生日を考慮していないので実際には不正確
-  def get_age(profile)
-    Time.now.utc.to_date.year - Date.strptime(profile[:birthday], '%m/%d/%Y').year
   end  
 end

@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Api::User::SessionsController do
   before do
-    @user = FactoryGirl.create(:user, {nickname: 'akira', point: 100})
+    @user = FactoryGirl.create(:user, {facebook_id: 1234567890, point: 100})
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
   end
 
@@ -16,7 +16,7 @@ describe Api::User::SessionsController do
         end
         subject { JSON.parse(response.body)["user"] }
 
-        its (["nickname"]) {should ==  "akira"}
+        its (["id"]) {should ==  @user.id}
       end
 
       context 'ユーザーが見つかるか作成された場合' do
@@ -102,7 +102,7 @@ describe Api::User::SessionsController do
 
     context '本日はじめてのログイン後の場合' do
       before do
-        user = FactoryGirl.create(:user, {nickname: 'akira', point: 100, last_login_at: Time.local(2013,4,5,14,0,0)})
+        user = FactoryGirl.create(:user, {facebook_id: 1234567890, point: 100, last_login_at: Time.local(2013,4,5,14,0,0)})
         session = FactoryGirl.create(:session, { value: user.id.to_s })
         Time.stub!(:now).and_return(Time.local(2013,4,6,14,0,0))
 
@@ -115,7 +115,7 @@ describe Api::User::SessionsController do
 
     context '二回目以降のログインの場合' do
       before do
-        user = FactoryGirl.create(:user, {nickname: 'akira', point: 100, last_login_at: Time.local(2013,4,6,10,0,0)})
+        user = FactoryGirl.create(:user, {facebook_id: 1234567890, point: 100, last_login_at: Time.local(2013,4,6,10,0,0)})
         session = FactoryGirl.create(:session, { value: user.id.to_s })
         Time.stub!(:now).and_return(Time.local(2013,4,6,14,0,0))
         Date.stub!(:today).and_return(Date.new(2013, 4, 6))

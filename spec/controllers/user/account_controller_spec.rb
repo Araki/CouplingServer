@@ -4,6 +4,7 @@ require 'spec_helper'
 describe Api::User::AccountController do
   before do
     @user = FactoryGirl.create(:user)
+    @profile = FactoryGirl.create(:profile, {user_id: @user.id})
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
   end
 
@@ -12,9 +13,9 @@ describe Api::User::AccountController do
       before do
         get :show_profile, {:session_id => @session.key}
       end
-      subject { JSON.parse(response.body)["user"] }
+      subject { JSON.parse(response.body)["user"]["profile"] }
 
-      its (["nickname"]) {should ==  @user.nickname  }
+      its (["nickname"]) {should ==  @profile.nickname  }
     end
 
     context '自分のアカウントが見つからなかった場合' do
@@ -31,16 +32,16 @@ describe Api::User::AccountController do
   describe '#update_profile' do
     context '正常な値をPOSTしたら' do
       before do
-        post :update_profile, {user: {nickname: 'koro'}, session_id: @session.key}
+        post :update_profile, {user: {profile: {nickname: 'koro'}}, session_id: @session.key}
       end
-      subject { JSON.parse(response.body)["user"] }
+      subject { JSON.parse(response.body)["user"]["profile"] }
 
       its (["nickname"]) {should == 'koro' }
     end
 
     context 'ユーザーからは変更できない値をPOSTした場合' do
       before do
-        post :update_profile, {user: {gender: 1}, session_id: @session.key}
+        post :update_profile, {user: {profile: {gender: 1}}, session_id: @session.key}
       end
       subject { JSON.parse(response.body)["code"] }
 
@@ -57,7 +58,7 @@ describe Api::User::AccountController do
         # mock.stub!(:nickname=).with("100")
         # User.stub!(:find_by_id).with(@user.id.to_s).and_return(mock)  
 
-        post :update_profile, {user: {height: '高い'}, session_id: @session.key}
+        post :update_profile, {user: {profile: {height: '高い'}}, session_id: @session.key}
       end
       subject { JSON.parse(response.body) }
 

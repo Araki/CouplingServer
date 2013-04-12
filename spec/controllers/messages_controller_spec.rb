@@ -6,7 +6,7 @@ describe Api::MessagesController do
     @user = FactoryGirl.create(:user)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
 
-    @target_user = FactoryGirl.create(:user, {gender: 1, nickname: 'atsuko'})
+    @target_user = FactoryGirl.create(:user, {gender: 1})
   end
 
   describe '#list' do

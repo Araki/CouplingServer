@@ -4,61 +4,8 @@ require 'spec_helper'
 describe User do
   before do
     @user = FactoryGirl.create(:user)
+    @profile = FactoryGirl.create(:profile, {user_id: @user.id})
     @target_user = FactoryGirl.create(:user)
-  end
-
-  describe "#hobbies" do
-    context 'hobbyを追加する前' do
-      subject { @user.hobbies }
-
-      its(:count) { should eq 0 }      
-    end
-    context 'hobbyを追加後' do
-      before do
-        5.times do
-          @user.hobbies << FactoryGirl.create(:hobby)
-        end
-      end
-      subject { @user.hobbies }
-
-      its(:count) { should eq 5 }      
-    end
-  end
-
-  describe "#specialities" do
-    context 'specialityを追加する前' do
-      subject { @user.specialities }
-
-      its(:count) { should eq 0 }      
-    end
-    context 'specialityを追加後' do
-      before do
-        5.times do
-          @user.specialities << FactoryGirl.create(:speciality)
-        end
-      end
-      subject { @user.specialities }
-
-      its(:count) { should eq 5 }      
-    end
-  end
-
-  describe "#characters" do
-    context 'characterを追加する前' do
-      subject { @user.characters }
-
-      its(:count) { should eq 0 }      
-    end
-    context 'specialityを追加後' do
-      before do
-        5.times do
-          @user.characters << FactoryGirl.create(:character)
-        end
-      end
-      subject { @user.characters }
-
-      its(:count) { should eq 5 }      
-    end
   end
 
   describe ".create_or_find_by_access_token" do
@@ -66,7 +13,7 @@ describe User do
       before do
         graph = mock("graph")
         Koala::Facebook::API.stub!(:new).with('facebookaccesstoken').and_return(graph)
-        profile = {
+        fb_profile = {
           id: '1234567890',
           email: 'test@example.com',
           first_name: "First", 
@@ -74,15 +21,17 @@ describe User do
           gender: "male",
           birthday: 28.years.ago.strftime("%m/%d/%Y")
         }
-        graph.stub!(:get_object).with('me').and_return(profile)
+        graph.stub!(:get_object).with('me').and_return(fb_profile)
       end
 
       context '既存のユーザーがあれば' do
         before do
-          FactoryGirl.create(:user, {facebook_id: 1234567890})
+          user = FactoryGirl.create(:user, {facebook_id: 1234567890})
+          FactoryGirl.create(:profile, {user_id: user.id})
         end
 
         it {expect{User.create_or_find_by_access_token('facebookaccesstoken', 'appledevicetoken') }.to change(User, :count).by(0)}
+        it {expect{User.create_or_find_by_access_token('facebookaccesstoken', 'appledevicetoken') }.to change(Profile, :count).by(0)}
       end
 
       context '既存のユーザーがなければ' do
@@ -93,14 +42,15 @@ describe User do
         end
 
         it {expect{User.create_or_find_by_access_token('facebookaccesstoken', 'appledevicetoken')}.to change(User, :count).by(1)}
+        it {expect{User.create_or_find_by_access_token('facebookaccesstoken', 'appledevicetoken')}.to change(Profile, :count).by(1)}
       end      
     end
     context 'facebook認証に成功しなかった場合' do
       before do
         graph = mock("graph")
         Koala::Facebook::API.stub!(:new).with('facebookaccesstoken').and_return(graph)
-        profile = {}
-        graph.stub!(:get_object).with('me').and_return(profile)
+        fb_profile = {}
+        graph.stub!(:get_object).with('me').and_return(fb_profile)
       end
 
       context 'エラーになること' do
@@ -394,7 +344,7 @@ describe User do
     before do
       graph = mock("graph")
       Koala::Facebook::API.stub!(:new).with('facebookaccesstoken').and_return(graph)
-      @profile = {
+      @fb_profile = {
         id: '1234567890',
         email: 'test@example.com',
         first_name: "First", 
@@ -406,24 +356,20 @@ describe User do
 
     context '作成できたら' do
       let(:user) { User.new() }
-      subject { user.send(:assign_fb_attributes, @profile, 'facebookaccesstoken', 'appledevicetoken') }
+      subject { user.send(:assign_fb_attributes, @fb_profile, 'facebookaccesstoken', 'appledevicetoken') }
 
       its (:facebook_id) { should eq 1234567890 }
       its (:email) { should eq 'test@example.com' }
       its (:gender) { should eq 0 }
-      its (:nickname) { should eq 'F.L' }
-      its (:age) { should eq 28 }
     end
 
     context '既存のユーザーの場合' do
-      let(:user) { FactoryGirl.create(:user, {nickname: 'akira', gender: 1, facebook_id: 999}) }
-      subject { user.send(:assign_fb_attributes, @profile, 'facebookaccesstoken', 'appledevicetoken') }
+      let(:user) { FactoryGirl.create(:user, {gender: 1, facebook_id: 999}) }
+      subject { user.send(:assign_fb_attributes, @fb_profile, 'facebookaccesstoken', 'appledevicetoken') }
 
       its (:facebook_id) { should eq 999 }
       its (:email) { should eq 'test@example.com' }
       its (:gender) { should eq 0 }
-      its (:nickname) { should eq 'akira' }
-      its (:age) { should eq 28 }
     end
   end  
 end

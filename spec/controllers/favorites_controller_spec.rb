@@ -8,13 +8,13 @@ describe Api::FavoritesController do
     @user = FactoryGirl.create(:user)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
 
-    @target_user = FactoryGirl.create(:user, {gender: 1, nickname: 'atsuko'})
+    @target_user = FactoryGirl.create(:girls)
   end
 
   describe '#list' do
     before do
       10.times do
-        target = FactoryGirl.create(:user, {gender: 1, nickname: 'yuko'})
+        target = FactoryGirl.create(:girls)
         FactoryGirl.create(:favorite, {user_id: @user.id, target_id: target.id})
       end
     end
@@ -30,7 +30,7 @@ describe Api::FavoritesController do
         parsed_body["current_page"].should == 1
         parsed_body["users"].length.should == 10
         parsed_body["last_page"].should == true
-        parsed_body["users"][0]["nickname"].should == 'yuko'
+        parsed_body["users"][0]["id"].should_not be_nil
         parsed_body["users"][0]["email"].should be_nil
       end
     end

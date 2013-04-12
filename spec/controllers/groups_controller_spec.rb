@@ -12,7 +12,7 @@ describe Api::GroupsController do
   describe '#list' do
     before do
       10.times do |n|
-        FactoryGirl.create(:group, {head_count: 2})
+        FactoryGirl.create(:group, {user_id: @user.id, head_count: 2})
       end
     end
 
@@ -35,8 +35,8 @@ describe Api::GroupsController do
   describe '#create' do
     context '既にグループがあった場合' do
       before do
-        group = FactoryGirl.create(:group)
-        @user2 = FactoryGirl.create(:user, {group_id: group.id})
+        @user2 = FactoryGirl.create(:user)
+        group = FactoryGirl.create(:group, {user_id: @user2.id})
         @session2 = FactoryGirl.create(:session, { value: @user2.id.to_s })
 
         post :create, {session_id: @session2.key, group: FactoryGirl.attributes_for(:group)}
@@ -97,8 +97,8 @@ describe Api::GroupsController do
 
     context 'グループがあった場合' do
       before do
-        group = FactoryGirl.create(:group)
-        @user2 = FactoryGirl.create(:user, {group_id: group.id})
+        @user2 = FactoryGirl.create(:user)
+        group = FactoryGirl.create(:group, {user_id: @user2.id})
         @session2 = FactoryGirl.create(:session, { value: @user2.id.to_s })
       end
 

@@ -2,6 +2,7 @@
 
 FactoryGirl.define do
   factory :group, class: Group do
+    user_id  1
     max_age 30
     min_age 25
     head_count 1

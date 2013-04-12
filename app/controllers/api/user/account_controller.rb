@@ -2,16 +2,16 @@
 class Api::User::AccountController < Api::BaseController
 
   def show_profile
-    render_ok(:user => @user.as_json(:except => [:email, :facebook_id, :access_token, :point]))
+    render_ok(:user => @user.as_json(:only => [:id]))
   end
 
   def update_profile
     begin
-      @user.update_attributes!(params[:user])
+      @user.profile.update_attributes!(params[:user][:profile])
     rescue Exception => e
       render_ng(e.message)
     else
-      render_ok(:user => @user.as_json(:except => [:email, :facebook_id, :access_token, :point]))
+      render_ok(:user => @user.as_json(:only => [:id]))
     end
   end
 
