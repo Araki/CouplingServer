@@ -6,18 +6,16 @@ class User < ActiveRecord::Base
   
   has_one  :profile
   has_one  :group
-  has_one  :main_image, :class_name => "Image", :conditions => { :is_main => true }
-  has_many :images, :dependent => :delete_all
   has_many :receipts, :dependent => :delete_all, :order => 'created_at desc'
   has_many :favorites, :dependent => :delete_all, :order => 'created_at desc'
   has_many :likes, :dependent => :delete_all, :order => 'created_at desc'
   has_many :likeds, :class_name => "Like", :foreign_key => "target_id", :dependent => :delete_all, :order => 'created_at desc'
   has_many :matches, :dependent => :delete_all, :order => 'created_at desc'
 
-  has_many :favorite_users, :through => :favorites, :source => :target_user, :include => [:images], :uniq => true
-  has_many :like_users, :through => :likes, :source => :target_user, :include => [:images], :uniq => true
-  has_many :liked_users, :through => :likeds, :source => :user, :include => [:images], :uniq => true
-  has_many :match_users, :through => :matches, :source => :target_user, :include => [:images], :uniq => true
+  has_many :favorite_users, :through => :favorites, :source => :target_user, :include => [:profile], :uniq => true
+  has_many :like_users, :through => :likes, :source => :target_user, :include => [:profile], :uniq => true
+  has_many :liked_users, :through => :likeds, :source => :user, :include => [:profile], :uniq => true
+  has_many :match_users, :through => :matches, :source => :target_user, :include => [:profile], :uniq => true
 
   validates :access_token, :presence => true
   validates :email, :presence => true
@@ -87,16 +85,6 @@ class User < ActiveRecord::Base
       return {type: "match"}
     rescue => e
       return {message: "internal_server_error"}    
-  end
-
-  def set_main_image(image)
-    ActiveRecord::Base.transaction do
-      self.main_image.update_attribute(:is_main, false ) if self.main_image.present?
-      image.update_attribute(:is_main, true )
-    end
-      return true
-    rescue => e
-      return false
   end
 
   def add_point(amount)
@@ -180,7 +168,6 @@ class User < ActiveRecord::Base
 
   def as_json(options = {})
       json = super(options)
-      json['images'] = self.images.as_json
       json['profile'] = self.profile.as_json
       json
   end  

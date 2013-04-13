@@ -1,13 +1,13 @@
-class Images < ActiveRecord::Migration
+class CreateImages < ActiveRecord::Migration
   def up
     create_table :images do |t|
-      t.integer :user_id,      :null => false
+      t.integer :member_id,      :null => false
       t.boolean :is_main,      :null => false
 
       t.datetime :created_at,  :null => false
     end
 
-    add_index :images, [:user_id, :is_main]
+    add_index :images, [:member_id, :is_main]
   end
 
   def down

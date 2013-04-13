@@ -7,6 +7,9 @@ class Member < ActiveRecord::Base
 
   belongs_to :group
 
+  has_one  :main_image, :class_name => "Image", :conditions => { :is_main => true }
+  has_many :images, :dependent => :delete_all
+
   has_many :member_hobbies
   has_many :hobbies, :through => :member_hobbies
   has_many :member_specialities
@@ -35,6 +38,16 @@ class Member < ActiveRecord::Base
   # validates :roommate, :inclusion => { :in => 0..3 }, :allow_nil => true
   validates :smoking, :inclusion => { :in => 0..2 }, :allow_nil => true
 
+
+  def set_main_image(image)
+    ActiveRecord::Base.transaction do
+      self.main_image.update_attribute(:is_main, false ) if self.main_image.present?
+      image.update_attribute(:is_main, true )
+    end
+      return true
+    rescue => e
+      return false
+  end
 
   def as_json(options = {})
       json = super(options)

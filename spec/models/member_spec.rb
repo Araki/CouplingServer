@@ -60,4 +60,28 @@ describe Member do
       its(:count) { should eq 5 }      
     end
   end
+
+  describe "#set_main_image" do
+    context 'mainでない画像の場合' do
+      let(:image) { FactoryGirl.create(:image, {member_id: @member.id, is_main: false}) }
+      before do
+        @member.set_main_image(image) 
+      end
+      subject { image.is_main }      
+      
+      it { should be_true } 
+    end
+
+    context 'main画像だった場合' do
+      # let!遅延評価でないことに注意
+      let!(:image) { FactoryGirl.create(:image, {member_id: @member.id, is_main: true}) }
+      before do
+        new_main_image =  FactoryGirl.create(:image, {member_id: @member.id, is_main: false})
+        @member.set_main_image(new_main_image) 
+      end
+      subject { image.reload.is_main }      
+
+      it { should be_false } 
+    end
+  end
 end

@@ -55,10 +55,10 @@ items = [
   {title: "無限ポイント", pid: "com.pairful.products.infinity", point: 0}
 ].map{|item|Item.create(item)}
 
-def create_images(user_id)
+def create_images(profile_id)
   0.upto(4) do |num|
     is_main = num > 0 ? false : true
-    FactoryGirl.create(:image, {user_id: user_id, is_main: is_main})
+    FactoryGirl.create(:image, {member_id: profile_id, is_main: is_main})
   end
 end
 
@@ -80,7 +80,7 @@ when "development"
    value: user.id.to_s,
    key: 'abc' 
    })
-  create_images(user.id)
+  create_images(user_profile.id)
 
   # お相手:session_id=xyz
   target_user = FactoryGirl.create(:user, {
@@ -97,17 +97,11 @@ when "development"
    value: user.id.to_s,
    key: 'xyz'
    })
-  create_images(target_user.id)
+  create_images(target_user_profile.id)
 
   # モブ:男女50人づつ','そのうち20人は画像を準備。
   boys = FactoryGirl.create_list(:boys, 50, {})
-  boys.sample(20).each do |boy|
-    create_images(boy.id)
-  end
   girls = FactoryGirl.create_list(:girls, 50, {})
-  girls.sample(20).each do |girl|
-    create_images(girl.id)
-  end
 
   # 主人公は10人のお気に入りと5人のmatchと10人のlikeと5人のlikedを持つ
   girls.sample(20).each_with_index do |girl, i|
@@ -169,6 +163,9 @@ when "development"
     end
     boys_groups << group
   end
+  boys_profiles.sample(20).each do |boy_profile|
+    create_images(boy_profile.id)
+  end
 
   girls_groups = []
   girls_profiles.sample(20).each do |girls_profile|
@@ -183,6 +180,9 @@ when "development"
       friend.specialities << specialities.sample(3)
     end
     girls_groups << group
+  end
+  girls_profiles.sample(20).each do |girls_profile|
+    create_images(girls_profile.id)
   end
 
   20.times do

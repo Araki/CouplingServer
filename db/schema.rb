@@ -76,12 +76,12 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
   end
 
   create_table "images", :force => true do |t|
-    t.integer  "user_id",    :null => false
+    t.integer  "member_id",  :null => false
     t.boolean  "is_main",    :null => false
     t.datetime "created_at", :null => false
   end
 
-  add_index "images", ["user_id", "is_main"], :name => "index_images_on_user_id_and_is_main"
+  add_index "images", ["member_id", "is_main"], :name => "index_images_on_member_id_and_is_main"
 
   create_table "infos", :force => true do |t|
     t.integer  "target_id",  :default => -1, :null => false
