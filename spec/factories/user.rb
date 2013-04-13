@@ -11,9 +11,8 @@ FactoryGirl.define do
     invitation_code   ''
     last_login_at     { rand(20).days.ago }
     like_point        { rand(20) }
-    status            '???'
+    status            1
     point             { rand(300) }
-    public_status     '???'
 
     factory :boys do
       gender 0

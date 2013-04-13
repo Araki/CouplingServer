@@ -19,7 +19,7 @@ describe Api::GroupsController do
         get :list, {session_id: @session.key}
       end
 
-      it 'お気に入りユーザーのリストが返ること' do
+      it 'グループのリストが返ること' do
         # response.body.should ==  ''
         parsed_body = JSON.parse(response.body)
         parsed_body["current_page"].should == 1

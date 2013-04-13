@@ -2,8 +2,8 @@
 
 FactoryGirl.define do
   factory :receipt, class: Receipt do
-    sequence(:receipt_code) { |n| "ewoJInNpZ25hdHVyZSIgPSAi...#{n}" }
-    user_id 1
-    item_id 1
+    receipt_code { Faker::Lorem.characters(30) }
+    user_id { User.all.sample.id }
+    item_id { Item.all.sample.id }
   end
 end

@@ -1,7 +1,8 @@
 class CreateMember < ActiveRecord::Migration
   def change
     create_table :members do |t|
-      t.string   :type
+      t.string   :type,      :null => false
+      t.integer  :status,    :default => 0
       t.integer  :user_id
       t.integer  :group_id
       t.string   :nickname

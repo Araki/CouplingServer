@@ -83,11 +83,12 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
   add_index "group_mst_prefectures", ["mst_prefecture_id"], :name => "index_group_mst_prefectures_on_mst_prefecture_id"
 
   create_table "groups", :force => true do |t|
-    t.integer "user_id",          :null => false
-    t.integer "max_age",          :null => false
-    t.integer "min_age",          :null => false
-    t.integer "head_count",       :null => false
-    t.string  "relationship",     :null => false
+    t.integer "status",           :default => 0
+    t.integer "user_id",                         :null => false
+    t.integer "max_age",                         :null => false
+    t.integer "min_age",                         :null => false
+    t.integer "head_count",                      :null => false
+    t.string  "relationship",                    :null => false
     t.string  "request"
     t.time    "opening_hour"
     t.integer "target_age_range"
@@ -167,7 +168,8 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
   add_index "member_specialities", ["speciality_id"], :name => "index_member_specialities_on_speciality_id"
 
   create_table "members", :force => true do |t|
-    t.string   "type"
+    t.string   "type",                           :null => false
+    t.integer  "status",          :default => 0
     t.integer  "user_id"
     t.integer  "group_id"
     t.string   "nickname"
@@ -193,8 +195,8 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
     t.integer  "sociability"
     t.string   "dislike"
     t.integer  "prefecture"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
   add_index "members", ["group_id"], :name => "index_members_on_group_id"
@@ -237,24 +239,23 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
   end
 
   create_table "users", :force => true do |t|
-    t.integer  "gender"
-    t.integer  "group_id"
+    t.string   "status"
     t.integer  "facebook_id",     :limit => 8
     t.string   "email"
     t.string   "access_token"
     t.string   "device_token"
-    t.string   "status"
-    t.string   "public_status"
-    t.datetime "last_login_at"
     t.string   "invitation_code"
     t.string   "contract_type"
-    t.integer  "like_point"
     t.integer  "point",                        :default => 0
+    t.integer  "like_point",                   :default => 0
+    t.integer  "gender"
+    t.datetime "last_login_at"
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
   end
 
-  add_index "users", ["access_token"], :name => "index_users_on_access_token"
-  add_index "users", ["group_id"], :name => "index_users_on_group_id"
+  add_index "users", ["facebook_id"], :name => "index_users_on_facebook_id"
+  add_index "users", ["gender"], :name => "index_users_on_gender"
+  add_index "users", ["like_point"], :name => "index_users_on_like_point"
 
 end
