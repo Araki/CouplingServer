@@ -11,6 +11,7 @@
 * GET  groups#list
 * POST groups#create
 * POST groups#update
+* GET  friends#show
 * POST friends#create
 * POST friends#update
 * POST friends#destroy
@@ -256,6 +257,23 @@ group[xxx]| o | 更新するグループのパラメータ
 ### Example Response
 
     {単独グループのレスポンス例(後述)}
+
+## GET friends#show
+
+友達を表示
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+id| o | Friend ID
+
+### Example Request
+
+    http://pairful.com/api/friends/(:id)/show?session_id=abc 
+
+### Example Response
+
+    {プロフィール/Friendの例(後述)}
 
 ## POST friends#create
 
@@ -573,7 +591,7 @@ session_id| o | セッションID
 
 ### Example Response
 
-    {未}
+    {"status":"ok","receipts":[{"created_at":"2013-04-13T13:03:16Z","item":"1000\u30dd\u30a4\u30f3\u30c8"},{"created_at":"2013-04-13T13:03:16Z","item":"\u7121\u9650\u30dd\u30a4\u30f3\u30c8"},{"created_at":"2013-04-13T13:03:16Z","item":"100\u30dd\u30a4\u30f3\u30c8"},{"created_at":"2013-04-13T13:03:16Z","item":"\u7121\u9650\u30dd\u30a4\u30f3\u30c8"},{"created_at":"2013-04-13T13:03:16Z","item":"\u7121\u9650\u30dd\u30a4\u30f3\u30c8"},{"created_at":"2013-04-13T13:03:16Z","item":"1000\u30dd\u30a4\u30f3\u30c8"},{"created_at":"2013-04-13T13:03:16Z","item":"1000\u30dd\u30a4\u30f3\u30c8"},{"created_at":"2013-04-13T13:03:16Z","item":"100\u30dd\u30a4\u30f3\u30c8"},{"created_at":"2013-04-13T13:03:16Z","item":"1000\u30dd\u30a4\u30f3\u30c8"},{"created_at":"2013-04-13T13:03:16Z","item":"100\u30dd\u30a4\u30f3\u30c8"}],"current_page":1,"last_page":true}
 
 ## POST receipts#validate
 
@@ -646,9 +664,9 @@ session_id| o | セッションID
 
     http://pairful.com/api/infos/list?session_id=abc
 
-### Example Response
+### Example Response(*target_idが-1は全ユーザー向け)
     
-    {"status":"ok","point":178}
+    {"status":"ok","infos":[{"body":"Quo et consectetur neque pariatur repellendus sed et veniam adipisci.","created_at":"2013-04-13T13:03:15Z","id":41,"target_id":-1},{"body":"Consectetur ullam expedita aliquid rem deserunt ut dicta est voluptas reiciendis vero quis.","created_at":"2013-04-13T13:03:15Z","id":52,"target_id":-1},{"body":"Saepe consequatur doloribus voluptatem magni accusantium aliquid sit sint temporibus.","created_at":"2013-04-13T13:03:15Z","id":53,"target_id":1},{"body":"Eum tempora voluptas officiis vero repellendus nisi magnam eos ipsum iste sunt provident.","created_at":"2013-04-13T13:03:15Z","id":54,"target_id":1},{"body":"Aperiam labore dicta atque dolor dolorem qui perspiciatis sit et aut voluptate et sed id.","created_at":"2013-04-13T13:03:15Z","id":55,"target_id":1},{"body":"Dolorem odit explicabo nostrum nobis sint cum fugiat aut dolores.","created_at":"2013-04-13T13:03:15Z","id":56,"target_id":-1},{"body":"Fugiat iure quidem eius sit et dolor quod omnis enim ut.","created_at":"2013-04-13T13:03:15Z","id":57,"target_id":-1},{"body":"Labore repellendus eum voluptatem accusantium nostrum maiores sequi non autem itaque.","created_at":"2013-04-13T13:03:15Z","id":58,"target_id":-1},{"body":"Officia et eos aut quasi accusamus doloremque qui illo quae vel reprehenderit.","created_at":"2013-04-13T13:03:15Z","id":59,"target_id":-1},{"body":"Eos quibusdam et possimus iste delectus excepturi ipsam soluta doloribus ex sapiente nulla.","created_at":"2013-04-13T13:03:15Z","id":51,"target_id":-1},{"body":"Soluta non aut sequi aut earum ipsum mollitia dolorem occaecati perferendis qui incidunt molestiae et.","created_at":"2013-04-13T13:03:15Z","id":50,"target_id":-1},{"body":"Eos aspernatur qui sunt voluptatem quidem fugiat consequatur veniam nemo.","created_at":"2013-04-13T13:03:15Z","id":42,"target_id":1},{"body":"Impedit et ut velit sint aut reprehenderit et omnis ipsum dignissimos laborum magni.","created_at":"2013-04-13T13:03:15Z","id":43,"target_id":-1},{"body":"Quia saepe vel sed qui animi voluptas cum aut deleniti.","created_at":"2013-04-13T13:03:15Z","id":44,"target_id":-1},{"body":"Laboriosam alias qui quod minima vitae veniam voluptatibus sit molestiae deserunt ut corporis.","created_at":"2013-04-13T13:03:15Z","id":45,"target_id":1},{"body":"Qui similique dolores placeat est quis recusandae ipsam molestias culpa labore.","created_at":"2013-04-13T13:03:15Z","id":46,"target_id":-1},{"body":"Praesentium et accusantium vel id qui voluptatem autem velit perspiciatis repellat amet unde est.","created_at":"2013-04-13T13:03:15Z","id":47,"target_id":-1},{"body":"Odit porro commodi dolores rem voluptatem beatae cum ut vel.","created_at":"2013-04-13T13:03:15Z","id":48,"target_id":-1},{"body":"Tempora et aliquid non laboriosam assumenda vel delectus temporibus quia unde ut veniam ut.","created_at":"2013-04-13T13:03:15Z","id":49,"target_id":-1},{"body":"Quia qui autem nam fugiat tempora et rem id corporis quibusdam.","created_at":"2013-04-13T13:03:15Z","id":60,"target_id":-1}],"current_page":1,"last_page":true}
 
 
 
@@ -780,102 +798,88 @@ session_id| o | セッションID
 
     {
         "current_page": 1, 
+        "last_page": true, 
+        "status": "ok", 
         "users": [
             {
-                "address": "Pearline", 
-                "age": 34, 
-                "alcohol": 3, 
-                "birthplace": "22", 
-                "blood_type": "O", 
-                "certification": "???", 
-                "certification_status": "???", 
-                "character": null, 
-                "constellation": 0, 
-                "contract_type": "???", 
-                "country": "Japan", 
-                "created_at": "2013-04-04T07:49:58Z", 
-                "dislike": "goki", 
-                "first_login_at": "2012-10-04T07:49:58Z", 
-                "gender": 1, 
-                "have_child": 0, 
-                "height": 181, 
-                "hobby": null, 
-                "holiday": 3, 
-                "id": 565, 
-                "images": [
-                    {
-                        "created_at": "2013-04-04T07:49:59Z", 
-                        "id": 206, 
-                        "is_main": true, 
-                        "order_number": 0, 
-                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/206.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365062978&Signature=ErlR03bPUgb4avR%2BKPtB9fu8dR8%3D", 
-                        "user_id": 565
-                    }, 
-                    {
-                        "created_at": "2013-04-04T07:49:59Z", 
-                        "id": 207, 
-                        "is_main": false, 
-                        "order_number": 1, 
-                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/207.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365062978&Signature=U12l1YZhzPgJTk8MfIYsf9lbwqc%3D", 
-                        "user_id": 565
-                    }, 
-                    {
-                        "created_at": "2013-04-04T07:49:59Z", 
-                        "id": 208, 
-                        "is_main": false, 
-                        "order_number": 2, 
-                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/208.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365062978&Signature=%2FNeqzd7t5MC%2FwL8%2FMCg4WDRshZ4%3D", 
-                        "user_id": 565
-                    }, 
-                    {
-                        "created_at": "2013-04-04T07:49:59Z", 
-                        "id": 209, 
-                        "is_main": false, 
-                        "order_number": 3, 
-                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/209.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365062978&Signature=i0BwMVxtAYv0sJeMRE7xj%2FGXfhQ%3D", 
-                        "user_id": 565
-                    }, 
-                    {
-                        "created_at": "2013-04-04T07:49:59Z", 
-                        "id": 210, 
-                        "is_main": false, 
-                        "order_number": 4, 
-                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/210.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365062978&Signature=D16pLPyxmLl5Xh8rb1OwAP%2Bk67U%3D", 
-                        "user_id": 565
-                    }
-                ], 
-                "income": 3, 
-                "industry": 0, 
-                "introduction": "Eum eos assumenda vitae nobis eligendi maxime numquam animi quae qui aliquam hic commodi.", 
-                "invitation_code": "", 
-                "job": 25, 
-                "job_description": "クリエイター ", 
-                "language": "Japanese", 
-                "last_login_at": "2013-03-26T07:49:58Z", 
-                "like_point": 0, 
-                "login_token": "db9qa63nld", 
-                "marital_history": 0, 
-                "marriage_time": 0, 
-                "nickname": "Darron", 
-                "prefecture": 38, 
-                "profile_status": "???", 
-                "proportion": 1, 
-                "public_status": "???", 
-                "qualification": "普通自動車免許", 
-                "relationship": 0, 
-                "roommate": "???", 
-                "school": null, 
-                "school_name": "辻調理師専門学校", 
-                "smoking": 0, 
-                "sociability": "???", 
-                "speciality": null, 
-                "updated_at": "2013-04-04T07:49:58Z", 
-                "want_child": 0, 
-                "workplace": "渋谷区"
+                "id": 284, 
+                "profile": null
+            }, 
+            {
+                "id": 262, 
+                "profile": {
+                    "age": 22, 
+                    "alcohol": 0, 
+                    "birthplace": 38, 
+                    "blood_type": "AB", 
+                    "characters": [], 
+                    "created_at": "2013-04-13T13:03:10Z", 
+                    "dislike": "Omnis odit eum velit possimus.", 
+                    "gender": 1, 
+                    "group_id": null, 
+                    "height": 174, 
+                    "hobbies": [], 
+                    "holiday": 3, 
+                    "id": 495, 
+                    "images": [
+                        {
+                            "created_at": "2013-04-13T13:03:15Z", 
+                            "id": 537, 
+                            "is_main": false, 
+                            "member_id": 495, 
+                            "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/537.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365864325&Signature=iSntig63kTj1ChOjZsNqp7MVl40%3D"
+                        }, 
+                        {
+                            "created_at": "2013-04-13T13:03:15Z", 
+                            "id": 538, 
+                            "is_main": false, 
+                            "member_id": 495, 
+                            "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/538.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365864325&Signature=WzgEq6om%2F%2FJAHX14i%2BOmxCbNFkM%3D"
+                        }, 
+                        {
+                            "created_at": "2013-04-13T13:03:15Z", 
+                            "id": 539, 
+                            "is_main": false, 
+                            "member_id": 495, 
+                            "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/539.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365864325&Signature=dmSfQMSpiUgbPOzW1XOkvkjTNFE%3D"
+                        }, 
+                        {
+                            "created_at": "2013-04-13T13:03:15Z", 
+                            "id": 540, 
+                            "is_main": false, 
+                            "member_id": 495, 
+                            "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/540.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365864325&Signature=SlyFA5q7AuQ%2B8hwquAfCOem2EUU%3D"
+                        }, 
+                        {
+                            "created_at": "2013-04-13T13:03:15Z", 
+                            "id": 536, 
+                            "is_main": true, 
+                            "member_id": 495, 
+                            "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/536.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365864325&Signature=VjGhvvH%2B%2Bm4PJ0MbbWrPpfbF1l4%3D"
+                        }
+                    ], 
+                    "income": 7, 
+                    "industry": 0, 
+                    "introduction": "Voluptatem quia impedit nemo id nesciunt cupiditate velit reprehenderit earum minus iure voluptatem iusto placeat at ea et et sapiente quo temporibus ea totam aliquam quas minima et doloribus nulla dignissimos recusandae quisquam.", 
+                    "job": 22, 
+                    "job_description": "Quis earum placeat in.", 
+                    "marital_history": 0, 
+                    "marriage_time": 0, 
+                    "nickname": "Kay", 
+                    "prefecture": 4, 
+                    "proportion": 2, 
+                    "roommate": "2", 
+                    "school": null, 
+                    "smoking": 2, 
+                    "sociability": 0, 
+                    "specialities": [], 
+                    "status": 1, 
+                    "updated_at": "2013-04-13T13:03:10Z", 
+                    "user_id": 262, 
+                    "workplace": "Jameyton"
+                }
             }
-        ], 
-        "last_page": true, 
-        "status": "ok"
+        ]
     }
 
 ## プロフィール/Friendの例
