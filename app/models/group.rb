@@ -1,6 +1,6 @@
 # coding:utf-8
 class Group < ActiveRecord::Base
-  attr_accessible :max_age, :min_age, :head_count,:relationship, :request, :opening_hour, :target_age_range, :area, :user_id
+  attr_accessible :max_age, :min_age, :head_count,:relationship, :request, :opening_hour, :target_age_range, :area, :user_id, :status
 
   has_one  :leader, :class_name => 'User'
   has_many :friends

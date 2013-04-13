@@ -10,5 +10,9 @@ describe Api::FriendsController do
     it "routes to #update" do
       post("/api/friends/5/update").should route_to(controller: "api/friends", action: "update", id: "5")
     end
+
+    it "routes to #destroy" do
+      post("/api/friends/5/destroy").should route_to(controller: "api/friends", action: "destroy", id: "5")
+    end
   end
 end

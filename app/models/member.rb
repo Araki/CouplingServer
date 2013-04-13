@@ -3,7 +3,7 @@ class Member < ActiveRecord::Base
   attr_accessible :type, :alcohol, :birthplace, :blood_type, :character, :group_id,
     :dislike, :height, :holiday, :income, :industry, :introduction, :job, 
     :job_description, :marital_history, :marriage_time, :nickname, :prefecture,
-    :proportion, :roommate, :school, :smoking, :sociability, :workplace
+    :proportion, :roommate, :school, :smoking, :sociability, :workplace, :status
 
   belongs_to :group
 

@@ -24,4 +24,14 @@ class Api::FriendsController < Api::BaseController
       render_ng(friend.errors)
     end
   end  
+
+  def destroy
+    friend = Friend.find_by_id(params[:id])
+    render_not_found and return if friend.nil?
+    render_ng("internal_server_error") and return if @user.group.nil?
+    render_ng("permission_denied") and return unless friend.group == @user.group
+
+    friend.destroy
+    render_ok
+  end  
 end

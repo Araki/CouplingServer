@@ -99,7 +99,7 @@ describe Api::FriendsController do
           end 
         end
 
-        context '自分のグループのFriendでなかった場合' do
+        context '自分のグループのFriendだった場合' do
           before do
             @friend = FactoryGirl.create(:friend, {group_id: @group.id, nickname: 'donald'})
           end
@@ -109,7 +109,7 @@ describe Api::FriendsController do
               post :update, {session_id: @session.key, friend: {nickname: 'taro'}, id: @friend.id}
             end
 
-            it 'internal_server_errorが返されること' do
+            it 'friendのプロフィールが返されること' do
               JSON.parse(response.body)["friend"]["nickname"].should eq 'taro'
             end 
           end
@@ -127,4 +127,80 @@ describe Api::FriendsController do
       end
     end
   end
+
+  describe '#destroy' do
+    context 'グループがなかった場合' do
+      before do
+        post :destroy, {session_id: @session.key, friend: {nickname: 'taro'}, id: 1}
+      end
+
+      it 'internal_server_errorが返されること' do
+        JSON.parse(response.body)["code"].should == "not_found"
+      end 
+    end
+
+    context 'グループがあった場合' do
+      before do
+        @group = FactoryGirl.create(:group, {user_id: @user.id})
+      end
+
+      context 'Friendがなかった場合' do
+        before do
+          post :destroy, {session_id: @session.key, id: 1}
+        end
+
+        it 'not_foundが返されること' do
+          JSON.parse(response.body)["code"].should == "not_found"
+        end 
+      end
+
+      context 'Friendがあった場合' do
+        context '自分のグループのFriendでなかった場合' do
+          before do
+            @friend = FactoryGirl.create(:friend, {group_id: 9999})
+            post :destroy, {session_id: @session.key, id: @friend.id}
+          end
+
+          it 'permission_deniedが返されること' do
+            JSON.parse(response.body)["code"].should == "permission_denied"
+          end 
+        end
+
+        context '自分のグループのFriendだった場合' do
+          before do
+            @friend = FactoryGirl.create(:friend, {group_id: @group.id})
+          end
+
+          context '正常に削除された場合' do
+            context 'Friendが一個減ること' do
+              it do
+                expect{
+                  post :destroy, {session_id: @session.key, id: @friend.id}
+                }.to change(Friend, :count).by(-1)
+              end
+            end
+
+            context 'Groupのfriendが一個減ること' do
+              it do
+                expect{
+                  post :destroy, {session_id: @session.key, id: @friend.id}
+                }.to change(@group.friends, :count).by(-1)
+              end
+            end
+
+            context 'okが返されること' do
+              before do
+                post :destroy, {session_id: @session.key, id: @friend.id}
+              end
+
+              it 'okが返されること' do
+                JSON.parse(response.body)["status"].should eq 'ok'
+              end 
+            end
+          end
+        end
+      end
+    end
+  end
+  
 end
