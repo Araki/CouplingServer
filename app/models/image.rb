@@ -1,19 +1,18 @@
 class Image < ActiveRecord::Base
-  attr_accessible :user_id, :is_main, :order_number
+  attr_accessible :member_id, :is_main
 
-  belongs_to :user
+  belongs_to :member
 
   IMAGE_DATA_HASH = Pref::AWS::BUCKET_PATH[:image]
 
   def self.main_images 
-    self.find(:all, :conditions => {is_main: true}, :order => 'user_id desc')
+    self.find(:all, :conditions => {is_main: true}, :order => 'member_id desc')
   end
 
-  def self.create_user_iamge(user) 
+  def self.create_member_iamge(member) 
     self.create!({
-      user_id: user.id,
-      is_main: user.main_image.nil?,
-      order_number: user.images.count + 1      
+      member_id: member.id,
+      is_main: member.main_image.nil?
       })
   end
 

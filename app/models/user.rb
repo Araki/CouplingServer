@@ -1,57 +1,42 @@
 # -*r coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  # attr_protected :access_token, :age, :email, :facebook_id, :certification_status, :certification, :like_point, 
-  #   :gender, :point, :first_login_at, :last_login_at, :invitation_code
-
-  attr_accessible :address, :alcohol, :birthplace, :blood_type, :character, :constellation, :contract_type, 
-    :country, :dislike, :have_child, :height, :hobby, :holiday, :income, :industry, :introduction, :job, 
-    :job_description, :language, :marital_history, :marriage_time, :nickname, :profile_status, 
-    :proportion, :public_status, :qualification, :relationship, :roommate, :school, :smoking, :sociability, :speciality, 
-    :want_child, :workplace
-
-  has_one  :main_image, :class_name => "Image", :conditions => { :is_main => true }
-  has_many :images, :dependent => :delete_all, :order => 'order_number'
+  # attr_protected :access_token, :age, :email, :facebook_id, :like_point, 
+  #   :gender, :point, :last_login_at, :invitation_code, :status, :public_status
+  
+  has_one  :profile
+  has_one  :group
+  has_many :receipts, :dependent => :delete_all, :order => 'created_at desc'
   has_many :favorites, :dependent => :delete_all, :order => 'created_at desc'
   has_many :likes, :dependent => :delete_all, :order => 'created_at desc'
   has_many :likeds, :class_name => "Like", :foreign_key => "target_id", :dependent => :delete_all, :order => 'created_at desc'
   has_many :matches, :dependent => :delete_all, :order => 'created_at desc'
 
-  has_many :favorite_users, :through => :favorites, :source => :target_user, :include => [:images], :uniq => true
-  has_many :like_users, :through => :likes, :source => :target_user, :include => [:images], :uniq => true
-  has_many :liked_users, :through => :likeds, :source => :user, :include => [:images], :uniq => true
-  has_many :match_users, :through => :matches, :source => :target_user, :include => [:images], :uniq => true
+  has_many :favorite_users, :through => :favorites, :source => :target_user, :include => [:profile], :uniq => true
+  has_many :like_users, :through => :likes, :source => :target_user, :include => [:profile], :uniq => true
+  has_many :liked_users, :through => :likeds, :source => :user, :include => [:profile], :uniq => true
+  has_many :match_users, :through => :matches, :source => :target_user, :include => [:profile], :uniq => true
 
-  # validates :gender, :numericality => true
-  # validates :height, :numericality => true
-  
   validates :access_token, :presence => true
-  validates :age, :presence => true
   validates :email, :presence => true
   validates :facebook_id, :presence => true
-  validates :gender, :presence => true
-  validates :gender, :inclusion => { :in => [0, 1] }
-  validates :nickname, :presence => true
-  validates :nickname, :length => { :minimum => 1, :maximum => 50 }
 
-  validates :address, :length => { :maximum => 50 }, :allow_nil => true
-  validates :alcohol, :inclusion => { :in => 0..3 }, :allow_nil => true
-  # validates :birthplace, :inclusion => { :in => 0..46 }, :allow_nil => true
-  # validates :character, :inclusion => { :in => 0..46 }, :allow_nil => true
-  validates :holiday, :inclusion => { :in => 0..3 }, :allow_nil => true
-  validates :income, :inclusion => { :in => 0..7 }, :allow_nil => true
-  validates :introduction, :length => { :minimum => 70, :maximum => 500 }, :allow_nil => true
-  validates :height, :inclusion => { :in => 130..210 }, :allow_nil => true
-  validates :proportion, :inclusion => { :in => 0..7 }, :allow_nil => true
-  # validates :roommate, :inclusion => { :in => 0..3 }, :allow_nil => true
-  validates :smoking, :inclusion => { :in => 0..2 }, :allow_nil => true
+  def self.create_or_find_by_access_token(access_token, device_token)
+    graph = Koala::Facebook::API.new(access_token)
+    fb_profile = graph.get_object("me") 
 
-
-  def self.create_or_find_by_access_token(access_token)
-    user = self.find_by_access_token(access_token)
+    user = self.find_by_facebook_id(fb_profile[:id].to_i)
     user = self.new if user.nil?
-    user.assign_fb_attributes(access_token)
+    user.assign_fb_attributes(fb_profile, access_token, device_token)
     user.save!
+    profile = user.profile.nil? ? Profile.new : user.profile
+    profile.assign_fb_attributes(user, fb_profile)
+    profile.save!
+    user
+  end
+
+  def infos
+    Info.find(:all, :conditions => ['target_id IN (?,?)', -1, self.id] , :order => 'created_at desc')
   end
 
   def like?(target)
@@ -64,6 +49,10 @@ class User < ActiveRecord::Base
 
   def match?(target)
     Match.find_by_user_id_and_target_id(self.id, target.id).present?
+  end
+
+  def over_likes_limit_per_day?
+    self.likes.where('created_at > ?', Date.today).count > configatron.likes_limit_per_day - 1
   end
 
   # targetに対するLikeを作る
@@ -98,39 +87,33 @@ class User < ActiveRecord::Base
       return {message: "internal_server_error"}    
   end
 
-  def set_main_image(image)
-    ActiveRecord::Base.transaction do
-      self.main_image.update_attribute(:is_main, false ) if self.main_image.present?
-      image.update_attribute(:is_main, true )
-    end
-      return true
-    rescue => e
-      return false
-  end
-
   def add_point(amount)
     if amount > 0
-      self.point += amount
-      if self.save
-        return {point: self.point}
-      else
-        return {message: "internal_server_error"}
+      begin
+        self.point += amount
+        self.save!
+      rescue ActiveRecord::RecordInvalid => e
+        self.errors.add :base, "internal_server_error"
+        false
       end
     else
-      return {message: "invalid_arguments"}
+      self.errors.add :base, "invalid_arguments"
+      false
     end
   end
 
   def consume_point(amount)
     if amount > 0 && amount < self.point
-      self.point -= amount
-      if self.save
-        return {point: self.point}
-      else
-        return {message: "internal_server_error"}
+      begin
+        self.point -= amount
+        self.save!
+      rescue ActiveRecord::RecordInvalid => e
+        self.errors.add :base, "internal_server_error"
+        false
       end
     else
-      return {message: "invalid_arguments"}
+      self.errors.add :base, "invalid_arguments"
+      false
     end
   end
 
@@ -171,37 +154,21 @@ class User < ActiveRecord::Base
       "updated_time"=>"2012-02-24T04:18:05+0000"
     }
 =end
-  def assign_fb_attributes(access_token)
-    graph = Koala::Facebook::API.new(access_token)
-    profile = graph.get_object("me") 
+  def assign_fb_attributes(fb_profile, access_token, device_token)
     params = {access_token: access_token}
       # params.picture = graph.get_picture(uid) 
-    params[:email] =     profile[:email] 
-    params[:nickname]    = self.nickname || get_initial(profile)
-    params[:facebook_id] = self.facebook_id || profile[:id]
-    params[:gender] =    profile[:gender] == "male" ? 0 : 1
-    params[:age] =       get_age(profile)      
+    params[:device_token] = device_token unless device_token.nil?      
+    params[:email] =        fb_profile[:email] 
+    params[:facebook_id] =  self.facebook_id || fb_profile[:id]
+    params[:gender] =  fb_profile[:gender] == "male" ? 0 : 1
     params[:last_login_at] = Time.now      
-
     self.assign_attributes(params, :without_protection => true)
     self
   end
 
   def as_json(options = {})
       json = super(options)
-      json['images'] = self.images.as_json
+      json['profile'] = self.profile.as_json
       json
-  end  
-
-
-  private
-
-  def get_initial(profile)
-    "#{profile[:first_name][0, 1].capitalize}.#{profile[:last_name][0, 1].capitalize}"
-  end
-
-  #age 誕生日を考慮していないので実際には不正確
-  def get_age(profile)
-    Time.now.utc.to_date.year - Date.strptime(profile[:birthday], '%m/%d/%Y').year
   end  
 end

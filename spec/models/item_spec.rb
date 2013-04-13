@@ -1,5 +1,5 @@
- # # -*r coding: utf-8 -*-
- # require 'spec_helper'
+# -*r coding: utf-8 -*-
+require 'spec_helper'
 
- # describe Item do
- # end
+describe Item do
+end

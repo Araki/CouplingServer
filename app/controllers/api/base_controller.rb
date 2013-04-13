@@ -9,6 +9,7 @@ class Api::BaseController < ApplicationController
   end
 
   def render_ng(message, ps = nil)
+    # code = message.kind_of?(String) ? message : message[:base][0]
     ret = {status: "ng", code: message}
     ret = ret.merge({ps: ps}) if ps
     render json: ret
@@ -24,7 +25,7 @@ class Api::BaseController < ApplicationController
   end
 
   def render_users_list(data)
-    render_pagenate_data(:users, data, {:except => [:email, :facebook_id, :access_token, :point]})
+    render_pagenate_data(:users, data, {:only => [:id]})
   end
 
   def render_not_found
@@ -33,9 +34,13 @@ class Api::BaseController < ApplicationController
 
   def verify_session
     @session = Session.find_by_key(params[:session_id])
-    render_ng('invalid_session') and return if @session.nil?    
+    render_ng('invalid_session') and return if @session.nil?
+    
     @user = ::User.find_by_id(@session.value)
-    unless @user
+    if  @user.present?
+      @login_bonus = @user.last_login_at < Date.today ? configatron.login_bonus : 0
+      @user.update_attribute(:last_login_at, Time.now)
+    else
       @session.destroy
       render_ng('invalid_session') and return if @user.nil?    
     end

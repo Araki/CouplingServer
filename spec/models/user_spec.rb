@@ -4,41 +4,71 @@ require 'spec_helper'
 describe User do
   before do
     @user = FactoryGirl.create(:user)
+    @profile = FactoryGirl.create(:profile, {user_id: @user.id})
     @target_user = FactoryGirl.create(:user)
   end
 
   describe ".create_or_find_by_access_token" do
-    before do
-      graph = mock("graph")
-      Koala::Facebook::API.stub!(:new).with('xxx').and_return(graph)
-      profile = {
-        id: '12345678900',
-        email: 'test@example.com',
-        first_name: "First", 
-        last_name: "Last", 
-        gender: "male",
-        birthday: 28.years.ago.strftime("%m/%d/%Y"),
-        id: '12345678900',
-      }
-      graph.stub!(:get_object).with('me').and_return(profile)
-    end
-
-    context '既存のユーザーがあれば' do
+    context 'facebook認証に成功した場合' do
       before do
-        FactoryGirl.create(:user, {access_token: 'xxx'})
+        graph = mock("graph")
+        Koala::Facebook::API.stub!(:new).with('facebookaccesstoken').and_return(graph)
+        fb_profile = {
+          id: '1234567890',
+          email: 'test@example.com',
+          first_name: "First", 
+          last_name: "Last", 
+          gender: "male",
+          birthday: 28.years.ago.strftime("%m/%d/%Y")
+        }
+        graph.stub!(:get_object).with('me').and_return(fb_profile)
       end
 
-      it {expect{User.create_or_find_by_access_token('xxx') }.to change(User, :count).by(0)}
-    end
+      context '既存のユーザーがあれば' do
+        before do
+          user = FactoryGirl.create(:user, {facebook_id: 1234567890})
+          FactoryGirl.create(:profile, {user_id: user.id})
+        end
 
-    context '既存のユーザーがなければ' do
-      before do
-        User.stub!(:find_by_access_token).with('xxx').and_return(nil)
-        user = User.new
-        User.stub!(:new).and_return(user)
+        it {expect{User.create_or_find_by_access_token('facebookaccesstoken', 'appledevicetoken') }.to change(User, :count).by(0)}
+        it {expect{User.create_or_find_by_access_token('facebookaccesstoken', 'appledevicetoken') }.to change(Profile, :count).by(0)}
       end
 
-      it {expect{User.create_or_find_by_access_token('xxx')}.to change(User, :count).by(1)}
+      context '既存のユーザーがなければ' do
+        before do
+          User.stub!(:find_by_access_token).with('facebookaccesstoken').and_return(nil)
+          user = User.new
+          User.stub!(:new).and_return(user)
+        end
+
+        it {expect{User.create_or_find_by_access_token('facebookaccesstoken', 'appledevicetoken')}.to change(User, :count).by(1)}
+        it {expect{User.create_or_find_by_access_token('facebookaccesstoken', 'appledevicetoken')}.to change(Profile, :count).by(1)}
+      end      
+    end
+    context 'facebook認証に成功しなかった場合' do
+      before do
+        graph = mock("graph")
+        Koala::Facebook::API.stub!(:new).with('facebookaccesstoken').and_return(graph)
+        fb_profile = {}
+        graph.stub!(:get_object).with('me').and_return(fb_profile)
+      end
+
+      context 'エラーになること' do
+        it {expect{User.create_or_find_by_access_token('facebookaccesstoken', 'appledevicetoken') }.to raise_error}
+      end
+    end
+  end
+
+  describe "#infos" do
+    context '自分宛と全員あてがとれること' do
+      subject { @user.infos() }
+      before do
+        FactoryGirl.create_list(:info, 5, {:body => 'lalala', :target_id => @user.id})
+        FactoryGirl.create_list(:info, 6, {:body => 'lalala', :target_id => -1})
+        FactoryGirl.create_list(:info, 7, {:body => 'lalala', :target_id => 100})
+      end
+
+      its(:count) { should eq 11 }
     end
   end
 
@@ -87,6 +117,33 @@ describe User do
       before do
         @target_user.match_users << @user
         @user.match_users << @target_user
+      end
+
+      it { should be_true }
+    end
+  end
+
+  describe "#over_likes_limit_per_day?" do
+    before do
+      @girls = FactoryGirl.create_list(:girls, 10)
+    end
+    subject { @user.over_likes_limit_per_day? }
+
+    context '当日のlikeの数がlikes_limit_per_day以下だったら' do
+      before do
+        (configatron.likes_limit_per_day - 1).times do |n|
+          FactoryGirl.create(:like_target_girls, {user_id: @user.id, target_id: @girls[n].id})
+        end
+      end
+
+      it { should be_false }
+    end
+
+    context '当日のlikeの数がlikes_limit_per_day以上だったら' do
+      before do
+        configatron.likes_limit_per_day.times do |n|
+          FactoryGirl.create(:like_target_girls, {user_id: @user.id, target_id: @girls[n].id})
+        end
       end
 
       it { should be_true }
@@ -209,106 +266,86 @@ describe User do
     it 'like_pointが増えること'
   end
 
-  describe "#set_main_image" do
-    context 'mainでない画像の場合' do
-      let(:image) { FactoryGirl.create(:image, {user_id: @user.id, is_main: false}) }
-      before do
-        @user.set_main_image(image) 
-      end
-      subject { image.is_main }      
-      
-      it { should be_true } 
-    end
-
-    context 'main画像だった場合' do
-      # let!遅延評価でないことに注意
-      let!(:image) { FactoryGirl.create(:image, {user_id: @user.id, is_main: true}) }
-      before do
-        new_main_image =  FactoryGirl.create(:image, {user_id: @user.id, is_main: false})
-        @user.set_main_image(new_main_image) 
-      end
-      subject { image.reload.is_main }      
-
-      it { should be_false } 
-    end
-  end
-
   describe "#add_point" do
     let(:user) { FactoryGirl.create(:user, :point => 100) }
-    subject { user.add_point(point) }
+    subject { user.reload.point }
 
     context '正の整数を渡されたら' do
-      let(:point) { 50 }
+      before do
+        user.add_point(50)
+      end
 
-      it { should eq({:point => 150}) }
+      it { should eq 150 }
     end
 
     context '負の整数を渡されたら' do
-      let(:point) { -50 }
+      before do
+        user.add_point(-50)
+      end
 
-      it { should eq({:message => "invalid_arguments"}) }
+      it { should eq 100 }
     end
   end
 
   describe "#consume_point" do
     let(:user) { FactoryGirl.create(:user, :point => 100) }
-    subject { user.consume_point(point) }
+    subject { user.reload.point }
 
     context '正の整数を渡されたら' do
-      let(:point) { 50 }
+      before do
+        user.consume_point(50)
+      end
 
-      it { should eq({:point => 50}) }
+      it { should eq 50 }
     end
 
     context '持ちポイントより多く使われたら' do
-      let(:point) { 150 }
+      before do
+        user.consume_point(150)
+      end
 
-      it { should eq({:message => "invalid_arguments"}) }
+      it { should eq 100 }
     end
 
     context '負の整数を渡されたら' do
-      let(:point) { -50 }
+      before do
+        user.consume_point(-50)
+      end
 
-      it { should eq({:message => "invalid_arguments"}) }
+      it { should eq 100 }
     end
   end
 
   describe "#assign_fb_attributes" do
     before do
       graph = mock("graph")
-      Koala::Facebook::API.stub!(:new).with('xxx').and_return(graph)
-      profile = {
-        id: '12345678900',
+      Koala::Facebook::API.stub!(:new).with('facebookaccesstoken').and_return(graph)
+      @fb_profile = {
+        id: '1234567890',
         email: 'test@example.com',
         first_name: "First", 
         last_name: "Last", 
         gender: "male",
-        birthday: 28.years.ago.strftime("%m/%d/%Y"),
-        id: '12345678900',
+        birthday: 28.years.ago.strftime("%m/%d/%Y")
       }
-      graph.stub!(:get_object).with('me').and_return(profile)
     end
 
     context '作成できたら' do
       let(:user) { User.new() }
-      subject { user.send(:assign_fb_attributes, 'xxx') }
+      subject { user.send(:assign_fb_attributes, @fb_profile, 'facebookaccesstoken', 'appledevicetoken') }
 
-      its (:facebook_id) { should eq 12345678900 }
+      its (:facebook_id) { should eq 1234567890 }
       its (:email) { should eq 'test@example.com' }
       its (:gender) { should eq 0 }
-      its (:nickname) { should eq 'F.L' }
-      its (:age) { should eq 28 }
     end
 
     context '既存のユーザーの場合' do
-      let(:user) { FactoryGirl.create(:user, {nickname: 'akira', gender: 1, facebook_id: 999}) }
-      subject { user.send(:assign_fb_attributes, 'xxx') }
+      let(:user) { FactoryGirl.create(:user, {gender: 1, facebook_id: 999}) }
+      subject { user.send(:assign_fb_attributes, @fb_profile, 'facebookaccesstoken', 'appledevicetoken') }
 
       its (:facebook_id) { should eq 999 }
       its (:email) { should eq 'test@example.com' }
       its (:gender) { should eq 0 }
-      its (:nickname) { should eq 'akira' }
-      its (:age) { should eq 28 }
     end
   end  
 end

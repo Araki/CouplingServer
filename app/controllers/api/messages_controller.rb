@@ -13,10 +13,11 @@ class Api::MessagesController < Api::BaseController
     match = Match.find_by_user_id_and_target_id(@user.id, params[:target_id].to_i)
     render_ng("permission_denied") and return unless match.present?
 
-    if match.create_message({body: params[:body]})
+    message = Message.new(:match_id => match.id, :body => params[:body], :talk_key => match.talk_key )
+    if message.count_and_save(match)
       render_ok
     else
-      render_ng("internal_server_error")
+      render_ng(message.errors)
     end
   end
 end
