@@ -2,7 +2,7 @@
 class Group < ActiveRecord::Base
   attr_accessible :max_age, :min_age, :head_count,:relationship, :request, :opening_hour, :target_age_range, :area, :user_id, :status
 
-  has_one  :leader, :class_name => 'User'
+  belongs_to  :leader, :class_name => 'User', :foreign_key => :user_id
   has_many :friends
   has_many :members
 
@@ -22,4 +22,11 @@ class Group < ActiveRecord::Base
   validates :request, :length => { :maximum => 500 }, :allow_nil => true
   validates :target_age_range, :inclusion => { :in => 0..10 }, :allow_nil => true
   validates :area, :length => { :maximum => 50 }, :allow_nil => true
+
+  def as_json(options = {})
+    json = super(options)
+    json['leader'] = self.leader.as_json
+    json['friends'] = self.friends.as_json
+    json
+  end  
 end

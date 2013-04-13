@@ -2,7 +2,7 @@
 class Api::User::AccountController < Api::BaseController
 
   def show_profile
-    render_ok(:user => @user.as_json(:only => [:id]))
+    render_ok(:profile => @user.profile.as_json)
   end
 
   def update_profile
@@ -11,7 +11,7 @@ class Api::User::AccountController < Api::BaseController
     rescue Exception => e
       render_ng(e.message)
     else
-      render_ok(:user => @user.as_json(:only => [:id]))
+      render_ok(:profile => @user.profile.as_json)
     end
   end
 

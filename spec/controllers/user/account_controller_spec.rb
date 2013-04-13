@@ -13,7 +13,7 @@ describe Api::User::AccountController do
       before do
         get :show_profile, {:session_id => @session.key}
       end
-      subject { JSON.parse(response.body)["user"]["profile"] }
+      subject { JSON.parse(response.body)["profile"] }
 
       its (["nickname"]) {should ==  @profile.nickname  }
     end
@@ -34,7 +34,7 @@ describe Api::User::AccountController do
       before do
         post :update_profile, {user: {profile: {nickname: 'koro'}}, session_id: @session.key}
       end
-      subject { JSON.parse(response.body)["user"]["profile"] }
+      subject { JSON.parse(response.body)["profile"] }
 
       its (["nickname"]) {should == 'koro' }
     end

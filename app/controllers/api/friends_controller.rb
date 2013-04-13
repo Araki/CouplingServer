@@ -1,5 +1,15 @@
 class Api::FriendsController < Api::BaseController
   
+  def show
+    friend = Friend.find_by_id(params[:id])
+
+    if friend
+      render_ok({friend: friend})
+    else
+      render_not_found
+    end
+  end
+  
   def create
     render_ng("internal_server_error") and return if @user.group.nil?
 

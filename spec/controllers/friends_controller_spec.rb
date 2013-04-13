@@ -7,6 +7,35 @@ describe Api::FriendsController do
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
   end
 
+  describe '#show' do
+    before do
+      FactoryGirl.create(:friend, {id: 3, nickname: 'elvis'})
+    end
+
+    context 'Friendが存在している場合' do
+      before do
+        get :show, {session_id: @session.key, id: 3}
+      end
+
+      it 'Friendが返ること' do
+        # response.body.should ==  ''
+        parsed_body = JSON.parse(response.body)
+        parsed_body["friend"]["nickname"].should == 'elvis'
+      end
+    end
+
+    context 'Friendが存在していない場合' do
+      before do
+        get :show, {session_id: @session.key, id: 1000}
+      end
+
+      it 'NotFoundが返ること' do
+        parsed_body = JSON.parse(response.body)
+        parsed_body["code"].should == 'not_found'
+      end
+    end
+  end
+  
   describe '#create' do
     context 'グループがなかった場合' do
       before do
