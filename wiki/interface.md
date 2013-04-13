@@ -7,6 +7,12 @@
 * POST account#destroy
 * GET  users#list
 * GET  users#show
+* GET  groups#list
+* POST groups#create
+* POST groups#update
+* POST friends#create
+* POST friends#update
+* POST friends#destroy
 * GET  images#list
 * POST images#create
 * POST images#destroy
@@ -20,20 +26,23 @@
 * GET  messages#list
 * POST messages#create
 * GET  items#list
-* POST items#purchase
 * POST points#add
 * POST points#consume
+* GET  infos#list
+* GET  receipts#list
+* POST receipts#validate
 
 
 ## POST sessions#create
 
-初期登録時に叩くAPI。Facebookのアクセストークンを投げると、セッションIDを生成して返す。
+初期登録時に叩くAPI。Facebookのアクセストークンを投げると、セッションIDを生成。
 
 ### Parameters
 
 param | require | description
 ------|---------|------
 fb_token | o | Facebookのアクセストークン
+device_token | o | デバイストークン
 
 ### Example Request
 
@@ -174,6 +183,108 @@ session_id| o | セッションID
 ### Example Request
 
     http://pairful.com/api/users/(:id)/show?session_id=abc 
+
+### Example Response
+
+    {単独ユーザーのレスポンス例(後述)}
+
+## GET groups#list
+
+グループのリストを取得
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+
+### Example Request
+
+    http://pairful.com/api/groups/list?session_id=abc 
+
+### Example Response
+
+    {単独ユーザーのレスポンス例(後述)}
+
+## POST groups#create
+
+グループを作成
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+group[xxx]| o | 更新するグループのパラメータ
+
+### Example Request
+
+    http://pairful.com/api/groups/create 
+
+### Example Response
+
+    {単独ユーザーのレスポンス例(後述)}
+
+## POST groups#update
+
+グループを更新
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+group[xxx]| o | 更新するグループのパラメータ
+
+### Example Request
+
+    http://pairful.com/api/groups/update
+
+### Example Response
+
+    {単独ユーザーのレスポンス例(後述)}
+
+## POST friends#create
+
+友達を作成
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+friend[xxx]| o | 友達のパラメータ
+
+### Example Request
+
+    http://pairful.com/api/friends/create 
+
+### Example Response
+
+    {単独ユーザーのレスポンス例(後述)}
+
+## POST friends#update
+
+友達を更新
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+id| o | Friend ID
+friend[xxx]| o | 友達のパラメータ
+
+### Example Request
+
+    http://pairful.com/api/friends/(:id)/update
+
+### Example Response
+
+    {単独ユーザーのレスポンス例(後述)}
+
+## POST friends#destroy
+
+友達を削除
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+id| o | Friend ID
+
+### Example Request
+
+    http://pairful.com/api/friends/(:id)/destroy 
 
 ### Example Response
 
@@ -427,26 +538,6 @@ body| o | メッセージの内容
 
     {未}
 
-
-## POST items#purchase
-
-In App Purchace購入操作
-
-### Paremeters
-
-param | require | description
-------|---------|------
-session_id| o | セッションID
-item_id| o | 購入するアイテムID
-
-### Example Request
-
-    http://pairful.com/api/items/purchase
-
-### Example Response
-
-    {未}
-
 ## GET receipts#list
 
 In App Purchaceの購入履歴
@@ -460,6 +551,25 @@ session_id| o | セッションID
 ### Example Request
 
     http://pairful.com/api/receipts/list?session_id=abc
+
+### Example Response
+
+    {未}
+
+## POST receipts#validate
+
+In App Purchaceのレシートを確認してアイテムを購入する
+
+### Paremeters
+
+param | require | description
+------|---------|------
+session_id| o | セッションID
+receipt_data| o | レシート
+
+### Example Request
+
+    http://pairful.com/api/receipts/list
 
 ### Example Response
 
@@ -503,142 +613,149 @@ amount| o | ポイント消費量
 
     {"status":"ok","point":158}
 
-## POST apns/establish
+## GET infos#list
 
-APNSトークン登録
+運営からのお知らせ、個人ユーザーへの通達。
 
 ### Parameters
+
 param | require | description
 ------|---------|------
 session_id| o | セッションID
-push_token| o | PUSH通知用のトークン
 
 ### Example Request
 
-    http://pairful.com/api/apns/establish
+    http://pairful.com/api/infos/list?session_id=abc
 
 ### Example Response
+    
+    {"status":"ok","point":178}
 
-    {未}
-
-## POST apns/dissolve
-
-APNSトークン解除
-
-### Parameters
-param | require | description
-------|---------|------
-session_id| o | セッションID
-push_token| o | PUSH通知用のトークン
-
-### Example Request
-
-    http://pairful.com/api/apns/dissolve
-
-### Example Response
-
-    {未}
 
 
 ## 単独ユーザーのレスポンス例
 
     {
+        "login_bonus": 10, 
         "session": "abc", 
         "status": "ok", 
         "user": {
-            "address": "Kory", 
-            "age": 24, 
-            "alcohol": 2, 
-            "birthplace": "0", 
-            "blood_type": "AB", 
-            "certification": "???", 
-            "certification_status": "???", 
-            "character": null, 
-            "constellation": 0, 
-            "contract_type": "???", 
-            "country": "Japan", 
-            "created_at": "2013-04-04T08:24:09Z", 
-            "dislike": "goki", 
-            "first_login_at": "2012-09-04T08:24:09Z", 
-            "gender": 0, 
-            "have_child": 0, 
-            "height": 166, 
-            "hobby": null, 
-            "holiday": 1, 
-            "id": 1, 
-            "images": [
-                {
-                    "created_at": "2013-04-04T08:24:09Z", 
-                    "id": 211, 
-                    "is_main": true, 
-                    "order_number": 0, 
-                    "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/211.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365078115&Signature=5jD3KVnyHQBB3TrPtmbv%2BBnEuWQ%3D", 
-                    "user_id": 1
-                }, 
-                {
-                    "created_at": "2013-04-04T08:24:09Z", 
-                    "id": 212, 
-                    "is_main": false, 
-                    "order_number": 1, 
-                    "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/212.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365078115&Signature=%2BZi5oe%2BmlWwfzkO6Zr0oipLf1oQ%3D", 
-                    "user_id": 1
-                }, 
-                {
-                    "created_at": "2013-04-04T08:24:09Z", 
-                    "id": 213, 
-                    "is_main": false, 
-                    "order_number": 2, 
-                    "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/213.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365078115&Signature=s2S%2Bb0BMK7FuyWRdqlvzeu8TXnk%3D", 
-                    "user_id": 1
-                }, 
-                {
-                    "created_at": "2013-04-04T08:24:09Z", 
-                    "id": 214, 
-                    "is_main": false, 
-                    "order_number": 3, 
-                    "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/214.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365078115&Signature=EsP4rV7G0Ty9nk7SVfQL3nnvsFc%3D", 
-                    "user_id": 1
-                }, 
-                {
-                    "created_at": "2013-04-04T08:24:09Z", 
-                    "id": 215, 
-                    "is_main": false, 
-                    "order_number": 4, 
-                    "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130404/215.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365078115&Signature=msxhFVo%2Bbkokfn088SQofJVk1%2BY%3D", 
-                    "user_id": 1
-                }
-            ], 
-            "income": 4, 
-            "industry": 0, 
-            "introduction": "Aut rerum eum qui fugit harum sequi velit totam quis exercitationem veniam sed accusantium.", 
-            "invitation_code": "", 
-            "job": 19, 
-            "job_description": "公務員", 
-            "language": "Japanese", 
-            "last_login_at": "2013-03-24T08:24:09Z", 
-            "like_point": 0, 
-            "login_token": "abcdefg1234567", 
-            "marital_history": 0, 
-            "marriage_time": 0, 
-            "nickname": "taro", 
-            "prefecture": 39, 
-            "profile_status": "???", 
-            "proportion": 1, 
-            "public_status": "???", 
-            "qualification": "普通自動車免許", 
-            "relationship": 0, 
-            "roommate": "???", 
-            "school": null, 
-            "school_name": "辻調理師専門学校", 
-            "smoking": 0, 
-            "sociability": "???", 
-            "speciality": null, 
-            "updated_at": "2013-04-04T08:24:09Z", 
-            "want_child": 0, 
-            "workplace": "渋谷区"
+            "last_login_at": "2013-04-13T13:03:49Z", 
+            "like_point": 5, 
+            "point": 213, 
+            "profile": {
+                "age": 16, 
+                "alcohol": 2, 
+                "birthplace": 38, 
+                "blood_type": "B", 
+                "characters": [
+                    {
+                        "id": 192, 
+                        "name": "仕事好き"
+                    }, 
+                    {
+                        "id": 187, 
+                        "name": "謙虚"
+                    }, 
+                    {
+                        "id": 176, 
+                        "name": "決断力がある"
+                    }
+                ], 
+                "created_at": "2013-04-13T13:03:08Z", 
+                "dislike": "Aliquid dolor esse ipsam.", 
+                "gender": 0, 
+                "group_id": null, 
+                "height": 153, 
+                "hobbies": [
+                    {
+                        "id": 119, 
+                        "name": "料理"
+                    }, 
+                    {
+                        "id": 122, 
+                        "name": "ショッピング゙"
+                    }, 
+                    {
+                        "id": 133, 
+                        "name": "ゲーム"
+                    }
+                ], 
+                "holiday": 1, 
+                "id": 413, 
+                "images": [
+                    {
+                        "created_at": "2013-04-13T13:03:08Z", 
+                        "id": 422, 
+                        "is_main": false, 
+                        "member_id": 413, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/422.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365858239&Signature=LLeC%2Bx6Yp1oMaWHMDKRSmbwpULw%3D"
+                    }, 
+                    {
+                        "created_at": "2013-04-13T13:03:08Z", 
+                        "id": 423, 
+                        "is_main": false, 
+                        "member_id": 413, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/423.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365858239&Signature=azazOts92ClK7EerOF8%2BwrQkVo8%3D"
+                    }, 
+                    {
+                        "created_at": "2013-04-13T13:03:08Z", 
+                        "id": 424, 
+                        "is_main": false, 
+                        "member_id": 413, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/424.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365858239&Signature=%2BnkpHlNkXKUxvT%2BfU6Ych6aDYKU%3D"
+                    }, 
+                    {
+                        "created_at": "2013-04-13T13:03:08Z", 
+                        "id": 425, 
+                        "is_main": false, 
+                        "member_id": 413, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/425.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365858239&Signature=RPk3KScPQ1skS8P4FfcUPmA1RSg%3D"
+                    }, 
+                    {
+                        "created_at": "2013-04-13T13:03:08Z", 
+                        "id": 421, 
+                        "is_main": true, 
+                        "member_id": 413, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/421.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365858239&Signature=NSy5%2BwAWSjbNQ73mozmdvistMT4%3D"
+                    }
+                ], 
+                "income": 1, 
+                "industry": 0, 
+                "introduction": "Aut commodi iste voluptatem beatae voluptatem veniam mollitia ipsam ut reprehenderit doloribus voluptatem vero nobis atque dolores nesciunt at molestiae magni voluptate consequuntur corrupti eius minus aspernatur et excepturi quisquam aut distinctio.", 
+                "job": 10, 
+                "job_description": "Sed ut.", 
+                "marital_history": 0, 
+                "marriage_time": 0, 
+                "nickname": "taro", 
+                "prefecture": 23, 
+                "proportion": 3, 
+                "roommate": "1", 
+                "school": null, 
+                "smoking": 1, 
+                "sociability": 0, 
+                "specialities": [
+                    {
+                        "id": 26, 
+                        "name": "茶道"
+                    }, 
+                    {
+                        "id": 29, 
+                        "name": "早食い"
+                    }, 
+                    {
+                        "id": 27, 
+                        "name": "華道"
+                    }
+                ], 
+                "status": 1, 
+                "updated_at": "2013-04-13T13:03:08Z", 
+                "user_id": 1, 
+                "workplace": "South Katheryn"
+            }, 
+            "status": "1"
         }
     }
-
 
 ## ユーザーリストのレスポンス例
 
@@ -741,5 +858,9 @@ push_token| o | PUSH通知用のトークン
         "last_page": true, 
         "status": "ok"
     }
+
+
+## グループのレスポンス例
+
 
 

@@ -51,7 +51,10 @@ class Member < ActiveRecord::Base
 
   def as_json(options = {})
       json = super(options)
-      # json['images'] = self.images.as_json
+      json['images'] = self.images.as_json
+      json['hobbies'] = self.hobbies.as_json
+      json['specialities'] = self.specialities.as_json
+      json['characters'] = self.characters.as_json
       json
   end  
 

@@ -37,7 +37,7 @@ class Api::User::SessionsController < Api::BaseController
   def user_hash
     {
       :session => @session.key,
-      :user => @user.as_json(:except => [:email, :facebook_id, :access_token, :point]),
+      :user => @user.as_json(:only => [:id, :status, :point, :like_point, :last_login_at]),
       :login_bonus => @login_bonus
     }
   end

@@ -1,5 +1,9 @@
 class Api::GroupsController < Api::BaseController
   
+  def show
+    render_ok({group: @user.group})
+  end
+
   def list
     groups = Kaminari.paginate_array(Group.all).page(params[:page]).per(params[:per])
 

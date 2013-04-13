@@ -81,6 +81,9 @@ when "development"
    key: 'abc' 
    })
   create_images(user_profile.id)
+  user_profile.hobbies << hobbies.sample(3)
+  user_profile.characters << characters.sample(3)
+  user_profile.specialities << specialities.sample(3)
 
   # お相手:session_id=xyz
   target_user = FactoryGirl.create(:user, {
@@ -98,6 +101,9 @@ when "development"
    key: 'xyz'
    })
   create_images(target_user_profile.id)
+  target_user_profile.hobbies << hobbies.sample(3)
+  target_user_profile.characters << characters.sample(3)
+  target_user_profile.specialities << specialities.sample(3)
 
   # モブ:男女50人づつ','そのうち20人は画像を準備。
   boys = FactoryGirl.create_list(:boys, 50, {})

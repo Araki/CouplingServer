@@ -16,6 +16,7 @@ Coupling::Application.routes.draw do
     get  '/users/list' => 'user/users#list'
     get  '/users/:id/show' => 'user/users#show'
 
+    get  '/groups/show' => 'groups#show'
     get  '/groups/list' => 'groups#list'
     post '/groups/create' => 'groups#create'
     post '/groups/update' => 'groups#update'

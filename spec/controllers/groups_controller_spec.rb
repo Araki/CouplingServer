@@ -7,10 +7,28 @@ describe Api::GroupsController do
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
   end
 
+  describe '#show' do
+    before do
+      FactoryGirl.create(:group, {user_id: @user.id, head_count: 3})
+    end
+
+    context 'グループが存在している場合' do
+      before do
+        get :show, {session_id: @session.key}
+      end
+
+      it 'グループが返ること' do
+        # response.body.should ==  ''
+        parsed_body = JSON.parse(response.body)
+        parsed_body["group"]["head_count"].should == 3
+      end
+    end
+  end
+
   describe '#list' do
     before do
       10.times do |n|
-        FactoryGirl.create(:group, {user_id: @user.id, head_count: 2})
+        FactoryGirl.create(:group, {head_count: 2})
       end
     end
 
