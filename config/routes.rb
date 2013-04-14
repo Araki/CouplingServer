@@ -16,6 +16,16 @@ Coupling::Application.routes.draw do
     get  '/users/list' => 'user/users#list'
     get  '/users/:id/show' => 'user/users#show'
 
+    get  '/groups/show' => 'groups#show'
+    get  '/groups/list' => 'groups#list'
+    post '/groups/create' => 'groups#create'
+    post '/groups/update' => 'groups#update'
+
+    post '/friends/:id/show' => 'friends#show'
+    post '/friends/create' => 'friends#create'
+    post '/friends/:id/update' => 'friends#update'
+    post '/friends/:id/destroy' => 'friends#destroy'
+
     get  '/images/list' => 'images#list'
     post '/images/create' => 'images#create'
     post '/images/:id/destroy' => 'images#destroy'
@@ -28,9 +38,6 @@ Coupling::Application.routes.draw do
     post '/favorites/create' => 'favorites#create'
     post '/favorites/destroy' => 'favorites#destroy', :as => 'favorites_destroy'
 
-    get  '/items/list' => 'items#list'
-    post '/items/purchase' => 'items#purchase'
-
     post '/points/add' => 'points#add'
     post '/points/consume' => 'points#consume'
 
@@ -39,6 +46,14 @@ Coupling::Application.routes.draw do
     get  '/messages/list' => 'messages#list'
     post '/messages/create' => 'messages#create'
 
+    get  '/infos/list' => 'infos#list'
+
+    get  'receipts/list' => 'receipts#list'
+    post 'receipts/validate' => 'receipts#validate'
+  end
+
+  namespace :admin do
+    get  '/items/list' => 'items#list'
   end
 
   root :to => 'index#index'

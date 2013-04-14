@@ -11,6 +11,6 @@ class Api::User::UsersController < Api::BaseController
     user = User.find_by_id(params[:id])
     render_not_found and return if user.nil?
     
-    render_ok(:user => user.as_json(:except => [:email, :facebook_id, :access_token, :point]))
+    render_ok(:user => user.as_json(:only => [:id]))
   end
 end

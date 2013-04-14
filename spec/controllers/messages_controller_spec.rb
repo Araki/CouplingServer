@@ -6,12 +6,10 @@ describe Api::MessagesController do
     @user = FactoryGirl.create(:user)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
 
-    @target_user = FactoryGirl.create(:user, {gender: 1, nickname: 'atsuko'})
+    @target_user = FactoryGirl.create(:user, {gender: 1})
   end
 
   describe '#list' do
-    it '女性の場合の本人確認の有無'
-
     context 'matchの関係がない場合' do
       before do
         get :list, {target_id: @target_user.id, session_id: @session.key}
@@ -87,15 +85,10 @@ describe Api::MessagesController do
 
       context 'messageを作成できなかった場合' do
         before do
-          match = mock(:match)
-          Match.should_receive(:find_by_user_id_and_target_id).with(@user.id, @target_user.id).and_return(match)
-          match.should_receive(:present?).and_return(true)
-          match.should_receive(:create_message).with({body: 'lalala'}).and_return(false)
-
-          post :create, {target_id: @target_user.id, body: 'lalala', session_id: @session.key}
+          post :create, {target_id: @target_user.id, body: '', session_id: @session.key}
         end
 
-        it { JSON.parse(response.body)["code"].should == "internal_server_error" }
+        it { JSON.parse(response.body)["code"]["base"][0].should == "internal_server_error" }
       end      
     end
   end

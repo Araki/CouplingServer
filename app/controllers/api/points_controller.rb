@@ -1,12 +1,18 @@
 class Api::PointsController < Api::BaseController
   
   def add
-    result = @user.add_point(params[:amount].to_i)
-    result.has_key?(:point) ? render_ok(result) : render_ng(result[:message])
+    if @user.add_point(params[:amount].to_i)
+      render_ok({user: @user})
+    else
+      render_ng(@user.errors)
+    end
   end
 
   def consume
-    result = @user.consume_point(params[:amount].to_i)
-    result.has_key?(:point) ? render_ok(result) : render_ng(result[:message])
+    if @user.consume_point(params[:amount].to_i)
+      render_ok({user: @user})
+    else
+      render_ng(@user.errors)
+    end
   end
 end

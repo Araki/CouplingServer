@@ -2,17 +2,19 @@
 require 'spec_helper'
 
 describe Api::FavoritesController do
+  include Helpers
+
   before do
     @user = FactoryGirl.create(:user)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
 
-    @target_user = FactoryGirl.create(:user, {gender: 1, nickname: 'atsuko'})
+    @target_user = FactoryGirl.create(:girls)
   end
 
   describe '#list' do
     before do
       10.times do
-        target = FactoryGirl.create(:user, {gender: 1, nickname: 'yuko'})
+        target = FactoryGirl.create(:girls)
         FactoryGirl.create(:favorite, {user_id: @user.id, target_id: target.id})
       end
     end
@@ -28,7 +30,7 @@ describe Api::FavoritesController do
         parsed_body["current_page"].should == 1
         parsed_body["users"].length.should == 10
         parsed_body["last_page"].should == true
-        parsed_body["users"][0]["nickname"].should == 'yuko'
+        parsed_body["users"][0]["id"].should_not be_nil
         parsed_body["users"][0]["email"].should be_nil
       end
     end
@@ -67,10 +69,9 @@ describe Api::FavoritesController do
 
       context '保存に失敗すると' do
         before do
-          user = mock(:user)
-          User.should_receive(:find_by_id).with(@session.value.to_s).and_return(user)
-          User.should_receive(:find_by_id).with(@target_user.id.to_s).and_return(@target_user)
-          user.stub!(:<<).with(@target_user).and_raise(Exception)          
+          user = session_verified_user(@session)
+          user.stub!(:<<).with(@target_user).and_raise(Exception)
+          User.should_receive(:find_by_id).with(@target_user.id.to_s).and_return(@target_user)      
 
           post :create, {target_id: @target_user.id, session_id: @session.key}
         end
@@ -107,8 +108,7 @@ describe Api::FavoritesController do
 
     context 'okが返されること' do
       before do
-        user = mock(:user)
-        User.should_receive(:find_by_id).with(@session.value.to_s).and_return(user)
+        user = session_verified_user(@session)
         User.should_receive(:find_by_id).with(@target_user.id.to_s).and_return(@target_user)
         user.stub!(:favorite_users).and_return([@target_user])
         [@target_user].stub!(:delete).with(@target_user)

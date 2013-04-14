@@ -2,15 +2,18 @@
 require 'spec_helper'
 
 describe Api::ImagesController do
+  include Helpers
+  
   before do
     @user = FactoryGirl.create(:user)
+    @profile = FactoryGirl.create(:profile, {user_id: @user.id})
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
   end
 
   describe '#list' do
     before do
-      FactoryGirl.create_list(:image, 10, {user_id: @user.id, is_main: true})
-      FactoryGirl.create_list(:image, 5, {user_id: @user.id, is_main: false})
+      FactoryGirl.create_list(:image, 10, {member_id: @user.id, is_main: true})
+      FactoryGirl.create_list(:image, 5, {member_id: @user.id, is_main: false})
     end
 
     context '画像が見つかった場合' do
@@ -49,7 +52,7 @@ describe Api::ImagesController do
   describe '#create' do
     context 'すでに5枚以上アップロードしている場合' do
       before do
-        FactoryGirl.create_list(:image, 5, {user_id: @user.id})
+        FactoryGirl.create_list(:image, 5, {member_id: @profile.id})
         post :create, {session_id: @session.key}
       end
 
@@ -80,7 +83,8 @@ describe Api::ImagesController do
 
     context '自分の画像ではなかった場合' do
       before do
-        FactoryGirl.create(:image, {user_id: 100})
+        FactoryGirl.create(:profile, {id: 100})
+        FactoryGirl.create(:image, {member_id: 100})
         post :set_main, {id: 1, session_id: @session.key}
       end
 
@@ -89,7 +93,7 @@ describe Api::ImagesController do
 
     context 'mainにセットされた場合' do
       before do
-        FactoryGirl.create(:image, {user_id: @user.id})
+        FactoryGirl.create(:image, {member_id: @profile.id})
         post :set_main, {id: 1, session_id: @session.key}
       end
 
@@ -98,12 +102,14 @@ describe Api::ImagesController do
 
     context 'mainのセットに失敗すると' do
       before do
-        image = FactoryGirl.create(:image, {user_id: @user.id})
+        image = FactoryGirl.create(:image, {member_id: @profile.id})
 
-        user = mock(:user)
-        User.should_receive(:find_by_id).with(@session.value.to_s).and_return(user)
+        user = session_verified_user(@session)
+        profile = mock(:profile)
         user.stub!(:==).with(@user).and_return(true)          
-        user.stub!(:set_main_image).with(image).and_return(false)          
+        user.stub!(:profile).and_return(profile)          
+        profile.stub!(:id).and_return(@profile.id)          
+        profile.stub!(:set_main_image).with(image).and_return(false)          
 
         post :set_main, {id: 1, session_id: @session.key}
       end
@@ -117,7 +123,7 @@ describe Api::ImagesController do
   describe '#destroy' do
     context '削除できた場合' do
       before do
-        FactoryGirl.create(:image, {user_id: @user.id})
+        FactoryGirl.create(:image, {member_id: @profile.id})
         post :destroy, {id: 1, session_id: @session.key}
       end
 
@@ -126,7 +132,8 @@ describe Api::ImagesController do
 
     context '自分の画像ではなかった場合' do
       before do
-        FactoryGirl.create(:image, {user_id: 100})
+        FactoryGirl.create(:profile, {id: 100})
+        FactoryGirl.create(:image, {member_id: 100})
         post :destroy, {id: 1, session_id: @session.key}
       end
 

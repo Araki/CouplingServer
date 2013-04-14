@@ -11,31 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130401094857) do
+ActiveRecord::Schema.define(:version => 20130412073152) do
 
-  create_table "apn_devices", :force => true do |t|
-    t.string   "token",              :default => "", :null => false
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
-    t.datetime "last_registered_at"
+  create_table "characters", :force => true do |t|
+    t.string "name", :null => false
   end
 
-  add_index "apn_devices", ["token"], :name => "index_apn_devices_on_token", :unique => true
-
-  create_table "apn_notifications", :force => true do |t|
-    t.integer  "device_id",                        :null => false
-    t.integer  "errors_nb",         :default => 0
-    t.string   "device_language"
-    t.string   "sound"
-    t.string   "alert"
-    t.integer  "badge"
-    t.text     "custom_properties"
-    t.datetime "sent_at"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+  create_table "days", :force => true do |t|
+    t.string "name", :null => false
   end
-
-  add_index "apn_notifications", ["device_id"], :name => "index_apn_notifications_on_device_id"
 
   create_table "favorites", :force => true do |t|
     t.integer  "user_id",    :null => false
@@ -46,15 +30,75 @@ ActiveRecord::Schema.define(:version => 20130401094857) do
   add_index "favorites", ["target_id"], :name => "index_favorites_on_target_id"
   add_index "favorites", ["user_id"], :name => "index_favorites_on_user_id"
 
-  create_table "images", :force => true do |t|
-    t.integer  "user_id",      :null => false
-    t.boolean  "is_main",      :null => false
-    t.integer  "order_number", :null => false
-    t.datetime "created_at",   :null => false
+  create_table "group_days", :force => true do |t|
+    t.integer "group_id", :null => false
+    t.integer "day_id",   :null => false
   end
 
-  add_index "images", ["user_id", "is_main"], :name => "index_images_on_user_id_and_is_main"
-  add_index "images", ["user_id", "order_number"], :name => "index_images_on_user_id_and_order_number"
+  add_index "group_days", ["day_id"], :name => "index_group_days_on_day_id"
+  add_index "group_days", ["group_id"], :name => "index_group_days_on_group_id"
+
+  create_table "group_group_images", :force => true do |t|
+    t.integer "group_id",       :null => false
+    t.integer "group_image_id", :null => false
+  end
+
+  add_index "group_group_images", ["group_id"], :name => "index_group_group_images_on_group_id"
+  add_index "group_group_images", ["group_image_id"], :name => "index_group_group_images_on_group_image_id"
+
+  create_table "group_images", :force => true do |t|
+    t.string "name", :null => false
+  end
+
+  create_table "group_mst_prefectures", :force => true do |t|
+    t.integer "group_id",          :null => false
+    t.integer "mst_prefecture_id", :null => false
+  end
+
+  add_index "group_mst_prefectures", ["group_id"], :name => "index_group_mst_prefectures_on_group_id"
+  add_index "group_mst_prefectures", ["mst_prefecture_id"], :name => "index_group_mst_prefectures_on_mst_prefecture_id"
+
+  create_table "groups", :force => true do |t|
+    t.integer "status",           :default => 0
+    t.integer "user_id",                         :null => false
+    t.integer "max_age",                         :null => false
+    t.integer "min_age",                         :null => false
+    t.integer "head_count",                      :null => false
+    t.string  "relationship",                    :null => false
+    t.string  "request"
+    t.time    "opening_hour"
+    t.integer "target_age_range"
+    t.string  "area"
+  end
+
+  create_table "hobbies", :force => true do |t|
+    t.string "name", :null => false
+  end
+
+  create_table "images", :force => true do |t|
+    t.integer  "member_id",  :null => false
+    t.boolean  "is_main",    :null => false
+    t.datetime "created_at", :null => false
+  end
+
+  add_index "images", ["member_id", "is_main"], :name => "index_images_on_member_id_and_is_main"
+
+  create_table "infos", :force => true do |t|
+    t.integer  "target_id",  :default => -1, :null => false
+    t.string   "body",                       :null => false
+    t.datetime "created_at",                 :null => false
+  end
+
+  add_index "infos", ["target_id"], :name => "index_infos_on_target_id"
+
+  create_table "items", :force => true do |t|
+    t.string   "title",                         :null => false
+    t.string   "pid",                           :null => false
+    t.integer  "point",          :default => 0
+    t.integer  "receipts_count", :default => 0
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
 
   create_table "likes", :force => true do |t|
     t.integer  "user_id",    :null => false
@@ -67,16 +111,72 @@ ActiveRecord::Schema.define(:version => 20130401094857) do
   add_index "likes", ["user_id"], :name => "index_likes_on_user_id"
 
   create_table "matches", :force => true do |t|
-    t.integer  "user_id",                             :null => false
-    t.integer  "target_id",                           :null => false
-    t.integer  "messages_count",   :default => 0
-    t.boolean  "can_open_profile", :default => false
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.integer "user_id",                             :null => false
+    t.integer "target_id",                           :null => false
+    t.boolean "can_open_profile", :default => false
   end
 
   add_index "matches", ["user_id", "target_id"], :name => "index_matches_on_user_id_and_target_id", :unique => true
   add_index "matches", ["user_id"], :name => "index_matches_on_user_id"
+
+  create_table "member_characters", :force => true do |t|
+    t.integer "member_id",    :null => false
+    t.integer "character_id", :null => false
+  end
+
+  add_index "member_characters", ["character_id"], :name => "index_member_characters_on_character_id"
+  add_index "member_characters", ["member_id"], :name => "index_member_characters_on_member_id"
+
+  create_table "member_hobbies", :force => true do |t|
+    t.integer "member_id", :null => false
+    t.integer "hobby_id",  :null => false
+  end
+
+  add_index "member_hobbies", ["hobby_id"], :name => "index_member_hobbies_on_hobby_id"
+  add_index "member_hobbies", ["member_id"], :name => "index_member_hobbies_on_member_id"
+
+  create_table "member_specialities", :force => true do |t|
+    t.integer "member_id",     :null => false
+    t.integer "speciality_id", :null => false
+  end
+
+  add_index "member_specialities", ["member_id"], :name => "index_member_specialities_on_member_id"
+  add_index "member_specialities", ["speciality_id"], :name => "index_member_specialities_on_speciality_id"
+
+  create_table "members", :force => true do |t|
+    t.string   "type",                           :null => false
+    t.integer  "status",          :default => 0
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.string   "nickname"
+    t.string   "introduction"
+    t.integer  "gender"
+    t.integer  "age"
+    t.integer  "birthplace"
+    t.string   "roommate"
+    t.integer  "height"
+    t.integer  "proportion"
+    t.string   "blood_type"
+    t.integer  "marital_history"
+    t.integer  "marriage_time"
+    t.integer  "smoking"
+    t.integer  "alcohol"
+    t.integer  "industry"
+    t.integer  "job"
+    t.string   "job_description"
+    t.string   "workplace"
+    t.integer  "income"
+    t.integer  "school"
+    t.integer  "holiday"
+    t.integer  "sociability"
+    t.string   "dislike"
+    t.integer  "prefecture"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
+
+  add_index "members", ["group_id"], :name => "index_members_on_group_id"
+  add_index "members", ["user_id"], :name => "index_members_on_user_id"
 
   create_table "messages", :force => true do |t|
     t.string   "body"
@@ -89,10 +189,18 @@ ActiveRecord::Schema.define(:version => 20130401094857) do
   add_index "messages", ["talk_key"], :name => "index_messages_on_talk_key"
 
   create_table "mst_prefectures", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string "name"
   end
+
+  create_table "receipts", :force => true do |t|
+    t.string   "receipt_code", :null => false
+    t.integer  "user_id",      :null => false
+    t.integer  "item_id",      :null => false
+    t.datetime "created_at",   :null => false
+  end
+
+  add_index "receipts", ["receipt_code"], :name => "index_receipts_on_receipt_code"
+  add_index "receipts", ["user_id"], :name => "index_receipts_on_user_id"
 
   create_table "sessions", :force => true do |t|
     t.string   "key",        :null => false
@@ -102,58 +210,28 @@ ActiveRecord::Schema.define(:version => 20130401094857) do
 
   add_index "sessions", ["key"], :name => "index_sessions_on_key"
 
+  create_table "specialities", :force => true do |t|
+    t.string "name", :null => false
+  end
+
   create_table "users", :force => true do |t|
-    t.integer  "facebook_id"
-    t.string   "access_token"
-    t.string   "profile_status"
+    t.string   "status"
+    t.integer  "facebook_id",     :limit => 8
     t.string   "email"
-    t.string   "certification"
-    t.string   "certification_status"
-    t.string   "public_status"
-    t.datetime "first_login_at"
-    t.datetime "last_login_at"
+    t.string   "access_token"
+    t.string   "device_token"
     t.string   "invitation_code"
     t.string   "contract_type"
-    t.integer  "like_point"
-    t.integer  "point"
-    t.string   "nickname"
-    t.string   "introduction"
+    t.integer  "point",                        :default => 0
+    t.integer  "like_point",                   :default => 0
     t.integer  "gender"
-    t.integer  "age"
-    t.string   "country"
-    t.string   "language"
-    t.string   "address"
-    t.string   "birthplace"
-    t.string   "roommate"
-    t.integer  "height"
-    t.integer  "proportion"
-    t.integer  "constellation"
-    t.string   "blood_type"
-    t.integer  "marital_history"
-    t.integer  "marriage_time"
-    t.integer  "want_child"
-    t.integer  "relationship"
-    t.integer  "have_child"
-    t.integer  "smoking"
-    t.integer  "alcohol"
-    t.integer  "industry"
-    t.integer  "job"
-    t.string   "job_description"
-    t.string   "workplace"
-    t.integer  "income"
-    t.string   "qualification"
-    t.integer  "school"
-    t.integer  "holiday"
-    t.string   "sociability"
-    t.string   "character"
-    t.string   "speciality"
-    t.string   "hobby"
-    t.string   "dislike"
-    t.string   "login_token"
-    t.integer  "prefecture"
-    t.string   "school_name"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "last_login_at"
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
   end
+
+  add_index "users", ["facebook_id"], :name => "index_users_on_facebook_id"
+  add_index "users", ["gender"], :name => "index_users_on_gender"
+  add_index "users", ["like_point"], :name => "index_users_on_like_point"
 
 end
