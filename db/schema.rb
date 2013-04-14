@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
 
   create_table "groups", :force => true do |t|
     t.integer "status",           :default => 0
+    t.integer "gender",           :default => 0
     t.integer "user_id",                         :null => false
     t.integer "max_age",                         :null => false
     t.integer "min_age",                         :null => false

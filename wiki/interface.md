@@ -1052,133 +1052,118 @@ session_id| o | セッションID
                     "workplace": "Vonstad"
                 }
             ], 
+            "gender": 0, 
             "head_count": 2, 
             "id": 83, 
             "leader": {
-                "access_token": "abcdefg", 
-                "contract_type": null, 
+                "age": 16, 
+                "alcohol": 2, 
+                "birthplace": 38, 
+                "blood_type": "B", 
+                "characters": [
+                    {
+                        "id": 192, 
+                        "name": "仕事好き"
+                    }, 
+                    {
+                        "id": 187, 
+                        "name": "謙虚"
+                    }, 
+                    {
+                        "id": 176, 
+                        "name": "決断力がある"
+                    }
+                ], 
                 "created_at": "2013-04-13T13:03:08Z", 
-                "device_token": "r9sof5esgzg2jiengllljs9gktrozc", 
-                "email": "amparo.ledner@ondricka.name", 
-                "facebook_id": 1234567, 
+                "dislike": "Aliquid dolor esse ipsam.", 
                 "gender": 0, 
-                "id": 1, 
-                "invitation_code": "", 
-                "last_login_at": "2013-04-13T13:45:54Z", 
-                "like_point": 5, 
-                "point": 213, 
-                "profile": {
-                    "age": 16, 
-                    "alcohol": 2, 
-                    "birthplace": 38, 
-                    "blood_type": "B", 
-                    "characters": [
-                        {
-                            "id": 192, 
-                            "name": "仕事好き"
-                        }, 
-                        {
-                            "id": 187, 
-                            "name": "謙虚"
-                        }, 
-                        {
-                            "id": 176, 
-                            "name": "決断力がある"
-                        }
-                    ], 
-                    "created_at": "2013-04-13T13:03:08Z", 
-                    "dislike": "Aliquid dolor esse ipsam.", 
-                    "gender": 0, 
-                    "group_id": null, 
-                    "height": 153, 
-                    "hobbies": [
-                        {
-                            "id": 119, 
-                            "name": "料理"
-                        }, 
-                        {
-                            "id": 122, 
-                            "name": "ショッピング゙"
-                        }, 
-                        {
-                            "id": 133, 
-                            "name": "ゲーム"
-                        }
-                    ], 
-                    "holiday": 1, 
-                    "id": 413, 
-                    "images": [
-                        {
-                            "created_at": "2013-04-13T13:03:08Z", 
-                            "id": 422, 
-                            "is_main": false, 
-                            "member_id": 413, 
-                            "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/422.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365860764&Signature=x08z3bL7SSyYmoqCylzJii9GdcU%3D"
-                        }, 
-                        {
-                            "created_at": "2013-04-13T13:03:08Z", 
-                            "id": 423, 
-                            "is_main": false, 
-                            "member_id": 413, 
-                            "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/423.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365860764&Signature=b53Y0GFknhmABiYfi%2F3IEvzZdP0%3D"
-                        }, 
-                        {
-                            "created_at": "2013-04-13T13:03:08Z", 
-                            "id": 424, 
-                            "is_main": false, 
-                            "member_id": 413, 
-                            "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/424.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365860764&Signature=TMfT4QQ8VpdAs6Yl8vxe2bzj8ss%3D"
-                        }, 
-                        {
-                            "created_at": "2013-04-13T13:03:08Z", 
-                            "id": 425, 
-                            "is_main": false, 
-                            "member_id": 413, 
-                            "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/425.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365860764&Signature=JdbMJrJwHbIWgEHrjzO2IsC2lis%3D"
-                        }, 
-                        {
-                            "created_at": "2013-04-13T13:03:08Z", 
-                            "id": 421, 
-                            "is_main": true, 
-                            "member_id": 413, 
-                            "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/421.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365860764&Signature=Q4KO0tCjJDyCD0OS5HA8wSxQWkw%3D"
-                        }
-                    ], 
-                    "income": 1, 
-                    "industry": 0, 
-                    "introduction": "Aut commodi iste voluptatem beatae voluptatem veniam mollitia ipsam ut reprehenderit doloribus voluptatem vero nobis atque dolores nesciunt at molestiae magni voluptate consequuntur corrupti eius minus aspernatur et excepturi quisquam aut distinctio.", 
-                    "job": 10, 
-                    "job_description": "Sed ut.", 
-                    "marital_history": 0, 
-                    "marriage_time": 0, 
-                    "nickname": "taro", 
-                    "prefecture": 23, 
-                    "proportion": 3, 
-                    "roommate": "1", 
-                    "school": null, 
-                    "smoking": 1, 
-                    "sociability": 0, 
-                    "specialities": [
-                        {
-                            "id": 26, 
-                            "name": "茶道"
-                        }, 
-                        {
-                            "id": 29, 
-                            "name": "早食い"
-                        }, 
-                        {
-                            "id": 27, 
-                            "name": "華道"
-                        }
-                    ], 
-                    "status": 1, 
-                    "updated_at": "2013-04-13T13:03:08Z", 
-                    "user_id": 1, 
-                    "workplace": "South Katheryn"
-                }, 
-                "status": "1", 
-                "updated_at": "2013-04-13T13:45:54Z"
+                "group_id": null, 
+                "height": 153, 
+                "hobbies": [
+                    {
+                        "id": 119, 
+                        "name": "料理"
+                    }, 
+                    {
+                        "id": 122, 
+                        "name": "ショッピング゙"
+                    }, 
+                    {
+                        "id": 133, 
+                        "name": "ゲーム"
+                    }
+                ], 
+                "holiday": 1, 
+                "id": 413, 
+                "images": [
+                    {
+                        "created_at": "2013-04-13T13:03:08Z", 
+                        "id": 422, 
+                        "is_main": false, 
+                        "member_id": 413, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/422.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365979032&Signature=N%2BWqzi9juJ8wgO9ztXGbcImhsZw%3D"
+                    }, 
+                    {
+                        "created_at": "2013-04-13T13:03:08Z", 
+                        "id": 423, 
+                        "is_main": false, 
+                        "member_id": 413, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/423.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365979032&Signature=CqpHQ%2Bb6i1iTAj7OzC%2FajXUaF7g%3D"
+                    }, 
+                    {
+                        "created_at": "2013-04-13T13:03:08Z", 
+                        "id": 424, 
+                        "is_main": false, 
+                        "member_id": 413, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/424.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365979032&Signature=fBZCgZg7e0bdScVEXEDTizYiZJM%3D"
+                    }, 
+                    {
+                        "created_at": "2013-04-13T13:03:08Z", 
+                        "id": 425, 
+                        "is_main": false, 
+                        "member_id": 413, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/425.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365979032&Signature=kXBAIKCoWhsa2xAgHzsvlIrnTXE%3D"
+                    }, 
+                    {
+                        "created_at": "2013-04-13T13:03:08Z", 
+                        "id": 421, 
+                        "is_main": true, 
+                        "member_id": 413, 
+                        "url": "https://pairful-development.s3.amazonaws.com/pairful/image/20130413/421.png?AWSAccessKeyId=AKIAIOQ4BVQW426SIRFA&Expires=1365979032&Signature=eYWcNUAawTwalejxxcInUMt5jFI%3D"
+                    }
+                ], 
+                "income": 1, 
+                "industry": 0, 
+                "introduction": "Aut commodi iste voluptatem beatae voluptatem veniam mollitia ipsam ut reprehenderit doloribus voluptatem vero nobis atque dolores nesciunt at molestiae magni voluptate consequuntur corrupti eius minus aspernatur et excepturi quisquam aut distinctio.", 
+                "job": 10, 
+                "job_description": "Sed ut.", 
+                "marital_history": 0, 
+                "marriage_time": 0, 
+                "nickname": "taro", 
+                "prefecture": 23, 
+                "proportion": 3, 
+                "roommate": "1", 
+                "school": null, 
+                "smoking": 1, 
+                "sociability": 0, 
+                "specialities": [
+                    {
+                        "id": 26, 
+                        "name": "茶道"
+                    }, 
+                    {
+                        "id": 29, 
+                        "name": "早食い"
+                    }, 
+                    {
+                        "id": 27, 
+                        "name": "華道"
+                    }
+                ], 
+                "status": 1, 
+                "updated_at": "2013-04-13T13:03:08Z", 
+                "user_id": 1, 
+                "workplace": "South Katheryn"
             }, 
             "max_age": 38, 
             "min_age": 25, 
@@ -1191,6 +1176,3 @@ session_id| o | セッションID
         }, 
         "status": "ok"
     }
-
-
-

@@ -1,6 +1,6 @@
 # coding:utf-8
 class Group < ActiveRecord::Base
-  attr_accessible :max_age, :min_age, :head_count,:relationship, :request, :opening_hour, :target_age_range, :area, :user_id, :status
+  attr_accessible :gender, :max_age, :min_age, :head_count,:relationship, :request, :opening_hour, :target_age_range, :area, :user_id, :status
 
   belongs_to  :leader, :class_name => 'User', :foreign_key => :user_id
   has_many :friends
@@ -25,7 +25,7 @@ class Group < ActiveRecord::Base
 
   def as_json(options = {})
     json = super(options)
-    json['leader'] = self.leader.as_json
+    json['leader'] = self.leader.profile.as_json
     json['friends'] = self.friends.as_json
     json
   end  
