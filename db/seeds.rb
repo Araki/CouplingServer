@@ -134,7 +134,7 @@ when "development"
     FactoryGirl.create(:message, {talk_key: "#{user.id}_#{target_user.id}", match_id: [match.id, target_match.id].sample})
   end
 
-  group = FactoryGirl.create(:group, {user_id: user.id})
+  group = FactoryGirl.create(:boys_group, {user_id: user.id})
   group.group_images << group_images.sample(3)
   group.days << days.sample(3)
   group.mst_prefectures << prefectures.sample(3)
@@ -157,7 +157,7 @@ when "development"
 
   boys_groups = []
   boys_profiles.sample(20).each do |boys_profile|
-    group = FactoryGirl.create(:group, {user_id: boys_profile.user_id})
+    group = FactoryGirl.create(:boys_group, {user_id: boys_profile.user_id})
     group.group_images << group_images.sample(3)
     group.days << days.sample(3)
     group.mst_prefectures << prefectures.sample(3)
@@ -175,7 +175,7 @@ when "development"
 
   girls_groups = []
   girls_profiles.sample(20).each do |girls_profile|
-    group = FactoryGirl.create(:group, {user_id: girls_profile.user_id})
+    group = FactoryGirl.create(:girls_group, {user_id: girls_profile.user_id})
     group.group_images << group_images.sample(3)
     group.days << days.sample(3)
     group.mst_prefectures << prefectures.sample(3)

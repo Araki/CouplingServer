@@ -4,12 +4,15 @@ require 'spec_helper'
 describe Api::GroupsController do
   before do
     @user = FactoryGirl.create(:user)
+    @profile = FactoryGirl.create(:profile, {user_id: @user.id})
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
   end
 
   describe '#show' do
     before do
-      FactoryGirl.create(:group, {user_id: @user.id, head_count: 3})
+      group = FactoryGirl.create(:group, {user_id: @user.id, head_count: 3})
+      group.friends = FactoryGirl.create_list(:friend, 3)
+      group.save
     end
 
     context 'グループが存在している場合' do
@@ -18,9 +21,10 @@ describe Api::GroupsController do
       end
 
       it 'グループが返ること' do
-        # response.body.should ==  ''
         parsed_body = JSON.parse(response.body)
         parsed_body["group"]["head_count"].should == 3
+        parsed_body["group"]["friends"].count.should == 3
+        parsed_body["group"]["leader"][:user_id] == @user.id
       end
     end
   end
@@ -28,7 +32,11 @@ describe Api::GroupsController do
   describe '#list' do
     before do
       10.times do |n|
-        FactoryGirl.create(:group, {head_count: 2})
+        user = FactoryGirl.create(:boys)
+        FactoryGirl.create(:profile, {user_id: user.id})
+        group = FactoryGirl.create(:group, {user_id: user.id, head_count: 2})
+        group.friends = FactoryGirl.create_list(:friend, 3)
+        group.save
       end
     end
 
@@ -44,6 +52,8 @@ describe Api::GroupsController do
         parsed_body["groups"].length.should == 10
         parsed_body["last_page"].should == true
         parsed_body["groups"][0]["head_count"].should == 2
+        parsed_body["groups"][0]["friends"].count.should == 3
+        parsed_body["groups"][0]["leader"].should_not be_nil
       end
     end
   end
