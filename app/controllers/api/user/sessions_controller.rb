@@ -20,8 +20,10 @@ class Api::User::SessionsController < Api::BaseController
 
   #セッションIDをverifyする
   def verify
-    if @login_bonus > 0
-      @user.update_attribute(:point, @user.point + @login_bonus)
+    if @user.last_verify_at < Date.today
+      @login_bonus = configatron.login_bonus
+      @user.assign_attributes({point: @user.point + @login_bonus, last_verify_at: Time.now}, :without_protection => true)
+      @user.save
     end
     render_ok(user_hash)
   end
