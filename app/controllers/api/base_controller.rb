@@ -28,6 +28,10 @@ class Api::BaseController < ApplicationController
     render_pagenate_data(:users, data, {:only => [:id]})
   end
 
+  def render_profiles_list(data)
+    render_pagenate_data(:profiles, data, {})
+  end
+
   def render_not_found
     render_ng('not_found')
   end

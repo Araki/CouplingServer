@@ -2,20 +2,18 @@
 class User < ActiveRecord::Base
 
   # attr_protected :access_token, :age, :email, :facebook_id, :like_point, 
-  #   :gender, :point, :last_login_at, :invitation_code, :status, :public_status
+  #   :point, :last_login_at, :invitation_code, :status, :public_status
   
   has_one  :profile
   has_one  :group
   has_many :receipts, :dependent => :delete_all, :order => 'created_at desc'
+  
   has_many :favorites, :dependent => :delete_all, :order => 'created_at desc'
   has_many :likes, :dependent => :delete_all, :order => 'created_at desc'
-  has_many :likeds, :class_name => "Like", :foreign_key => "target_id", :dependent => :delete_all, :order => 'created_at desc'
   has_many :matches, :dependent => :delete_all, :order => 'created_at desc'
-
-  has_many :favorite_users, :through => :favorites, :source => :target_user, :include => [:profile], :uniq => true
-  has_many :like_users, :through => :likes, :source => :target_user, :include => [:profile], :uniq => true
-  has_many :liked_users, :through => :likeds, :source => :user, :include => [:profile], :uniq => true
-  has_many :match_users, :through => :matches, :source => :target_user, :include => [:profile], :uniq => true
+  has_many :favorite_profiles, :through => :favorites, :source => :profile, :uniq => true
+  has_many :like_profiles, :through => :likes, :source => :profile, :uniq => true
+  has_many :match_profiles, :through => :matches, :source => :profile, :uniq => true
 
   validates :access_token, :presence => true
   validates :email, :presence => true
@@ -35,20 +33,31 @@ class User < ActiveRecord::Base
     user
   end
 
+  def likeds
+    Like.find_all_by_profile_id(self.profile.id)
+  end
+
+  has_many :liked_users, :through => :likeds, :source => :user, :include => [:profile], :uniq => true
+
+  def liked_profiles
+    ids = Like.find_all_by_profile_id(self.profile.id).map(&:id)
+    Profile.where(["id IN (?)", ids])
+  end
+
   def infos
     Info.find(:all, :conditions => ['target_id IN (?,?)', -1, self.id] , :order => 'created_at desc')
   end
 
-  def like?(target)
-    Like.find_by_user_id_and_target_id(self.id, target.id).present?
+  def like?(profile)
+    Like.find_by_user_id_and_profile_id(self.id, profile.id).present?
   end
 
-  def liked?(target)
-    Like.find_by_user_id_and_target_id(target.id, self.id).present?
+  def liked?(profile)
+    Like.find_by_user_id_and_profile_id(profile.user_id, self.profile.id).present?
   end
 
-  def match?(target)
-    Match.find_by_user_id_and_target_id(self.id, target.id).present?
+  def match?(profile)
+    Match.find_by_user_id_and_profile_id(self.id, profile.id).present?
   end
 
   def over_likes_limit_per_day?
@@ -59,14 +68,14 @@ class User < ActiveRecord::Base
   # 既にmatchがあれば何もしない。
   # 相手からLikeされていれば、Matchに切り替える。
   # 上記以外はtargetに対するLikeを作成。
-  def create_like(target)
-    return {type: "match"} if self.match?(target)
+  def create_like(profile)
+    return {type: "match"} if self.match?(profile)
 
-    if liked?(target)
-      self.create_match(target)
+    if liked?(profile)
+      self.create_match(profile)
     else
       begin
-        self.like_users << target
+        self.like_profiles << profile
       rescue Exception => e
         ActiveRecord::Rollback
         return {message: "internal_server_error"}
@@ -76,11 +85,12 @@ class User < ActiveRecord::Base
     end
   end
 
-  def create_match(target)
+  def create_match(profile)
     ActiveRecord::Base.transaction do
-      target.like_users.delete self
-      self.match_users << target
-      target.match_users << self
+      target = profile.user
+      target.like_profiles.delete self.profile
+      self.match_profiles << profile
+      target.match_profiles << self.profile
     end
       return {type: "match"}
     rescue => e
@@ -160,7 +170,6 @@ class User < ActiveRecord::Base
     params[:device_token] = device_token unless device_token.nil?      
     params[:email] =        fb_profile[:email] 
     params[:facebook_id] =  self.facebook_id || fb_profile[:id]
-    params[:gender] =  fb_profile[:gender] == "male" ? 0 : 1
     params[:last_login_at] = Time.now      
     self.assign_attributes(params, :without_protection => true)
     self

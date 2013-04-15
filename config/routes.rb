@@ -13,8 +13,8 @@ Coupling::Application.routes.draw do
     post '/account/update_profile' => 'user/account#update_profile'
     post '/account/destroy' => 'user/account#destroy'
 
-    get  '/users/list' => 'user/users#list'
-    get  '/users/:id/show' => 'user/users#show'
+    get  '/profiles/list' => 'profiles#list'
+    get  '/profiles/:id/show' => 'profiles#show'
 
     get  '/groups/show' => 'groups#show'
     get  '/groups/list' => 'groups#list'

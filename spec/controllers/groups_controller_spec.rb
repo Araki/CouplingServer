@@ -32,8 +32,8 @@ describe Api::GroupsController do
   describe '#list' do
     before do
       10.times do |n|
-        user = FactoryGirl.create(:boys)
-        FactoryGirl.create(:profile, {user_id: user.id})
+        user = FactoryGirl.create(:user)
+        FactoryGirl.create(:male_profile, {user_id: user.id})
         group = FactoryGirl.create(:group, {user_id: user.id, head_count: 2})
         group.friends = FactoryGirl.create_list(:friend, 3)
         group.save

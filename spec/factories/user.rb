@@ -2,7 +2,6 @@
 
 FactoryGirl.define do
   factory :user do
-    gender            0
     access_token      { Faker::Lorem.characters(100) }
     contract_type    nil
     device_token      { Faker::Lorem.characters(30) }
@@ -13,17 +12,5 @@ FactoryGirl.define do
     like_point        { rand(20) }
     status            1
     point             { rand(300) }
-
-    factory :boys do
-      gender 0
-    end
-
-    factory :girls do
-      gender 1
-    end
   end
-
-  # factory :invalid_user, parent: :user do
-  #   nickname nil
-  # end  
 end

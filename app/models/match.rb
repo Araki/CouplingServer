@@ -6,12 +6,12 @@
 class Match < ActiveRecord::Base
   # attr_accessible :user_id, :target_id, :can_open_profile
   belongs_to :user, :dependent => :destroy
-  belongs_to :target_user, :class_name => "User", :foreign_key => "target_id", :dependent => :destroy
+  belongs_to :profile, :dependent => :destroy
   has_many :messages, :dependent => :delete_all
 
   #targetからuserへの対となるmatchを返す。
   def pair
-    Match.find_by_id_and_target_id(self.target_id, self.user_id)
+    Match.find_by_id_and_profile_id(self.profile_id, self.user_id)
   end
 
   def talks(since_id)
@@ -20,6 +20,7 @@ class Match < ActiveRecord::Base
   end
 
   def talk_key
-    self.user_id < self.target_id ? "#{self.user_id}_#{self.target_id}" : "#{self.target_id}_#{self.user_id}"
+    target_id = Profile.find_by_id(self.profile_id).user_id
+    self.user_id < target_id ? "#{self.user_id}_#{target_id}" : "#{target_id}_#{self.user_id}"
   end
 end
