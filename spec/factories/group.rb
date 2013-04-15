@@ -14,11 +14,11 @@ FactoryGirl.define do
     target_age_range 0
     area { Faker::Address.city }
 
-    factory :boys_group do
+    factory :males_group do
       gender 0
     end
 
-    factory :girls_group do
+    factory :females_group do
       gender 1
     end
   end

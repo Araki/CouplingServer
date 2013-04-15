@@ -1,14 +1,12 @@
 # -*r coding: utf-8 -*-
 require 'spec_helper'
 
-describe Api::User::UsersController do
+describe Api::ProfilesController do
   before do
     @user = FactoryGirl.create(:user)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
-    @target_user = FactoryGirl.create(:girls)
 
-    FactoryGirl.create_list(:user, 11, {gender: 0})
-    FactoryGirl.create_list(:user, 11, {gender: 1})
+    FactoryGirl.create_list(:profile, 11)
   end
 
   describe '#list' do
@@ -33,14 +31,17 @@ describe Api::User::UsersController do
   end
 
   describe '#show' do
+    before do
+      @target_profile = FactoryGirl.create(:female_profile)
+    end
 
     context '該当のユーザーが見つかった場合' do
       before do
-        get :show, {id: @target_user.id, session_id: @session.key}
+        get :show, {id: @target_profile.id, session_id: @session.key}
       end
-      subject { JSON.parse(response.body)["user"] }
+      subject { JSON.parse(response.body)["profile"] }
 
-      its (["id"]) {should ==  @target_user.id  }
+      its (["id"]) {should ==  @target_profile.id  }
     end
 
     context '該当のユーザーが見つからなかった場合' do

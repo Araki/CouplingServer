@@ -5,9 +5,13 @@ describe Message do
   describe "#count_and_save" do
     before do
       @user = FactoryGirl.create(:user)
+      @profile = FactoryGirl.create(:profile, {user_id: @user.id})
       @target_user = FactoryGirl.create(:user)
-      @match =  FactoryGirl.create(:match, {user_id: @user.id, target_id: @target_user.id})
-      @oppsite_match =  FactoryGirl.create(:match, {user_id: @target_user.id, target_id: @user.id}) 
+      @target_user_profile = FactoryGirl.create(:profile, {user_id: @target_user.id})
+      @session = FactoryGirl.create(:session, { value: @user.id.to_s })
+
+      @match =  FactoryGirl.create(:match, {user_id: @user.id, profile_id: @target_user_profile.id})
+      @oppsite_match =  FactoryGirl.create(:match, {user_id: @target_user.id, profile_id: @profile.id}) 
     end
 
     context 'count_and_saveについて' do

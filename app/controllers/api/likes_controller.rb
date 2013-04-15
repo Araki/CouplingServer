@@ -3,23 +3,23 @@ class Api::LikesController < Api::BaseController
   
   def list
     if params[:type] == 'liked'
-      users = Kaminari.paginate_array(@user.liked_users).page(params[:page]).per(params[:per])
+      profiles = Kaminari.paginate_array(@user.liked_profiles).page(params[:page]).per(params[:per])
     else
-      users = Kaminari.paginate_array(@user.like_users).page(params[:page]).per(params[:per])
+      profiles = Kaminari.paginate_array(@user.like_profiles).page(params[:page]).per(params[:per])
     end
 
-    render_users_list(users)
+    render_profiles_list(profiles)
   end
 
   def create
-    if @user.gender == 0
+    if @user.profile.gender == 0
       render_ng("over_limit") and return if @user.over_likes_limit_per_day?
     end
 
-    target_user = User.find_by_id(params[:target_id])
-    render_not_found and return unless target_user
+    profile = Profile.find_by_id(params[:profile_id])
+    render_not_found and return unless profile
 
-    result = @user.create_like(target_user)
+    result = @user.create_like(profile)
     result.has_key?(:type) ? render_ok(result) : render_ng("internal_server_error")
   end
 end

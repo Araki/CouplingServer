@@ -13,5 +13,6 @@ class CreateGroup < ActiveRecord::Migration
       t.integer :target_age_range
       t.string  :area
     end
+    add_index :groups, :gender
   end
 end

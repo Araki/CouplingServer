@@ -4,10 +4,12 @@ require 'spec_helper'
 describe Match do
   before do
     @user = FactoryGirl.create(:user)
+    @profile = FactoryGirl.create(:profile, {user_id: @user.id})
     @target_user = FactoryGirl.create(:user)
+    @target_user_profile = FactoryGirl.create(:profile, {user_id: @target_user.id})
 
-    @match =  FactoryGirl.create(:match, {user_id: @user.id, target_id: @target_user.id})
-    @oppsite_match =  FactoryGirl.create(:match, {user_id: @target_user.id, target_id: @user.id}) 
+    @match =  FactoryGirl.create(:match, {user_id: @user.id, profile_id: @target_user_profile.id})
+    @oppsite_match =  FactoryGirl.create(:match, {user_id: @target_user.id, profile_id: @profile.id}) 
   end
 
   describe "#pair" do
@@ -20,10 +22,9 @@ describe Match do
 
   describe "#talk_key" do
     context '2つのmatchのidを結合したキーを返すこと' do
-      let(:match) { FactoryGirl.create(:match, {user_id: 50, target_id: 100}) }
-      subject { match.talk_key }
+      subject { @match.talk_key }
 
-      it { should eq '50_100' }
+      it { should eq "#{@user.id}_#{@target_user.id}" }
     end
   end
 
