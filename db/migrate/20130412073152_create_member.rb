@@ -29,11 +29,13 @@ class CreateMember < ActiveRecord::Migration
       t.integer  :sociability
       t.string   :dislike
       t.integer  :prefecture
+      t.integer  :like_point,     :default => 0
 
       t.timestamps
     end
     add_index :members, :gender
     add_index :members, :user_id
     add_index :members, :group_id
+    add_index :members, :like_point
   end
 end

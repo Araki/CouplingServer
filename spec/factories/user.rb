@@ -9,7 +9,7 @@ FactoryGirl.define do
     facebook_id       { Faker::Base.numerify('##########').to_i }
     invitation_code   ''
     last_login_at     { rand(20).days.ago }
-    like_point        { rand(20) }
+    last_verify_at    { rand(20).days.ago }
     status            1
     point             { rand(300) }
   end

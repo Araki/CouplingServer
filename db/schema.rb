@@ -175,12 +175,14 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
     t.integer  "sociability"
     t.string   "dislike"
     t.integer  "prefecture"
+    t.integer  "like_point",      :default => 0
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
   end
 
   add_index "members", ["gender"], :name => "index_members_on_gender"
   add_index "members", ["group_id"], :name => "index_members_on_group_id"
+  add_index "members", ["like_point"], :name => "index_members_on_like_point"
   add_index "members", ["user_id"], :name => "index_members_on_user_id"
 
   create_table "messages", :force => true do |t|
@@ -228,13 +230,12 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
     t.string   "invitation_code"
     t.string   "contract_type"
     t.integer  "point",                        :default => 0
-    t.integer  "like_point",                   :default => 0
     t.datetime "last_login_at"
+    t.datetime "last_verify_at"
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
   end
 
   add_index "users", ["facebook_id"], :name => "index_users_on_facebook_id"
-  add_index "users", ["like_point"], :name => "index_users_on_like_point"
 
 end

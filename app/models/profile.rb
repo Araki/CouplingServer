@@ -1,6 +1,6 @@
 # coding:utf-8
 class Profile < Member
-  attr_accessible :birthday_on, :user_id
+  attr_accessible :birthday_on, :user_id, :like_point
   
   belongs_to :user
   belongs_to :group

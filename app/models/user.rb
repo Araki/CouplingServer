@@ -1,7 +1,7 @@
 # -*r coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  # attr_protected :access_token, :age, :email, :facebook_id, :like_point, 
+  # attr_protected :access_token, :age, :email, :facebook_id, :last_verify_at, 
   #   :point, :last_login_at, :invitation_code, :status, :public_status
   
   has_one  :profile
