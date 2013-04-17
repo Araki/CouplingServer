@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Api::MessagesController do
   before do
     @user = FactoryGirl.create(:user)
-    @profile = FactoryGirl.create(:profile, {user_id: @user.id})
+    @profile = FactoryGirl.create(:profile, {user_id: @user.id, nickname: 'akira'})
     @target_user = FactoryGirl.create(:user)
     @target_user_profile = FactoryGirl.create(:profile, {user_id: @target_user.id})
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
@@ -78,10 +78,21 @@ describe Api::MessagesController do
 
       context '正常な値を送った場合' do
         before do
+          @server = Grocer.server(port: 2195)
+          @server.accept # starts listening in background
           post :create, {profile_id: @target_user_profile.id, body: 'lalala', session_id: @session.key}
         end
 
+        after do
+          @server.close
+        end
+
         it {JSON.parse(response.body)["status"].should == "ok"}
+
+        it do
+          notification = @server.notifications.pop
+          expect(notification.alert).to eq("akira: lalala")
+        end
       end
 
       context 'messageを作成できなかった場合' do

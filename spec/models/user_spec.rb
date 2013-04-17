@@ -267,6 +267,26 @@ describe User do
     it 'like_pointが増えること'
   end
 
+  describe "#count_unread_messages" do
+    context 'unread messageがなかったら' do
+      subject { @user.count_unread_messages }
+
+      it { should eq 0 }
+    end
+
+    context 'unread messageがあったら' do
+      before do
+        FactoryGirl.create(:match, {user_id: 10, profile_id: @profile.id, unread_count: 5})
+        FactoryGirl.create(:match, {user_id: 15, profile_id: @profile.id, unread_count: 7})
+        FactoryGirl.create(:match, {user_id: 20, profile_id: @profile.id, unread_count: 9})
+        FactoryGirl.create(:match, {user_id: 25, profile_id: 10, unread_count: 9})
+      end
+      subject { @user.count_unread_messages }
+
+      it { should eq 21 }
+    end
+  end
+
   describe "#add_point" do
     let(:user) { FactoryGirl.create(:user, :point => 100) }
     subject { user.reload.point }

@@ -18,6 +18,11 @@ describe Match do
 
       it { should eq @match }
     end
+    context '対となるmatchを返すこと2' do
+      subject { @match.pair }
+
+      it { should eq @oppsite_match }
+    end
   end
 
   describe "#talk_key" do
@@ -44,6 +49,29 @@ describe Match do
       subject { @match.talks(@messages.last.id) }
 
       its (:size) { should eq 5 }
+    end
+  end
+
+  describe "#reset_unread_count" do
+    context 'countについて' do
+      let!(:match) { FactoryGirl.create(:match, {unread_count: 5, user_id: 5, profile_id: 7}) }
+      subject { match.unread_count }
+      before do
+        match.reset_unread_count
+      end
+
+      it { should eq 0 }
+    end
+
+    context 'last_read_atについて' do
+      let!(:match) { FactoryGirl.create(:match, {unread_count: 5, user_id: 5, profile_id: 10}) }
+      subject { match.last_read_at }
+      before do
+        Time.stub!(:now).and_return(Time.local(2013,4,6,14,0,0))
+        match.reset_unread_count
+      end
+
+      it { should eq Time.local(2013,4,6,14,0,0) }
     end
   end
 end
