@@ -5,13 +5,17 @@
 
 class Match < ActiveRecord::Base
   # attr_accessible :user_id, :target_id, :can_open_profile
+  attr_accessible :unread_count, :last_read_at, :can_open_profile
+
   belongs_to :user, :dependent => :destroy
   belongs_to :profile, :dependent => :destroy
   has_many :messages, :dependent => :delete_all
 
   #targetからuserへの対となるmatchを返す。
   def pair
-    Match.find_by_id_and_profile_id(self.profile_id, self.user_id)
+    profile = Profile.find_by_id(self.profile_id)
+    user = User.find_by_id(self.user_id)
+    Match.find_by_id_and_profile_id(profile.user.id, user.profile.id)
   end
 
   def talks(since_id)
@@ -22,5 +26,9 @@ class Match < ActiveRecord::Base
   def talk_key
     target_id = Profile.find_by_id(self.profile_id).user_id
     self.user_id < target_id ? "#{self.user_id}_#{target_id}" : "#{target_id}_#{self.user_id}"
+  end
+
+  def reset_unread_count
+    self.update_attributes(unread_count: 0, last_read_at: Time.now)
   end
 end

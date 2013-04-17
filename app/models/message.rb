@@ -8,14 +8,16 @@ class Message < ActiveRecord::Base
   def count_and_save(match)
     ActiveRecord::Base.transaction do
       self.save!
+      pair = Match.find_by_id_and_profile_id(match.profile.user_id, match.user.profile.id)
       unless match.can_open_profile
-        if match.messages.count > 2 && match.pair.messages.count > 2
+        if match.messages.count > 2 && pair.messages.count > 2
           match.can_open_profile = true
+          pair.can_open_profile = true
           match.save!
-          match.pair.can_open_profile = true
-          match.pair.save!
         end
       end
+      pair.unread_count += 1
+      pair.save!
     end
     true
   rescue ActiveRecord::RecordInvalid => e

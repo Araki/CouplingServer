@@ -114,9 +114,11 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
   add_index "likes", ["user_id"], :name => "index_likes_on_user_id"
 
   create_table "matches", :force => true do |t|
-    t.integer "user_id",                             :null => false
-    t.integer "profile_id",                          :null => false
-    t.boolean "can_open_profile", :default => false
+    t.integer  "user_id",                             :null => false
+    t.integer  "profile_id",                          :null => false
+    t.boolean  "can_open_profile", :default => false
+    t.integer  "unread_count",     :default => 0
+    t.datetime "last_read_at"
   end
 
   add_index "matches", ["user_id", "profile_id"], :name => "index_matches_on_user_id_and_profile_id", :unique => true

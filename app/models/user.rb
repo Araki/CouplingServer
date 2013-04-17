@@ -126,6 +126,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def count_unread_messages
+    Match.where('profile_id = ?', self.profile.id).collect(&:unread_count).inject{|s,i|s+=i} || 0
+  end
+
 =begin
     FacebookIDとアクセストークンを渡すとプロフィールの情報を更新する。
     TODO 最終ログインの更新
