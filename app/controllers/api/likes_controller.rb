@@ -3,9 +3,9 @@ class Api::LikesController < Api::BaseController
   
   def list
     if params[:type] == 'liked'
-      profiles = Kaminari.paginate_array(@user.liked_profiles).page(params[:page]).per(params[:per])
+      profiles = Profile.they_likes(@user).page(params[:page]).per(params[:per])
     else
-      profiles = Kaminari.paginate_array(@user.like_profiles).page(params[:page]).per(params[:per])
+      profiles = @user.like_profiles.page(params[:page]).per(params[:per])
     end
 
     render_profiles_list(profiles)

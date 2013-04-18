@@ -51,16 +51,16 @@ describe Api::LikesController do
       end
     end
 
-    context 'いいねされたユーザーが見つかった場合' do
+    context 'いいねをしてくれたユーザーが見つかった場合' do
       before do
         10.times do
           user = FactoryGirl.create(:user)
-          profile = FactoryGirl.create(:female_profile)
+          profile = FactoryGirl.create(:female_profile, {user_id: user.id})
           FactoryGirl.create(:like, {user_id: user.id, profile_id: @user.profile.id})
         end
       end
 
-      context 'いいねされたユーザーが見つかった場合' do
+      context 'いいねをしてくれたユーザーが見つかった場合' do
         before do
           get :list, {type: 'liked', session_id: @session.key}
         end

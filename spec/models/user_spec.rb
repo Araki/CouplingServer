@@ -199,7 +199,7 @@ describe User do
           it { @user.create_like(@target_user_profile).should eq({type: 'like'}) }
         end
 
-        context 'likeされること' do
+        context 'like状態になること' do
           before do
             @user.create_like(@target_user_profile) 
           end
@@ -209,6 +209,10 @@ describe User do
         
         context 'likeが1つ増えること' do
           it {expect{@user.create_like(@target_user_profile) }.to change(Like, :count).by(1)}
+        end
+        
+        context '相手のlike_pointが1つ増えること' do
+          it {expect{@user.create_like(@target_user_profile) }.to change(@target_user_profile, :like_point).by(1)}
         end
       end
 

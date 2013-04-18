@@ -2,8 +2,7 @@
 class Api::ProfilesController < Api::BaseController
   
   def list
-    gender = @user.profile.gender == 0 ? 1 : 0
-    profiles = Kaminari.paginate_array(Profile.where(gender: gender)).page(params[:page]).per(params[:per])
+    profiles = Profile.gender(@user).order_by(params[:order]).page(params[:page]).per(params[:per])
     render_profiles_list(profiles)
   end
 
