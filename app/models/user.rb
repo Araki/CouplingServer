@@ -38,11 +38,6 @@ class User < ActiveRecord::Base
 
   has_many :liked_users, :through => :likeds, :source => :user, :include => [:profile], :uniq => true
 
-  def liked_profiles
-    ids = Like.find_all_by_profile_id(self.profile.id).map(&:id)
-    Profile.where(["id IN (?)", ids])
-  end
-
   def infos
     Info.find(:all, :conditions => ['target_id IN (?,?)', -1, self.id] , :order => 'created_at desc')
   end
@@ -75,6 +70,8 @@ class User < ActiveRecord::Base
     else
       begin
         self.like_profiles << profile
+        profile.like_point += 1
+        profile.save!
       rescue Exception => e
         ActiveRecord::Rollback
         return {message: "internal_server_error"}

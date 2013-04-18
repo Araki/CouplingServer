@@ -12,6 +12,20 @@ class Profile < Member
   has_many :like_from_users, :through => :likes, :source => :user, :uniq => true
   has_many :match_from_users, :through => :matches, :source => :user, :uniq => true
 
+  scope :they_likes, lambda{|target|
+    likes = Like.arel_table
+    ids = likes.project(likes[:user_id]).where(likes[:profile_id].eq(target.profile.id))
+    where(:user_id => ids)    
+  }
+  scope :gender, lambda{|user|
+    gender = user.profile.gender == 0 ? 1 : 0
+    where(gender: gender)
+  }
+  scope :order_by, lambda{|field|
+    str = field == 'popular' ? 'like_point desc' : 'created_at desc'
+    order(str)
+  }
+
   def assign_fb_attributes(user, fb_profile)
     params = {user_id: user.id}
     params[:age] =  get_age(fb_profile)  
@@ -24,7 +38,7 @@ class Profile < Member
 
   def as_json(options = {})
       json = super(options)
-      # json['images'] = self.images.as_json
+      json['images'] = self.images.as_json
       json
   end  
 
