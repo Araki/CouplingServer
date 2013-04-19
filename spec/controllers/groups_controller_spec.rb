@@ -91,6 +91,19 @@ describe Api::GroupsController do
       end
     end
 
+    context '複数選択項目も作成されること' do
+      before do
+        group_images = FactoryGirl.create_list(:group_image, 10)
+        post :create, {
+          group: FactoryGirl.attributes_for(:group),
+          group_images: [group_images[0].id,group_images[1].id,group_images[2].id], session_id: @session.key
+        }
+      end
+      subject { JSON.parse(response.body)["group"]["group_images"] }
+
+      its (:length) {should == 3 }
+    end
+
     context '正常に作成できなかった場合' do
       before do
         post :create, {session_id: @session.key, group: {head_count: 3}}
@@ -136,6 +149,16 @@ describe Api::GroupsController do
         it 'internal_server_errorが返されること' do
           JSON.parse(response.body)["group"]["head_count"].should == 3
         end 
+      end
+
+      context '複数選択項目も修正されること' do
+        before do
+          group_images = FactoryGirl.create_list(:group_image, 10)
+          post :update, {group_images: [group_images[0].id,group_images[1].id,group_images[2].id], session_id: @session2.key}
+        end
+        subject { JSON.parse(response.body)["group"]["group_images"] }
+
+        its (:length) {should == 3 }
       end
 
       context '正常に修正できなかった場合' do
