@@ -7,3 +7,4 @@ configatron.specialities_limit = 3
 configatron.characters_limit = 3
 configatron.group_images_limit = 3
 configatron.mst_prefectures_limit = 3
+configatron.days_limit = 7
