@@ -53,10 +53,14 @@ class Member < ActiveRecord::Base
       return false
   end
 
-  def update_profile(params)
+  def save_profile(params)
     self.class.transaction do
+      if self.persisted?
+        self.update_attributes!(params[:profile])
+      else
+        self.save!
+      end
       [:hobbies, :characters, :specialities].each{|association| update_associations(association, params)}
-      self.update_attributes!(params[:profile])
     end
     true
   rescue ActiveRecord::RecordInvalid => e
