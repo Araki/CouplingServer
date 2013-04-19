@@ -31,21 +31,34 @@ describe Api::User::AccountController do
 
   describe '#update_profile' do
     context '正常な値をPOSTしたら' do
-      before do
-        post :update_profile, {user: {profile: {nickname: 'koro'}}, session_id: @session.key}
-      end
-      subject { JSON.parse(response.body)["profile"] }
+      context '値が変更できること' do
+        before do
+          post :update_profile, {profile: {nickname: 'koro'}, session_id: @session.key}
+        end
+        subject { JSON.parse(response.body)["profile"] }
 
-      its (["nickname"]) {should == 'koro' }
+        its (["nickname"]) {should == 'koro' }
+      end
+
+      context '複数選択項目も修正されること' do
+        before do
+          hobbies = FactoryGirl.create_list(:hobby, 10)
+          post :update_profile, {profile: {nickname: 'koro'}, hobbies: [hobbies[0].id,hobbies[1].id,hobbies[2].id], session_id: @session.key}
+        end
+        subject { JSON.parse(response.body)["profile"]["hobbies"] }
+
+        its (:length) {should == 3 }
+      end
     end
 
     context 'ユーザーからは変更できない値をPOSTした場合' do
       before do
-        post :update_profile, {user: {profile: {gender: 1}}, session_id: @session.key}
+        post :update_profile, {profile: {gender: 1}, session_id: @session.key}
       end
-      subject { JSON.parse(response.body)["code"] }
+      subject { JSON.parse(response.body) }
 
-      it {should == "Can't mass-assign protected attributes: gender" }
+      its (["status"]) {should == 'ng' }
+      its (["code"]) {should_not be_nil }
     end
 
     context 'invalidな値をPOSTしたら' do
@@ -58,12 +71,12 @@ describe Api::User::AccountController do
         # mock.stub!(:nickname=).with("100")
         # User.stub!(:find_by_id).with(@user.id.to_s).and_return(mock)  
 
-        post :update_profile, {user: {profile: {height: '高い'}}, session_id: @session.key}
+        post :update_profile, {profile: {height: '高い'}, session_id: @session.key}
       end
       subject { JSON.parse(response.body) }
 
       its (["status"]) {should == 'ng' }
-      its (["code"]) {should == "Validation failed: Height is not included in the list, Height is not included in the list" }
+      its (["code"]) {should_not be_nil }
     end
   end
 

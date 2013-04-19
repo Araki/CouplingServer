@@ -1,5 +1,9 @@
 # coding:utf-8
+require 'model_helper'
+
 class Member < ActiveRecord::Base
+  include ModelHelper
+  
   attr_accessible :type, :alcohol, :birthplace, :blood_type, :character, :group_id,
     :dislike, :height, :holiday, :income, :industry, :introduction, :job, 
     :job_description, :marital_history, :marriage_time, :nickname, :prefecture,
@@ -49,6 +53,19 @@ class Member < ActiveRecord::Base
       return false
   end
 
+  def update_profile(params)
+    self.class.transaction do
+      [:hobbies, :characters, :specialities].each{|association| update_associations(association, params)}
+      self.update_attributes!(params[:profile])
+    end
+    true
+  rescue ActiveRecord::RecordInvalid => e
+    false
+  rescue => e
+    self.errors.add :base, e.message
+    false
+  end
+
   def as_json(options = {})
       json = super(options)
       json['images'] = self.images.as_json
@@ -57,5 +74,4 @@ class Member < ActiveRecord::Base
       json['characters'] = self.characters.as_json
       json
   end  
-
 end

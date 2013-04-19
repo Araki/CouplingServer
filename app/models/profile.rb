@@ -36,6 +36,7 @@ class Profile < Member
     self
   end
 
+
   def as_json(options = {})
       json = super(options)
       json['images'] = self.images.as_json
