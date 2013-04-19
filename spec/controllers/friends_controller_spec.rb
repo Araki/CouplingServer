@@ -39,7 +39,7 @@ describe Api::FriendsController do
   describe '#create' do
     context 'グループがなかった場合' do
       before do
-        post :create, {session_id: @session.key, friend: {nickname: 'taro', age: 25}}
+        post :create, {session_id: @session.key, profile: {nickname: 'taro', age: 25}}
       end
 
       it 'internal_server_errorが返されること' do
@@ -54,7 +54,7 @@ describe Api::FriendsController do
 
       context '正常に作成された場合' do
         before do
-          post :create, {session_id: @session.key, friend: FactoryGirl.attributes_for(:friend)}
+          post :create, {session_id: @session.key, profile: FactoryGirl.attributes_for(:friend)}
         end
 
         it 'friendが返ること' do
@@ -65,14 +65,24 @@ describe Api::FriendsController do
       context '正常に作成された場合2' do
         it 'お友達が作成されること' do
           expect{
-            post :create, {session_id: @session.key, friend: FactoryGirl.attributes_for(:friend)}
+            post :create, {session_id: @session.key, profile: FactoryGirl.attributes_for(:friend)}
           }.to change(Friend, :count).by(1)
         end
       end
 
+      context '複数選択項目も作成できること' do
+        before do
+          hobbies = FactoryGirl.create_list(:hobby, 10)
+          post :create, {profile: FactoryGirl.attributes_for(:friend), hobbies: [hobbies[0].id,hobbies[1].id,hobbies[2].id], session_id: @session.key}
+        end
+        subject { JSON.parse(response.body)["friend"]["hobbies"] }
+
+        its (:length) {should == 3 }
+      end
+
       context '正常に作成できなかった場合' do
         before do
-          post :create, {session_id: @session.key, friend: {nickname: nil}}
+          post :create, {session_id: @session.key, profile: {nickname: nil}}
         end
 
         it 'エラーが返されること' do
@@ -83,7 +93,7 @@ describe Api::FriendsController do
       context '正常に作成できなかった場合2' do
         it 'お友達が作成されないこと' do
           expect{
-            post :create, {session_id: @session.key, friend: {nickname: nil}}
+            post :create, {session_id: @session.key, profile: {nickname: nil}}
           }.to change(Friend, :count).by(0)
         end
       end
@@ -93,7 +103,7 @@ describe Api::FriendsController do
   describe '#update' do
     context 'グループがなかった場合' do
       before do
-        post :update, {session_id: @session.key, friend: {nickname: 'taro'}, id: 1}
+        post :update, {session_id: @session.key, profile: {nickname: 'taro'}, id: 1}
       end
 
       it 'internal_server_errorが返されること' do
@@ -108,7 +118,7 @@ describe Api::FriendsController do
 
       context 'Friendがなかった場合' do
         before do
-          post :update, {session_id: @session.key, friend: {nickname: 'taro'}, id: 1}
+          post :update, {session_id: @session.key, profile: {nickname: 'taro'}, id: 1}
         end
 
         it 'not_foundが返されること' do
@@ -120,7 +130,7 @@ describe Api::FriendsController do
         context '自分のグループのFriendでなかった場合' do
           before do
             @friend = FactoryGirl.create(:friend, {group_id: 9999, nickname: 'donald'})
-            post :update, {session_id: @session.key, friend: {nickname: 'taro'}, id: @friend.id}
+            post :update, {session_id: @session.key, profile: {nickname: 'taro'}, id: @friend.id}
           end
 
           it 'permission_deniedが返されること' do
@@ -135,7 +145,7 @@ describe Api::FriendsController do
 
           context '正常に修正された場合' do
             before do
-              post :update, {session_id: @session.key, friend: {nickname: 'taro'}, id: @friend.id}
+              post :update, {session_id: @session.key, profile: {nickname: 'taro'}, id: @friend.id}
             end
 
             it 'friendのプロフィールが返されること' do
@@ -143,9 +153,19 @@ describe Api::FriendsController do
             end 
           end
 
+          context '複数選択項目も修正されること' do
+            before do
+              hobbies = FactoryGirl.create_list(:hobby, 10)
+              post :update, {profile: {nickname: 'koro'}, hobbies: [hobbies[0].id,hobbies[1].id,hobbies[2].id], id: @friend.id, session_id: @session.key}
+            end
+            subject { JSON.parse(response.body)["friend"]["hobbies"] }
+
+            its (:length) {should == 3 }
+          end
+
           context '正常に修正できなかった場合' do
             before do
-              post :update, {session_id: @session.key, friend: {nickname: nil}, id: @friend.id}
+              post :update, {session_id: @session.key, profile: {nickname: nil}, id: @friend.id}
             end
 
             it 'internal_server_errorが返されること' do
@@ -160,7 +180,7 @@ describe Api::FriendsController do
   describe '#destroy' do
     context 'グループがなかった場合' do
       before do
-        post :destroy, {session_id: @session.key, friend: {nickname: 'taro'}, id: 1}
+        post :destroy, {session_id: @session.key, id: 1}
       end
 
       it 'internal_server_errorが返されること' do

@@ -61,7 +61,7 @@ describe Member do
     end
   end
 
-  describe "#update_profile" do
+  describe "#save_profile" do
     before do
       @characters = FactoryGirl.create_list(:character, 10)
       @hobbies = FactoryGirl.create_list(:hobby, 10)
@@ -72,7 +72,7 @@ describe Member do
     end
     context '正常な値を渡した場合' do
       before do
-        @member.update_profile({profile: {nickname: 'dada'}, characters: [@characters[3].id, @characters[4].id]})
+        @member.save_profile({profile: {nickname: 'dada'}, characters: [@characters[3].id, @characters[4].id]})
       end
 
       it { @member.nickname.should eq 'dada' }      
@@ -81,11 +81,11 @@ describe Member do
     end
     
     context '不正な値を渡した場合' do
-      it {@member.update_profile(profile: {alcohol: 10}).should be_false}
+      it {@member.save_profile(profile: {alcohol: 10}).should be_false}
     end
 
     context '不正な値を渡した場合2' do
-      it {@member.update_profile(characters: [@characters[3].id, @characters[4].id, @characters[5].id, @characters[6].id]).should be_false}
+      it {@member.save_profile(characters: [@characters[3].id, @characters[4].id, @characters[5].id, @characters[6].id]).should be_false}
     end
   end
 
