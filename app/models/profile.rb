@@ -17,10 +17,6 @@ class Profile < Member
     ids = likes.project(likes[:user_id]).where(likes[:profile_id].eq(target.profile.id))
     where(:user_id => ids)    
   }
-  scope :gender, lambda{|user|
-    gender = user.profile.gender == 0 ? 1 : 0
-    where(gender: gender)
-  }
   scope :order_by, lambda{|field|
     str = field == 'popular' ? 'like_point desc' : 'created_at desc'
     order(str)

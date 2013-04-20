@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Api::GroupsController do
   before do
     @user = FactoryGirl.create(:user)
-    @profile = FactoryGirl.create(:profile, {user_id: @user.id})
+    @profile = FactoryGirl.create(:profile, {user_id: @user.id, gender:0})
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
   end
 
@@ -40,9 +40,38 @@ describe Api::GroupsController do
       end
     end
 
-    context 'グループが存在している場合' do
+    context '検索結果が存在している場合' do
       before do
         get :list, {session_id: @session.key}
+      end
+
+      it 'グループのリストが返ること' do
+        # response.body.should ==  ''
+        parsed_body = JSON.parse(response.body)
+        parsed_body["current_page"].should == 1
+        parsed_body["groups"].length.should == 10
+        parsed_body["last_page"].should == true
+        parsed_body["groups"][0]["head_count"].should == 2
+        parsed_body["groups"][0]["friends"].count.should == 3
+        parsed_body["groups"][0]["leader"].should_not be_nil
+      end
+    end
+  end
+
+  describe '#search' do
+    before do
+      10.times do |n|
+        user = FactoryGirl.create(:user)
+        FactoryGirl.create(:female_profile, {user_id: user.id})
+        group = FactoryGirl.create(:group, {user_id: user.id, head_count: 2, gender: 1})
+        group.friends = FactoryGirl.create_list(:friend, 3)
+        group.save
+      end
+    end
+
+    context 'グループが存在している場合' do
+      before do
+        get :search, {session_id: @session.key}
       end
 
       it 'グループのリストが返ること' do
