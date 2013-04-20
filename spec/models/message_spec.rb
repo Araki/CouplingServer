@@ -5,15 +5,22 @@ describe Message do
   describe "#count_and_save" do
     before do
       @user = FactoryGirl.create(:user)
+      @profile = FactoryGirl.create(:profile, {user_id: @user.id})
       @target_user = FactoryGirl.create(:user)
-      @match =  FactoryGirl.create(:match, {user_id: @user.id, target_id: @target_user.id})
-      @oppsite_match =  FactoryGirl.create(:match, {user_id: @target_user.id, target_id: @user.id}) 
+      @target_user_profile = FactoryGirl.create(:profile, {user_id: @target_user.id})
+
+      @match =  FactoryGirl.create(:match, {user_id: @user.id, profile_id: @target_user_profile.id})
+      @oppsite_match =  FactoryGirl.create(:match, {user_id: @target_user.id, profile_id: @profile.id}) 
     end
 
     context 'count_and_saveについて' do
       before do
         @message = Message.new(:match_id => @match.id, :talk_key => @match.talk_key, :body => 'lalala' )
         @oppsite_message = Message.new(:match_id => @oppsite_match.id, :talk_key => @oppsite_match.talk_key, :body => 'hahaha' )
+      end
+
+      context '成功した場合' do
+        it {@message.count_and_save(@match).should be_true }
       end
 
       context 'messageが作成されること' do
@@ -40,6 +47,27 @@ describe Message do
       end
     end
 
+    context 'unread_countについて' do
+      before do
+        @message = Message.new(:match_id => @match.id, :talk_key => @match.talk_key, :body => 'lalala' )
+      end
+
+      context '作成前' do
+        subject { @oppsite_match.reload }
+
+        its (:unread_count) { should eq 0 }
+      end
+
+      context '成功したら2' do
+        before do
+          @message.count_and_save(@match)
+        end
+        subject { @oppsite_match.reload }
+
+        its (:unread_count) { should eq 1 }
+      end
+    end
+
     context 'can_open_profileについて' do
       context '2通づつmessageを送ったらcan_open_profileはfalseであること' do
         before do
@@ -53,6 +81,7 @@ describe Message do
         it { @match.messages.count.should eq 2 }
         it { @oppsite_match.messages.count.should eq 3 }
         it { @match.reload.can_open_profile.should be_false }
+        it { @oppsite_match.reload.can_open_profile.should be_false }
       end
 
       context '3通づつmessageを送ったら' do
@@ -68,6 +97,7 @@ describe Message do
         it { @match.messages.count.should eq 3 }
         it { @oppsite_match.messages.count.should eq 3 }
         it { @match.reload.can_open_profile.should be_true }
+        it { @oppsite_match.reload.can_open_profile.should be_true }
       end
     end
 

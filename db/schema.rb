@@ -23,11 +23,11 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
 
   create_table "favorites", :force => true do |t|
     t.integer  "user_id",    :null => false
-    t.integer  "target_id",  :null => false
+    t.integer  "profile_id", :null => false
     t.datetime "created_at", :null => false
   end
 
-  add_index "favorites", ["target_id"], :name => "index_favorites_on_target_id"
+  add_index "favorites", ["profile_id"], :name => "index_favorites_on_profile_id"
   add_index "favorites", ["user_id"], :name => "index_favorites_on_user_id"
 
   create_table "group_days", :force => true do |t|
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
 
   create_table "groups", :force => true do |t|
     t.integer "status",           :default => 0
+    t.integer "gender",           :default => 0
     t.integer "user_id",                         :null => false
     t.integer "max_age",                         :null => false
     t.integer "min_age",                         :null => false
@@ -70,6 +71,8 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
     t.integer "target_age_range"
     t.string  "area"
   end
+
+  add_index "groups", ["gender"], :name => "index_groups_on_gender"
 
   create_table "hobbies", :force => true do |t|
     t.string "name", :null => false
@@ -102,21 +105,23 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
 
   create_table "likes", :force => true do |t|
     t.integer  "user_id",    :null => false
-    t.integer  "target_id",  :null => false
+    t.integer  "profile_id", :null => false
     t.datetime "created_at", :null => false
   end
 
-  add_index "likes", ["target_id"], :name => "index_likes_on_target_id"
-  add_index "likes", ["user_id", "target_id"], :name => "index_likes_on_user_id_and_target_id", :unique => true
+  add_index "likes", ["profile_id"], :name => "index_likes_on_profile_id"
+  add_index "likes", ["user_id", "profile_id"], :name => "index_likes_on_user_id_and_profile_id", :unique => true
   add_index "likes", ["user_id"], :name => "index_likes_on_user_id"
 
   create_table "matches", :force => true do |t|
-    t.integer "user_id",                             :null => false
-    t.integer "target_id",                           :null => false
-    t.boolean "can_open_profile", :default => false
+    t.integer  "user_id",                             :null => false
+    t.integer  "profile_id",                          :null => false
+    t.boolean  "can_open_profile", :default => false
+    t.integer  "unread_count",     :default => 0
+    t.datetime "last_read_at"
   end
 
-  add_index "matches", ["user_id", "target_id"], :name => "index_matches_on_user_id_and_target_id", :unique => true
+  add_index "matches", ["user_id", "profile_id"], :name => "index_matches_on_user_id_and_profile_id", :unique => true
   add_index "matches", ["user_id"], :name => "index_matches_on_user_id"
 
   create_table "member_characters", :force => true do |t|
@@ -152,6 +157,7 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
     t.string   "introduction"
     t.integer  "gender"
     t.integer  "age"
+    t.date     "birthday_on"
     t.integer  "birthplace"
     t.string   "roommate"
     t.integer  "height"
@@ -171,11 +177,14 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
     t.integer  "sociability"
     t.string   "dislike"
     t.integer  "prefecture"
+    t.integer  "like_point",      :default => 0
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
   end
 
+  add_index "members", ["gender"], :name => "index_members_on_gender"
   add_index "members", ["group_id"], :name => "index_members_on_group_id"
+  add_index "members", ["like_point"], :name => "index_members_on_like_point"
   add_index "members", ["user_id"], :name => "index_members_on_user_id"
 
   create_table "messages", :force => true do |t|
@@ -223,15 +232,12 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
     t.string   "invitation_code"
     t.string   "contract_type"
     t.integer  "point",                        :default => 0
-    t.integer  "like_point",                   :default => 0
-    t.integer  "gender"
     t.datetime "last_login_at"
+    t.datetime "last_verify_at"
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
   end
 
   add_index "users", ["facebook_id"], :name => "index_users_on_facebook_id"
-  add_index "users", ["gender"], :name => "index_users_on_gender"
-  add_index "users", ["like_point"], :name => "index_users_on_like_point"
 
 end

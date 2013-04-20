@@ -5,7 +5,14 @@ class Api::GroupsController < Api::BaseController
   end
 
   def list
-    groups = Kaminari.paginate_array(Group.all).page(params[:page]).per(params[:per])
+    groups = Group.page(params[:page]).per(params[:per])
+
+    render_pagenate_data(:groups, groups, {})
+  end
+
+  def search
+    params[:gender] = @user.profile.gender == 0 ? 1 : 0
+    groups = Group.search(params).page(params[:page]).per(params[:per])
 
     render_pagenate_data(:groups, groups, {})
   end
@@ -15,7 +22,7 @@ class Api::GroupsController < Api::BaseController
 
     params[:group][:user_id] = @user.id
     group = Group.new(params[:group])
-    if group.save
+    if group.save_group(params)
       render_ok({group: group})
     else
       render_ng(group.errors)
@@ -25,7 +32,7 @@ class Api::GroupsController < Api::BaseController
   def update
     render_not_found and return unless @user.group.present?
 
-    if @user.group.update_attributes(params[:group])
+    if @user.group.save_group(params)
       render_ok({group: @user.group})
     else
       render_ng(@user.group.errors)

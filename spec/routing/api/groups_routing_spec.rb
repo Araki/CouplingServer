@@ -11,6 +11,10 @@ describe Api::GroupsController do
       get("/api/groups/list").should route_to(controller: "api/groups", action: "list")
     end
 
+    it "routes to #search" do
+      get("/api/groups/search").should route_to(controller: "api/groups", action: "search")
+    end
+
     it "routes to #create" do
       post("/api/groups/create").should route_to(controller: "api/groups", action: "create")
     end

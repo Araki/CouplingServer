@@ -13,9 +13,9 @@ class Api::FriendsController < Api::BaseController
   def create
     render_ng("internal_server_error") and return if @user.group.nil?
 
-    friend = Friend.new(params[:friend])
+    friend = Friend.new(params[:profile])
     @user.group.friends << friend
-    if friend.save
+    if friend.save_profile(params)
       render_ok({friend: friend})
     else
       render_ng(friend.errors)
@@ -28,7 +28,7 @@ class Api::FriendsController < Api::BaseController
     render_ng("internal_server_error") and return if @user.group.nil?
     render_ng("permission_denied") and return unless friend.group == @user.group
 
-    if friend.update_attributes(params[:friend])
+    if friend.save_profile(params)
       render_ok({friend: friend})
     else
       render_ng(friend.errors)

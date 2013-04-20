@@ -6,12 +6,10 @@ class Api::User::AccountController < Api::BaseController
   end
 
   def update_profile
-    begin
-      @user.profile.update_attributes!(params[:user][:profile])
-    rescue Exception => e
-      render_ng(e.message)
-    else
+    if @user.profile.save_profile(params)
       render_ok(:profile => @user.profile.as_json)
+    else
+      render_ng(@user.profile.errors)
     end
   end
 
