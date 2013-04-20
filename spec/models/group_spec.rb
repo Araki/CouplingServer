@@ -87,4 +87,17 @@ describe Group do
       its(:count) { should eq 5 }      
     end
   end
+
+  describe ".member_params_exists?" do
+    context 'keyが存在した場合' do
+      subject { Group.member_params_exists?({blood_type: "A"}) }
+
+      it { should be_true }      
+    end
+    context 'keyが存在しなかった場合' do
+      subject { Group.member_params_exists?({xxx: 0}) }
+
+      it { should be_false }      
+    end
+  end
 end

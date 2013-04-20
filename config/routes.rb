@@ -18,6 +18,7 @@ Coupling::Application.routes.draw do
 
     get  '/groups/show' => 'groups#show'
     get  '/groups/list' => 'groups#list'
+    get  '/groups/search' => 'groups#search'
     post '/groups/create' => 'groups#create'
     post '/groups/update' => 'groups#update'
 

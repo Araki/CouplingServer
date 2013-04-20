@@ -5,7 +5,14 @@ class Api::GroupsController < Api::BaseController
   end
 
   def list
-    groups = Kaminari.paginate_array(Group.all).page(params[:page]).per(params[:per])
+    groups = Group.page(params[:page]).per(params[:per])
+
+    render_pagenate_data(:groups, groups, {})
+  end
+
+  def search
+    params[:gender] = @user.profile.gender == 0 ? 1 : 0
+    groups = Group.search(params).page(params[:page]).per(params[:per])
 
     render_pagenate_data(:groups, groups, {})
   end
