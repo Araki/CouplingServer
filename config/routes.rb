@@ -1,5 +1,19 @@
 # -*- coding: utf-8 -*-
 Coupling::Application.routes.draw do
+  get "characters/index"
+
+  get "characters/show"
+
+  get "characters/new"
+
+  get "characters/create"
+
+  get "characters/edit"
+
+  get "characters/update"
+
+  get "characters/destroy"
+
   get "index/top"
   get "index/index"
 
