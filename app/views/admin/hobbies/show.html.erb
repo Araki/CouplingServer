@@ -1,0 +1,24 @@
+<% content_for :title do %>趣味詳細<% end %>
+
+<div class="row">
+  <div class="span8 offset3 well">
+    <h3><%= yield :title %></h3>
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td><%= @hobby.id %></td>
+        </tr>
+        <tr>
+          <td>趣味名</td>
+          <td><%= @hobby.name %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination-centered">
+      <%= link_to edit_admin_hobby_path(@hobby), :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+      <%= link_to [:admin, @hobby], :confirm => '趣味を削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+      <%= link_to "戻る", admin_hobbies_path, :class => "btn" %>
+    </div>
+  </div>
+</div>

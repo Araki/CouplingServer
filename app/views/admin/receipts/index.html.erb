@@ -1,0 +1,26 @@
+<% content_for :title do %>レシート管理<% end %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>アイテム</th>
+      <th>ユーザーID</th>
+      <th>レシートコード</th>
+      <th>作成日時</th>
+    </tr>
+  </thead>
+  <tbody>
+<% @receipts.each do |receipt| %>
+    <tr>
+      <td><%= receipt.id %></td>
+      <td><%= link_to "#{receipt.item.title}", admin_item_path(receipt.item) %></td>
+      <td><%= receipt.user_id %></td>
+      <td><%= receipt.receipt_code %></td>
+      <td><%= receipt.created_at %></td>
+      <td>
+        <%= link_to "詳細", admin_receipt_path(receipt) %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+<%= paginate @receipts %>

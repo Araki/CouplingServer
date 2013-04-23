@@ -1,7 +1,7 @@
-# coding:utf-8
-class Admin::ItemsController < ApplicationController
+class Admin::ItemsController < AdminController
+
   def index
-    @items = Item.all
+    @items = Item.page(params[:page])
   end
 
   def show
@@ -14,10 +14,13 @@ class Admin::ItemsController < ApplicationController
 
   def create
     @item = Item.new(params[:item])
-    if @item.save
-      redirect_to [:admin, @item], :notice => "Successfully created item."
-    else
-      render :action => 'new'
+
+    respond_to do |format|
+      if @item.save
+        format.html { redirect_to [:admin, @item], notice: 'Item was successfully created.' }
+      else
+        format.html { render action: "new" }
+      end
     end
   end
 
@@ -27,10 +30,13 @@ class Admin::ItemsController < ApplicationController
 
   def update
     @item = Item.find(params[:id])
-    if @item.update_attributes(params[:item])
-      redirect_to [:admin, @item], :notice  => "Successfully updated item."
-    else
-      render :action => 'edit'
+
+    respond_to do |format|
+      if @item.update_attributes(params[:item])
+        format.html { redirect_to [:admin, @item] }
+      else
+        format.html { render action: "edit" }
+      end
     end
   end
 

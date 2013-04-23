@@ -1,0 +1,35 @@
+<% content_for :title do %>レシート詳細<% end %>
+
+<div class="row">
+  <div class="span8 offset3 well">
+    <h3><%= yield :title %></h3>
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td><%= @receipt.id %></td>
+        </tr>
+        <tr>
+          <td>アイテム名</td>
+          <td><%= link_to "#{@receipt.item.title}", admin_item_path(@receipt.item) %></td>
+        </tr>
+        <tr>
+          <td>ユーザーID</td>
+          <td><%= @receipt.user_id %></td>
+        </tr>
+        <tr>
+          <td>レシートコード</td>
+          <td><%= @receipt.receipt_code %></td>
+        </tr>
+        <tr>
+          <td>作成日時</td>
+          <td><%= @receipt.created_at %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination-centered">
+      <%= link_to [:admin, @receipt], :confirm => 'レシートを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+      <%= link_to "戻る", admin_receipts_path, :class => "btn" %>
+    </div>
+  </div>
+</div>

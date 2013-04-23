@@ -5,6 +5,11 @@ class Image < ActiveRecord::Base
 
   IMAGE_DATA_HASH = Pref::AWS::BUCKET_PATH[:image]
 
+  validates :member_id,
+    :presence => true,  
+    :numericality => { :only_integer => true, :greater_than_or_equal_to => 1, :less_than_or_equal_to => 2147483647,
+                        :allow_blank => true }
+
   def self.main_images 
     self.find(:all, :conditions => {is_main: true}, :order => 'member_id desc')
   end

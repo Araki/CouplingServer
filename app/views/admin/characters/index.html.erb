@@ -14,7 +14,7 @@
 <% @characters.each do |character| %>
     <tr>
       <td><%= character.id %></td>
-      <td><%= character.name %>
+      <td><%= character.name %></td>
       <td>
         <%= link_to "詳細", admin_character_path(character) %> |
         <%= link_to "編集", edit_admin_character_path(character) %>
