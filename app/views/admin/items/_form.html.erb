@@ -1,0 +1,35 @@
+<div class="span8 offset2 well">
+<%= form_for([:admin, @item], :html => {:class => "form-horizontal well"}) do |f| %>
+  <fieldset>
+    <legend><%= yield :title %></legend>
+    <% if @item.errors.any? %>
+      <ul>
+        <% @item.errors.full_messages.each do |msg| %>
+          <li class="errorMsg"><%= msg %></li>
+        <% end %>
+      </ul>
+    <% end %>
+    <div class="control-group <%= 'error' if f.object.errors['title'].present? %>">
+      <%= f.label :title, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :title, :class => "input-xlarge", :required => "required", :maxlength => 255 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['pid'].present? %>">
+      <%= f.label :pid, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :pid, :class => "input-xlarge", :required => "required", :maxlength => 255 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['point'].present? %>">
+      <%= f.label :point, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :point, :class => "input-xlarge", :required => "required", :maxlength => 255 %>
+      </div>
+    </div>
+    <div class="form-actions">
+      <%= f.submit(nil, :class => "btn btn-primary", :id => "submitBtn") %>
+      <%= link_to_function "戻る", "history.back()", :class => "btn" %>
+    </div>
+  </fieldset>
+<% end %>

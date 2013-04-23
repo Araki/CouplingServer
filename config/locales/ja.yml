@@ -1,0 +1,254 @@
+ja:
+  date:
+    abbr_day_names:
+    - 日
+    - 月
+    - 火
+    - 水
+    - 木
+    - 金
+    - 土
+    abbr_month_names:
+    - 
+    - 1月
+    - 2月
+    - 3月
+    - 4月
+    - 5月
+    - 6月
+    - 7月
+    - 8月
+    - 9月
+    - 10月
+    - 11月
+    - 12月
+    day_names:
+    - 日曜日
+    - 月曜日
+    - 火曜日
+    - 水曜日
+    - 木曜日
+    - 金曜日
+    - 土曜日
+    formats:
+      default: ! '%Y/%m/%d'
+      long: ! '%Y年%m月%d日(%a)'
+      short: ! '%m/%d'
+    month_names:
+    - 
+    - 1月
+    - 2月
+    - 3月
+    - 4月
+    - 5月
+    - 6月
+    - 7月
+    - 8月
+    - 9月
+    - 10月
+    - 11月
+    - 12月
+    order:
+    - :year
+    - :month
+    - :day
+  datetime:
+    formats:
+      default: ! '%Y/%m/%d %H:%M'
+      long: ! '%Y年%m月%d日(%a) %H時%M分'
+      short: ! '%H:%M'
+    distance_in_words:
+      about_x_hours:
+        one: 約1時間
+        other: 約%{count}時間
+      about_x_months:
+        one: 約1ヶ月
+        other: 約%{count}ヶ月
+      about_x_years:
+        one: 約1年
+        other: 約%{count}年
+      almost_x_years:
+        one: 1年弱
+        other: ! '%{count}年弱'
+      half_a_minute: 30秒前後
+      less_than_x_minutes:
+        one: 1分以内
+        other: ! '%{count}分以内'
+      less_than_x_seconds:
+        one: 1秒以内
+        other: ! '%{count}秒以内'
+      over_x_years:
+        one: 1年以上
+        other: ! '%{count}年以上'
+      x_days:
+        one: 1日
+        other: ! '%{count}日'
+      x_minutes:
+        one: 1分
+        other: ! '%{count}分'
+      x_months:
+        one: 1ヶ月
+        other: ! '%{count}ヶ月'
+      x_seconds:
+        one: 1秒
+        other: ! '%{count}秒'
+    prompts:
+      day: 日
+      hour: 時
+      minute: 分
+      month: 月
+      second: 秒
+      year: 年
+  errors: &errors
+    format: ! '%{attribute}%{message}'
+    messages:
+      accepted: を受諾してください。
+      blank: を入力してください。
+      confirmation: と確認の入力が一致しません。
+      empty: を入力してください。
+      equal_to: は%{count}にしてください。
+      even: は偶数にしてください。
+      exclusion: は予約されています。
+      greater_than: は%{count}より大きい値にしてください。
+      greater_than_or_equal_to: は%{count}以上の値にしてください。
+      inclusion: は一覧にありません。
+      invalid: の形式が間違っています。
+      less_than: は%{count}より小さい値にしてください。
+      less_than_or_equal_to: は%{count}以下の値にしてください。
+      not_a_number: は数値で入力してください。
+      not_an_integer: は整数で入力してください。
+      odd: は奇数にしてください。
+      record_invalid: バリデーションに失敗しました。 %{errors}
+      taken: はすでに登録されています
+      too_long: は%{count}文字以内で入力してください。
+      too_short: は%{count}文字以上で入力してください。
+      wrong_length: は%{count}文字で入力してください。
+      image_size: の画像サイズは320x50(30KB以内)、300x50(30KB以内)、480x480(50KB以内)のいずれかのサイズのみ有効です
+    template:
+      body: 次の項目を確認してください。
+      header:
+        one: ! '%{model}にエラーが発生しました。'
+        other: ! '%{model}に%{count}個のエラーが発生しました。'
+  helpers:
+    select:
+      prompt: 選択してください。
+    submit:
+      create: 登録する
+      submit: 保存する
+      update: 更新する
+  number:
+    currency:
+      format:
+        delimiter: ! ','
+        format: ! '%n%u'
+        precision: 0
+        separator: .
+        significant: false
+        strip_insignificant_zeros: false
+        unit: 円
+    format:
+      delimiter: ! ','
+      precision: 3
+      separator: .
+      significant: false
+      strip_insignificant_zeros: false
+    human:
+      decimal_units:
+        format: ! '%n %u'
+        units:
+          billion: 十億
+          million: 百万
+          quadrillion: 千兆
+          thousand: 千
+          trillion: 兆
+          unit: ''
+      format:
+        delimiter: ''
+        precision: 3
+        significant: true
+        strip_insignificant_zeros: true
+      storage_units:
+        format: ! '%n%u'
+        units:
+          byte: バイト
+          gb: ギガバイト
+          kb: キロバイト
+          mb: メガバイト
+          tb: テラバイト
+    percentage:
+      format:
+        delimiter: ''
+    precision:
+      format:
+        delimiter: ''
+  support:
+    array:
+      last_word_connector: と
+      two_words_connector: と
+      words_connector: と
+  time:
+    am: 午前
+    pm: 午後
+  activerecord:
+    errors:
+      messages:
+        record_invalid: レコードが無効です
+    models:
+      company: 会社
+      prefecture: 都道府県
+      category: カテゴリ
+      facility: 施設
+      program: プログラム
+      program_item: プログラムアイテム
+    attributes:
+      company:
+        id: ID
+        name: 会社名
+      category:
+        id: ID
+        name: カテゴリ名
+      course:
+        program_id: プログラムID
+        name: コース名
+        meeting_time: 集合時間
+        start_time: 開始時間
+        finish_time: 終了時間
+        price_adult: 大人料金
+        price_child: 小人料金
+        age_of_child: 小人範囲
+        group_discount: 団体割引学
+        group_discount_num: 団体割引になる人数
+      reservation:
+        course_id: コース名
+        option_id: オプションID
+        reserved_on: 予約日時
+        men: 男性人数
+        women: 女性人数
+        minors: 未成年人数
+        pickup_place: 送迎場所
+        lodging_place: 宿泊先
+        experience: 経験
+        note: 備考
+        total_price: 合計金額
+        pickup_place_1: 最寄り駅
+        pickup_place_2: 宿泊先
+        pickup_place_3: なし
+        experience_1: 初めて
+        experience_2: 1-3回
+        experience_3: それ以上
+  label:
+    nonselect: 選択なし
+
+  activerecord:
+    attributes:
+      profile:
+        nickname: ニックネーム
+      group:
+        name: グループ名
+      item:
+        title: アイテム名
+        pid: プロダクトID
+        point: ポイント
+      info:
+        body: 本文
+        target_id: 対象

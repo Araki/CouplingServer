@@ -56,7 +56,13 @@ Coupling::Application.routes.draw do
 
   namespace :admin do
     resources :characters
-    get  '/items/list' => 'items#list'
+    resources :items
+    resources :group_images
+    resources :specialities
+    resources :hobbies
+    resources :images, :only => [:index, :show, :destroy]
+    resources :infos
+    resources :receipts, :only => [:index, :show, :destroy]
   end
 
   root :to => 'index#index'

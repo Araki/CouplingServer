@@ -1,0 +1,25 @@
+<% content_for :title do %>特技管理<% end %>
+<%= link_to new_admin_speciality_path, :class => "btn" do %>
+  <i class="icon-pencil"></i><strong>登録</strong>
+<% end %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>名前</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+<% @specialities.each do |speciality| %>
+    <tr>
+      <td><%= speciality.id %></td>
+      <td><%= speciality.name %>
+      <td>
+        <%= link_to "詳細", admin_speciality_path(speciality) %> |
+        <%= link_to "編集", edit_admin_speciality_path(speciality) %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+<%= paginate @specialities %>
