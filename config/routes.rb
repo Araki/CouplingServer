@@ -1,18 +1,5 @@
 # -*- coding: utf-8 -*-
 Coupling::Application.routes.draw do
-  get "characters/index"
-
-  get "characters/show"
-
-  get "characters/new"
-
-  get "characters/create"
-
-  get "characters/edit"
-
-  get "characters/update"
-
-  get "characters/destroy"
 
   get "index/top"
   get "index/index"
@@ -36,7 +23,7 @@ Coupling::Application.routes.draw do
     post '/groups/create' => 'groups#create'
     post '/groups/update' => 'groups#update'
 
-    post '/friends/:id/show' => 'friends#show'
+    get  '/friends/:id/show' => 'friends#show'
     post '/friends/create' => 'friends#create'
     post '/friends/:id/update' => 'friends#update'
     post '/friends/:id/destroy' => 'friends#destroy'
@@ -68,6 +55,7 @@ Coupling::Application.routes.draw do
   end
 
   namespace :admin do
+    resources :characters
     get  '/items/list' => 'items#list'
   end
 

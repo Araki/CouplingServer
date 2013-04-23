@@ -4,7 +4,7 @@ describe Api::FriendsController do
   describe "routing" do
 
     it "routes to #show" do
-      post("/api/friends/5/show").should route_to(controller: "api/friends", action: "show", id: "5")
+      get("/api/friends/5/show").should route_to(controller: "api/friends", action: "show", id: "5")
     end
 
     it "routes to #create" do
