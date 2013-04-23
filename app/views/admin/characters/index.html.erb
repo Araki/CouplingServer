@@ -1,0 +1,25 @@
+<% content_for :title do %>キャラクター管理<% end %>
+<%= link_to new_admin_character_path, :class => "btn" do %>
+  <i class="icon-pencil"></i><strong>登録</strong>
+<% end %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>名前</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+<% @characters.each do |character| %>
+    <tr>
+      <td><%= character.id %></td>
+      <td><%= character.name %>
+      <td>
+        <%= link_to "詳細", admin_character_path(character) %> |
+        <%= link_to "編集", edit_admin_character_path(character) %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+<%= paginate @characters %>
