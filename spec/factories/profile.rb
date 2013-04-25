@@ -14,5 +14,13 @@ FactoryGirl.define do
     factory :female_profile do
       gender 1
     end
+
+    factory :valid_profile do
+      age 35
+    end
+
+    factory :invalid_profile do
+      age 'x'
+    end
   end
 end

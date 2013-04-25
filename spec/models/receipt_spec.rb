@@ -91,11 +91,12 @@ describe Receipt do
 
     context 'トランザクションに失敗した場合' do
       before do
-         FactoryGirl.create(:item, { title: "300point", point: -300, pid: 'com.example.products.-300pt' })
+         FactoryGirl.create(:item, { title: "300point", point: 300, pid: 'com.example.products.-300pt' })
         iap_receipt = mock(:iap_receipt)
         iap_receipt.stub!(:product_id).and_return( 'com.example.products.-300pt')
         Itunes::Receipt.should_receive(:verify!).with('abcde', :allow_sandbox).and_return(iap_receipt)
         @receipt = Receipt.new({user_id:@user.id, receipt_code: 'abcde'})
+        @receipt.stub!(:save!).and_raise(ActiveRecord::RecordInvalid.new(@receipt))
         
         ActiveRecord::Base.connection.should_receive(:rollback_db_transaction).once
       end

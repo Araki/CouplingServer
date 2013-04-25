@@ -9,13 +9,13 @@
         <% end %>
       </ul>
     <% end %>
-    <div class="control-group <%= 'error' if f.object.errors['title'].present? %>">
+    <div class="control-group <%= 'error' if f.object.errors['target_id'].present? %>">
       <%= f.label :target_id, :class => "control-label" %>
       <div class="controls">
         <%= f.text_field :target_id, :class => "input-xlarge", :readonly => true, :required => "required", :maxlength => 10 %>
       </div>
     </div>
-    <div class="control-group <%= 'error' if f.object.errors['title'].present? %>">
+    <div class="control-group <%= 'error' if f.object.errors['body'].present? %>">
       <%= f.label :body, :class => "control-label" %>
       <div class="controls">
         <%= f.text_area :body, :class => "input-xlarge", :required => "required"%>

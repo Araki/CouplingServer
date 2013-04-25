@@ -18,8 +18,12 @@ FactoryGirl.define do
       gender 0
     end
 
-    factory :females_group do
+    factory :females_group, class: Group do
       gender 1
+    end
+
+    factory :invalid_group, class: Group do
+      gender nil
     end
   end
 end

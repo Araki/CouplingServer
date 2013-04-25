@@ -13,4 +13,12 @@ FactoryGirl.define do
     status            1
     point             { rand(300) }
   end
+
+  factory :valid_user, class: User do
+    email 'baz@example.com'
+  end
+
+  factory :invalid_user, class: User do
+    email nil
+  end
 end

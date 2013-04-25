@@ -201,46 +201,6 @@ ja:
       program: プログラム
       program_item: プログラムアイテム
     attributes:
-      company:
-        id: ID
-        name: 会社名
-      category:
-        id: ID
-        name: カテゴリ名
-      course:
-        program_id: プログラムID
-        name: コース名
-        meeting_time: 集合時間
-        start_time: 開始時間
-        finish_time: 終了時間
-        price_adult: 大人料金
-        price_child: 小人料金
-        age_of_child: 小人範囲
-        group_discount: 団体割引学
-        group_discount_num: 団体割引になる人数
-      reservation:
-        course_id: コース名
-        option_id: オプションID
-        reserved_on: 予約日時
-        men: 男性人数
-        women: 女性人数
-        minors: 未成年人数
-        pickup_place: 送迎場所
-        lodging_place: 宿泊先
-        experience: 経験
-        note: 備考
-        total_price: 合計金額
-        pickup_place_1: 最寄り駅
-        pickup_place_2: 宿泊先
-        pickup_place_3: なし
-        experience_1: 初めて
-        experience_2: 1-3回
-        experience_3: それ以上
-  label:
-    nonselect: 選択なし
-
-  activerecord:
-    attributes:
       profile:
         nickname: ニックネーム
       group:
@@ -252,3 +212,5 @@ ja:
       info:
         body: 本文
         target_id: 対象
+  label:
+    nonselect: 選択なし

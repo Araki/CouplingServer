@@ -13,7 +13,7 @@ class Api::FriendsController < Api::BaseController
   def create
     render_ng("internal_server_error") and return if @user.group.nil?
 
-    friend = Friend.new(params[:profile])
+    friend = Friend.new(params[:friend])
     @user.group.friends << friend
     if friend.save_profile(params)
       render_ok({friend: friend})

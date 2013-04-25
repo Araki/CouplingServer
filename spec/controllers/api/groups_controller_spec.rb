@@ -183,7 +183,7 @@ describe Api::GroupsController do
       context '複数選択項目も修正されること' do
         before do
           group_images = FactoryGirl.create_list(:group_image, 10)
-          post :update, {group_images: [group_images[0].id,group_images[1].id,group_images[2].id], session_id: @session2.key}
+          post :update, {group: {}, group_images: [group_images[0].id,group_images[1].id,group_images[2].id], session_id: @session2.key}
         end
         subject { JSON.parse(response.body)["group"]["group_images"] }
 

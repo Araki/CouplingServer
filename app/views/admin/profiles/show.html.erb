@@ -1,0 +1,188 @@
+<% content_for :title do %>ユーザー詳細<% end %>
+
+<div class="row">
+  <div class="span8 offset3 well">
+    <h3><%= yield :title %></h3>
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td><%= @user.id %></td>
+        </tr>
+        <tr>
+          <td>ステータス</td>
+          <td><%= @user.status %></td>
+        </tr>
+        <tr>
+          <td>Facebook ID</td>
+          <td><%= @user.facebook_id %></td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td><%= @user.email %></td>
+        </tr>
+        <tr>
+          <td>Access Token</td>
+          <td><%= truncate(@user.access_token, :length => 50) %></td>
+        </tr>
+        <tr>
+          <td>Device Token</td>
+          <td><%= @user.device_token %></td>
+        </tr>
+        <tr>
+          <td>招待コード</td>
+          <td><%= @user.invitation_code %></td>
+        </tr>
+        <tr>
+          <td>Contact Type</td>
+          <td><%= @user.contract_type %></td>
+        </tr>
+        <tr>
+          <td>ポイント</td>
+          <td><%= @user.point %></td>
+        </tr>
+        <tr>
+          <td>最終ログイン</td>
+          <td><%= @user.last_login_at %></td>
+        </tr>
+        <tr>
+          <td>最終Verify</td>
+          <td><%= @user.last_verify_at %></td>
+        </tr>
+        <tr>
+          <td>入会日時</td>
+          <td><%= @user.created_at %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination-centered">
+      <%= link_to edit_admin_user_path(@user), :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+      <%= link_to [:admin, @user], :confirm => 'ユーザーを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+      <%= link_to "戻る", admin_users_path, :class => "btn" %>
+    </div>
+  </div>
+
+  <% if @user.profile.present? %>
+    <div class="span8 offset3 well">
+      <h3>プロフィール</h3>
+      <%= profile = @user.profile %>
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <td>ID</td>
+            <td><%= profile.id %></td>
+          </tr>
+          <tr>
+            <td>ステータス</td>
+            <td><%= profile.status %></td>
+          </tr>
+          <tr>
+            <td>ニックネーム</td>
+            <td><%= profile.nickname %></td>
+          </tr>
+          <tr>
+            <td>自己紹介</td>
+            <td><%= profile.introduction %></td>
+          </tr>
+          <tr>
+            <td>性別</td>
+            <td><%= profile.gender %></td>
+          </tr>
+          <tr>
+            <td>年齢</td>
+            <td><%= profile.age %></td>
+          </tr>
+          <tr>
+            <td>誕生日</td>
+            <td><%= profile.birthday_on %></td>
+          </tr>
+          <tr>
+            <td>出身</td>
+            <td><%= profile.birthplace %></td>
+          </tr>
+          <tr>
+            <td>同居人</td>
+            <td><%= profile.roommate %></td>
+          </tr>
+          <tr>
+            <td>身長</td>
+            <td><%= profile.height %></td>
+          </tr>
+          <tr>
+            <td>プロポーション</td>
+            <td><%= profile.proportion %></td>
+          </tr>
+          <tr>
+            <td>血液型</td>
+            <td><%= profile.blood_type %></td>
+          </tr>
+          <tr>
+            <td>婚姻歴</td>
+            <td><%= profile.marital_history %></td>
+          </tr>
+          <tr>
+            <td>婚姻期間</td>
+            <td><%= profile.marriage_time %></td>
+          </tr>
+          <tr>
+            <td>たばこ</td>
+            <td><%= profile.smoking %></td>
+          </tr>
+          <tr>
+            <td>アルコール</td>
+            <td><%= profile.alcohol %></td>
+          </tr>
+          <tr>
+            <td>Industry</td>
+            <td><%= profile.industry %></td>
+          </tr>
+          <tr>
+            <td>職業</td>
+            <td><%= profile.job %></td>
+          </tr>
+          <tr>
+            <td>職業の内容</td>
+            <td><%= profile.job_description %></td>
+          </tr>
+          <tr>
+            <td>勤務地</td>
+            <td><%= profile.workplace %></td>
+          </tr>
+          <tr>
+            <td>収入</td>
+            <td><%= profile.income %></td>
+          </tr>
+          <tr>
+            <td>学歴</td>
+            <td><%= profile.school %></td>
+          </tr>
+          <tr>
+            <td>休日</td>
+            <td><%= profile.holiday %></td>
+          </tr>
+          <tr>
+            <td>社交性</td>
+            <td><%= profile.sociability %></td>
+          </tr>
+          <tr>
+            <td>苦手</td>
+            <td><%= profile.dislike %></td>
+          </tr>
+          <tr>
+            <td>県名</td>
+            <td><%= profile.prefecture %></td>
+          </tr>
+          <tr>
+            <td>likeポイント</td>
+            <td><%= profile.like_point %></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination-centered">
+        <%= link_to edit_admin_user_path(profile), :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+        <%= link_to [:admin, profile], :confirm => 'プロフィールを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+        <%= link_to "戻る", admin_users_path, :class => "btn" %>
+      </div>
+    </div>  
+  <% end %>
+</div>

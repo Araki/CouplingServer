@@ -8,6 +8,11 @@ class Member < ActiveRecord::Base
     :dislike, :height, :holiday, :income, :industry, :introduction, :job, 
     :job_description, :marital_history, :marriage_time, :nickname, :prefecture,
     :proportion, :roommate, :school, :smoking, :sociability, :workplace, :status
+  attr_accessible :type, :alcohol, :birthplace, :blood_type, :character, :group_id,
+    :dislike, :height, :holiday, :income, :industry, :introduction, :job, 
+    :job_description, :marital_history, :marriage_time, :nickname, :prefecture,
+    :proportion, :roommate, :school, :smoking, :sociability, :workplace, :status,
+    :gender, :age, :like_point, :birthday_on, :as => :admin  
 
   belongs_to :group
 
@@ -88,12 +93,36 @@ class Member < ActiveRecord::Base
   end
 
   def save_profile(params)
+    prop = self.class.name.underscore.to_sym
     self.class.transaction do
       if self.persisted?
-        self.update_attributes!(params[:profile])
+        self.update_attributes!(params[prop])
       else
         self.save!
       end
+      [:hobbies, :characters, :specialities].each{|association| update_associations(association, params)}
+    end
+    true
+  rescue ActiveRecord::RecordInvalid => e
+    false
+  rescue => e
+    self.errors.add :base, e.message
+    false
+  end
+
+  def update_profile_by_admin(params)
+    prop = self.class.name.underscore.to_sym
+    [:hobbies, :characters, :specialities].each do |association|
+      ids = (association.to_s.singularize + '_ids').to_sym
+      if params[prop][ids]
+        params[association] = params[prop][ids] 
+        params[prop].delete(ids)
+        params[association].delete('')
+      end
+    end    
+    self.class.transaction do
+      self.assign_attributes(params[prop], :as => :admin)
+      self.save!
       [:hobbies, :characters, :specialities].each{|association| update_associations(association, params)}
     end
     true
