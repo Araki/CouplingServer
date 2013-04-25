@@ -69,5 +69,7 @@ Coupling::Application.routes.draw do
     resources :receipts, :only => [:index, :show, :destroy]
   end
 
+  get  '/admin' => 'admin/users#index'
+  
   root :to => 'index#index'
 end

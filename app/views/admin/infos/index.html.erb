@@ -18,7 +18,8 @@
       <% if info.target_id < 0 %>
         <td>全員</td>
       <% else %>
-        <td><%= info.target_id %></td>
+
+        <td><%= link_to "#{info.target_id}", admin_user_path(info.target_id) %></td>
       <% end %>
       <td><%= truncate(info.body, :length => 30) %></td>
       <td><%= info.created_at %></td>

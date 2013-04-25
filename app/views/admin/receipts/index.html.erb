@@ -14,7 +14,7 @@
     <tr>
       <td><%= receipt.id %></td>
       <td><%= link_to "#{receipt.item.title}", admin_item_path(receipt.item) %></td>
-      <td><%= receipt.user_id %></td>
+      <td><%= link_to "#{receipt.user_id}", admin_user_path(receipt.user_id) %></td>
       <td><%= receipt.receipt_code %></td>
       <td><%= receipt.created_at %></td>
       <td>

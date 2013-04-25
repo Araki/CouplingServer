@@ -1,7 +1,7 @@
 <% content_for :title do %>レシート詳細<% end %>
 
 <div class="row">
-  <div class="span8 offset3 well">
+  <div class="span8 offset2 well">
     <h3><%= yield :title %></h3>
     <table class="table table-striped">
       <tbody>
@@ -15,7 +15,7 @@
         </tr>
         <tr>
           <td>ユーザーID</td>
-          <td><%= @receipt.user_id %></td>
+          <td><%= link_to "#{@receipt.user_id}", admin_user_path(@receipt.user_id) %></td>
         </tr>
         <tr>
           <td>レシートコード</td>

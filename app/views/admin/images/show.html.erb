@@ -1,7 +1,7 @@
 <% content_for :title do %>画像詳細<% end %>
 
 <div class="row">
-  <div class="span8 offset3 well">
+  <div class="span8 offset2 well">
     <h3><%= yield :title %></h3>
     <table class="table table-striped">
       <tbody>
@@ -11,7 +11,11 @@
         </tr>
         <tr>
           <td>メンバーID</td>
-          <td><%= @image.member_id %></td>
+          <% if @image.member.type == 'Profile' %>
+            <td><%= link_to "#{@image.member.user_id}", admin_user_path(@image.member.user_id) %></td>
+          <% else %>
+            <td><%= link_to "#{@image.member_id}", admin_friend_path(@image.member_id) %></td>
+          <% end %>
         </tr>
         <tr>
           <td>メイン画像</td>
