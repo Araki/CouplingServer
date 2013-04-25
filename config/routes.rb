@@ -55,6 +55,10 @@ Coupling::Application.routes.draw do
   end
 
   namespace :admin do
+    resources :users, :except => [:new, :create]
+    resources :friends, :except => [:new, :create]
+    resources :profiles, :except => [:new, :create]
+    resources :groups, :except => [:new, :create]
     resources :characters
     resources :items
     resources :group_images

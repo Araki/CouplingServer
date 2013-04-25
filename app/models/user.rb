@@ -2,7 +2,9 @@
 class User < ActiveRecord::Base
 
   # attr_protected :access_token, :age, :email, :facebook_id, :last_verify_at, 
-  #   :point, :last_login_at, :invitation_code, :status, :public_status
+  #   :point, :last_login_at, :invitation_code, :status
+  attr_accessible  :access_token, :device_token, :email, :facebook_id, :point, :invitation_code,
+   :status, :contract_type, :as => :admin  
   
   has_one  :profile
   has_one  :group

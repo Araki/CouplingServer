@@ -1,0 +1,65 @@
+<div class="span8 offset2 well">
+<%= form_for([:admin, @user], :html => {:class => "form-horizontal well"}) do |f| %>
+  <fieldset>
+    <legend><%= yield :title %></legend>
+    <% if @user.errors.any? %>
+      <ul>
+        <% @user.errors.full_messages.each do |msg| %>
+          <li class="errorMsg"><%= msg %></li>
+        <% end %>
+      </ul>
+    <% end %>
+    <div class="control-group <%= 'error' if f.object.errors['status'].present? %>">
+      <%= f.label :status, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :status, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['facebook_id'].present? %>">
+      <%= f.label :facebook_id, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :facebook_id, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['email'].present? %>">
+      <%= f.label :email, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :email, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['access_token'].present? %>">
+      <%= f.label :access_token, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :access_token, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['device_token'].present? %>">
+      <%= f.label :device_token, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :device_token, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['invitation_code'].present? %>">
+      <%= f.label :invitation_code, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :invitation_code, :class => "input-xlarge", :required => "required"%>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['contract_type'].present? %>">
+      <%= f.label :contract_type, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :contract_type, :class => "input-xlarge", :required => "required"%>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['point'].present? %>">
+      <%= f.label :point, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :point, :class => "input-xlarge", :required => "required"%>
+      </div>
+    </div>
+    <div class="form-actions">
+      <%= f.submit(nil, :class => "btn btn-primary", :id => "submitBtn") %>
+      <%= link_to_function "戻る", "history.back()", :class => "btn" %>
+    </div>
+  </fieldset>
+<% end %>

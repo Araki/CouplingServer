@@ -12,5 +12,13 @@ FactoryGirl.define do
     factory :female_friend do
       gender 1
     end
+
+    factory :valid_friend do
+      nickname 'taro'
+    end
+
+    factory :invalid_friend do
+      nickname nil
+    end
   end
 end

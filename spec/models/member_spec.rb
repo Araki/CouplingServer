@@ -72,7 +72,7 @@ describe Member do
     end
     context '正常な値を渡した場合' do
       before do
-        @member.save_profile({profile: {nickname: 'dada'}, characters: [@characters[3].id, @characters[4].id]})
+        @member.save_profile({member: {nickname: 'dada'}, characters: [@characters[3].id, @characters[4].id]})
       end
 
       it { @member.nickname.should eq 'dada' }      
@@ -81,7 +81,7 @@ describe Member do
     end
     
     context '不正な値を渡した場合' do
-      it {@member.save_profile(profile: {alcohol: 10}).should be_false}
+      it {@member.save_profile(member: {alcohol: 10}).should be_false}
     end
 
     context '不正な値を渡した場合2' do
