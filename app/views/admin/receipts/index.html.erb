@@ -1,4 +1,18 @@
-<% content_for :title do %>レシート管理<% end %>
+<div class="bdnavi">
+  <% if @user.present? %>
+    <% content_for :title do %><%= "購入したアイテム" %><% end %>
+    <ul class="breadcrumb">
+      <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
+      <li><%= yield :title =%></li>
+    </ul>
+  <% else %>
+    <% content_for :title do %>レシート一覧<% end %>
+    <ul class="breadcrumb">
+      <li><%= yield :title =%></li>
+    </ul>
+  <% end %>
+</div>
+
 <table class="table table-striped">
   <thead>
     <tr>

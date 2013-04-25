@@ -63,7 +63,7 @@ Coupling::Application.routes.draw do
       end
       resources :messages, :only => [:index, :destroy]
       resources :receipts, :only => [:index, :destroy]
-      resources :infos, :only => [:index, :destroy]
+      resources :infos
     end
     resources :friends, :except => [:new, :create]
     resources :profiles, :except => [:new, :create]
