@@ -1,31 +1,27 @@
-<% content_for :title do %>ユーザー管理<% end %>
+<% content_for :title do %>プロフィール管理<% end %>
 <table class="table table-striped">
   <thead>
     <tr>
       <th>ID</th>
-      <th>ステータス</th>
-      <th>Facebook ID</th>
-      <th>Email</th>
-      <th>ポイント</th>
-      <th>最終ログイン</th>
+      <th>ニックネーム</th>
+      <th>性別</th>
+      <th>年齢</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-<% @users.each do |user| %>
-    <tr>
-      <td><%= user.id %></td>
-      <td><%= user.status %></td>
-      <td><%= user.facebook_id %></td>
-      <td><%= user.email %></td>
-      <td><%= user.point %></td>
-      <td><%= user.last_login_at %></td>
-      <td>
-        <%= link_to "詳細", admin_user_path(user) %> |
-        <%= link_to "編集", edit_admin_user_path(user) %>
-      </td>
-    </tr>
-<% end %>
+    <% @profiles.each do |profile| %>
+        <tr>
+          <td><%= profile.id %></td>
+          <td><%= profile.nickname %></td>
+          <td><%= profile.gender %></td>
+          <td><%= profile.age %></td>
+          <td>
+            <%= link_to "詳細", admin_profile_path(profile) %> |
+            <%= link_to "編集", edit_admin_profile_path(profile) %>
+          </td>
+        </tr>
+    <% end %>
   </tbody>
 </table>
-<%= paginate @users %>
+<%= paginate @profiles %>

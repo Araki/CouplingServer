@@ -1,7 +1,7 @@
 <% content_for :title do %>ユーザー詳細<% end %>
 
 <div class="row">
-  <div class="span8 offset3 well">
+  <div class="span8 well">
     <h3><%= yield :title %></h3>
     <table class="table table-striped">
       <tbody>
@@ -62,8 +62,12 @@
     </div>
   </div>
 
+  <div class="span3 well">
+    ユーザーのお気に入り
+  </div>
+
   <% if @user.profile.present? %>
-    <div class="span8 offset3 well">
+    <div class="span8 well">
       <h3>プロフィール</h3>
       <% profile = @user.profile %>
       <table class="table table-striped">
@@ -198,7 +202,7 @@
             <td>画像</td>
             <td>
               <% profile.images.each do |image| %>
-                <%= image_tag "#{image.url}" %>
+　              <%= link_to(image_tag("#{image.url}"), admin_image_path(image)) %>
               <% end %>
             </td>
           </tr>
@@ -212,7 +216,7 @@
   <% end %>
 
   <% if @user.group.present? %>
-    <div class="span8 offset3 well">
+    <div class="span8 well">
       <h3>グループ</h3>
       <% group = @user.group %>
       <table class="table table-striped">
@@ -287,8 +291,8 @@
       </div>
     </div>
 
-    <div class="span8 offset3 well">
-      <h3>グループの友達</h3>
+    <div class="span8 well">
+      <h3>グループの友人</h3>
       <table class="table table-striped">
         <thead>
           <tr>
