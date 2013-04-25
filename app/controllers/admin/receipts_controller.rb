@@ -1,7 +1,12 @@
 class Admin::ReceiptsController < AdminController
 
   def index
-    @receipts = Receipt.page(params[:page])
+    if params[:user_id]
+      @user = User.find(params[:user_id])
+      @receipts = @user.receipts.page(params[:page])
+    else
+      @receipts = Receipt.page(params[:page])
+    end
   end
 
   def show

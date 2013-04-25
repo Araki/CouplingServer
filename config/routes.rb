@@ -55,7 +55,16 @@ Coupling::Application.routes.draw do
   end
 
   namespace :admin do
-    resources :users, :except => [:new, :create]
+    resources :users, :except => [:new, :create] do
+      resources :favorites, :only => [:index, :destroy]
+      resources :likes, :only => [:index, :destroy]
+      resources :matches, :only => [:index, :destroy] do
+        resources :messages, :only => [:index, :destroy]
+      end
+      resources :messages, :only => [:index, :destroy]
+      resources :receipts, :only => [:index, :destroy]
+      resources :infos, :only => [:index, :destroy]
+    end
     resources :friends, :except => [:new, :create]
     resources :profiles, :except => [:new, :create]
     resources :groups, :except => [:new, :create]

@@ -16,14 +16,14 @@ class Member < ActiveRecord::Base
 
   belongs_to :group
 
-  has_one  :main_image, :class_name => "Image", :conditions => { :is_main => true }
+  has_one  :main_image, :class_name => "Image", :conditions => { :is_main => true }, :dependent => :destroy
   has_many :images, :dependent => :delete_all
 
-  has_many :member_hobbies
+  has_many :member_hobbies, :dependent => :destroy
   has_many :hobbies, :through => :member_hobbies
-  has_many :member_specialities
+  has_many :member_specialities, :dependent => :destroy
   has_many :specialities, :through => :member_specialities
-  has_many :member_characters
+  has_many :member_characters, :dependent => :destroy
   has_many :characters, :through => :member_characters
 
   scope :by_statuses, lambda{|statuses| where(status: statuses) unless statuses.nil?}

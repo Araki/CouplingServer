@@ -1,7 +1,12 @@
 class Admin::InfosController < AdminController
 
   def index
-    @infos = Info.page(params[:page])
+    if params[:user_id]
+      @user = User.find(params[:user_id])
+      @infos = @user.received_infos.page(params[:page])
+    else
+      @infos = Info.page(params[:page])
+    end
   end
 
   def show

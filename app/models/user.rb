@@ -6,9 +6,11 @@ class User < ActiveRecord::Base
   attr_accessible  :access_token, :device_token, :email, :facebook_id, :point, :invitation_code,
    :status, :contract_type, :as => :admin  
   
-  has_one  :profile
-  has_one  :group
+  has_one  :profile, :dependent => :destroy
+  has_one  :group, :dependent => :destroy
   has_many :receipts, :dependent => :delete_all, :order => 'created_at desc'
+  has_many :received_infos, :class_name => 'Info', :foreign_key => :target_id,
+   :dependent => :delete_all, :order => 'created_at desc'
   
   has_many :favorites, :dependent => :delete_all, :order => 'created_at desc'
   has_many :likes, :dependent => :delete_all, :order => 'created_at desc'

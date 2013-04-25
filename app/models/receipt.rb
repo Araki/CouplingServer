@@ -3,8 +3,8 @@
 class Receipt < ActiveRecord::Base
   attr_accessible :receipt_code, :user_id, :item_id
 
-  belongs_to :user, :dependent => :destroy
-  belongs_to :item, :dependent => :destroy, :counter_cache => true
+  belongs_to :user
+  belongs_to :item, :counter_cache => true
 
   #itunes storeで発行されたreceiptコードを受け取り有効なレシートかを調べて確認出来れば
   #ポイントを追加して、Receiptを生成する。

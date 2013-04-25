@@ -63,7 +63,14 @@
   </div>
 
   <div class="span3 well">
-    ユーザーのお気に入り
+    <ul>
+      <li><%= link_to "お気に入りのユーザー", admin_user_favorites_path(@user) %></li>
+      <li><%= link_to "いいねしたユーザー", admin_user_likes_path(@user) %> </li>
+      <li><%= link_to "マッチしたユーザー", admin_user_matches_path(@user) %></li>
+      <li><%= link_to "送ったメッセージ", admin_user_messages_path(@user) %></li>
+      <li><%= link_to "購入したアイテム", admin_user_receipts_path(@user) %></li>
+      <li><%= link_to "受信したお知らせ", admin_user_infos_path(@user) %></li>
+    </ul>
   </div>
 
   <% if @user.profile.present? %>

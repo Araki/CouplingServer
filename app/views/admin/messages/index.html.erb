@@ -1,0 +1,48 @@
+<div class="bdnavi">
+  <% if @match.present? %>
+    <% content_for :title do %><%= "#{@match.profile.nickname}とのトーク" %><% end %>
+    <ul class="breadcrumb">
+      <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
+      <li><%= link_to "マッチ一覧", admin_user_matches_path(@user) %> &gt;</li>
+      <li><%= yield :title =%></li>
+    </ul>
+  <% else %>
+    <% content_for :title do %>メッセージ一覧<% end %>
+    <ul class="breadcrumb">
+      <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
+      <li><%= yield :title =%></li>
+    </ul>
+  <% end %>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>発信者</th>
+      <th>受信者</th>
+      <th>本文</th>
+      <th>送信日時</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @messages.each do |message| %>
+        <tr>
+          <td><%= message.id %></td>
+          <td><%= message.match.user_id %></td>
+          <td><%= message.match.profile_id %></td>
+          <td><%= message.body %></td>
+          <td><%= message.created_at %></td>
+          <td>
+            <% if @match.present? %>
+              <%= link_to "削除", admin_user_match_message_path(@user, @match.profile, message), :confirm => 'メッセージを削除しますか?', :method=> :delete %>
+            <% else %>
+              <%= link_to "削除", admin_user_message_path(@user, message), :confirm => 'メッセージを削除しますか?', :method=> :delete %>
+            <% end %>
+          </td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= paginate @messages %>
