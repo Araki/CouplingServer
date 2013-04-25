@@ -7,8 +7,8 @@ class Match < ActiveRecord::Base
   # attr_accessible :user_id, :target_id, :can_open_profile
   attr_accessible :unread_count, :last_read_at, :can_open_profile
 
-  belongs_to :user, :dependent => :destroy
-  belongs_to :profile, :dependent => :destroy
+  belongs_to :user
+  belongs_to :profile
   has_many :messages, :dependent => :delete_all
 
   #targetからuserへの対となるmatchを返す。

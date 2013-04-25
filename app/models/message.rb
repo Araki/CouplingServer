@@ -1,9 +1,15 @@
 class Message < ActiveRecord::Base
   attr_accessible :body, :match_id, :talk_key
-  belongs_to :match, :dependent => :destroy
+  belongs_to :match
 
   validates :body, :presence => true
   validates :body, :length => { :minimum => 1, :maximum => 500 }
+
+  scope :by_user, lambda{|user|
+    matches = Match.arel_table
+    ids = matches.project(matches[:id]).where(matches[:user_id].eq(user.id))
+    where(:match_id => ids)    
+  }
 
   def count_and_save(match)
     ActiveRecord::Base.transaction do
