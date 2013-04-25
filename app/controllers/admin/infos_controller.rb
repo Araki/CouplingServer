@@ -1,8 +1,8 @@
 class Admin::InfosController < AdminController
+  before_filter :load_user
 
   def index
-    if params[:user_id]
-      @user = User.find(params[:user_id])
+    if @user.present?
       @infos = @user.received_infos.page(params[:page])
     else
       @infos = Info.page(params[:page])
@@ -14,7 +14,7 @@ class Admin::InfosController < AdminController
   end
 
   def new
-    @info = Info.new
+    @info = Info.new(target_id: (@user.present? ? @user.id : -1))
   end
 
   def create
@@ -22,7 +22,11 @@ class Admin::InfosController < AdminController
 
     respond_to do |format|
       if @info.save
-        format.html { redirect_to [:admin, @info], notice: 'Info was successfully created.' }
+        if @user.present?
+          format.html { redirect_to admin_user_info_path(@user, @info), notice: 'Info was successfully created.' }
+        else
+          format.html { redirect_to [:admin, @info], notice: 'Info was successfully created.' }
+        end
       else
         format.html { render action: "new" }
       end
@@ -38,7 +42,11 @@ class Admin::InfosController < AdminController
 
     respond_to do |format|
       if @info.update_attributes(params[:info])
-        format.html { redirect_to [:admin, @info] }
+        if @user.present?
+          format.html { redirect_to admin_user_info_path(@user, @info), notice: 'Info was successfully created.' }
+        else
+          format.html { redirect_to [:admin, @info] }
+        end
       else
         format.html { render action: "edit" }
       end
@@ -48,6 +56,15 @@ class Admin::InfosController < AdminController
   def destroy
     @info = Info.find(params[:id])
     @info.destroy
-    redirect_to admin_infos_url, :notice => "Successfully destroyed info."
+    if @user.present?
+      redirect_to admin_user_infos_path(@user), :notice => "Successfully destroyed info."
+    else
+      redirect_to admin_infos_url, :notice => "Successfully destroyed info."
+    end
+  end
+
+  private 
+  def load_user
+    @user = User.find(params[:user_id]) if params[:user_id]
   end
 end
