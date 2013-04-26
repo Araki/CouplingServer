@@ -1,4 +1,5 @@
 class Admin::FriendsController < AdminController
+  layout "friend"
 
   def index
     @friends = Friend.page(params[:page])

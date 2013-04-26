@@ -1,20 +1,3 @@
-<% if @user.present? %>
-  <div class="bdnavi">
-    <% content_for :title do %><%= "#{@user.profile.nickname}への通知の修正" %><% end %>
-    <ul class="breadcrumb">
-      <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
-      <li><%= link_to "通知の一覧", admin_user_infos_path(@user) %> &gt;</li>
-      <li><%= yield :title =%></li>
-    </ul>
-  </div>
-<% else %>
-  <div class="bdnavi">
-    <% content_for :title do %>全会員への通知の修正<% end %>
-    <ul class="breadcrumb">
-      <li><%= link_to "通知の一覧", admin_infos_path %> &gt;</li>
-      <li><%= yield :title =%></li>
-    </ul>
-  </div>
-<% end %>
+<% content_for :title do %>通知の修正<% end %>
 
 <%= render 'form' %>

@@ -1,4 +1,5 @@
 class Admin::GroupsController < AdminController
+  layout "group"
 
   def index
     @groups = Group.page(params[:page])
@@ -26,7 +27,8 @@ class Admin::GroupsController < AdminController
 
   def destroy
     @group = Group.find(params[:id])
+    leader = @group.leader
     @group.destroy
-    redirect_to admin_groups_url, :notice => "Successfully destroyed group."
+    redirect_to  [:admin, leader], :notice => "Successfully destroyed group."
   end
 end

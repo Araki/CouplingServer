@@ -1,4 +1,5 @@
 class Admin::UsersController < AdminController
+  layout "user"
 
   def index
     @users = User.page(params[:page])

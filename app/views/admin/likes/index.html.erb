@@ -1,6 +1,8 @@
 <% content_for :title do %>いいねしたユーザー<% end %>
 <div class="bdnavi">
   <ul class="breadcrumb">
+    <li>ユーザー管理 &gt;</li>
+    <li><%= link_to "ユーザー一覧", [:admin, :users] %> &gt;</li>
     <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
     <li><%= yield :title =%></li>
   </ul>
@@ -24,8 +26,7 @@
           <td><%= profile.gender %></td>
           <td><%= profile.age %></td>
           <td>
-            <%= link_to "詳細", admin_profile_path(profile) %> |
-            <%= link_to "編集", edit_admin_profile_path(profile) %> |
+            <%= link_to "詳細", admin_user_path(profile.user) %> |
             <%= link_to "いいねを解除", admin_user_like_path(@user, profile), :confirm => 'いいねを解除しますか?', :method=> :delete %>
           </td>
         </tr>

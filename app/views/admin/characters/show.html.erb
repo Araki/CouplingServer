@@ -1,8 +1,7 @@
-<% content_for :title do %>キャラクター詳細<% end %>
+<% content_for :title do %>性格詳細<% end %>
 
 <div class="row">
   <div class="span8 offset2 well">
-    <h3><%= yield :title %></h3>
     <table class="table table-striped">
       <tbody>
         <tr>
@@ -10,7 +9,7 @@
           <td><%= @character.id %></td>
         </tr>
         <tr>
-          <td>キャラクター名</td>
+          <td>性格名</td>
           <td><%= @character.name %></td>
         </tr>
       </tbody>

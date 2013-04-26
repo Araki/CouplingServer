@@ -1,4 +1,5 @@
 class Admin::CharactersController < AdminController
+  layout "character"
 
   def index
     @characters = Character.page(params[:page])
