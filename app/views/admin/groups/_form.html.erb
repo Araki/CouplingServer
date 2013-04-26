@@ -1,7 +1,6 @@
 <div class="span8 offset2 well">
 <%= form_for([:admin, @group], :html => {:class => "form-horizontal well"}) do |f| %>
   <fieldset>
-    <legend><%= yield :title %></legend>
     <% if @group.errors.any? %>
       <ul>
         <% @group.errors.full_messages.each do |msg| %>

@@ -1,4 +1,5 @@
 class Admin::GroupImagesController < AdminController
+  layout "group_image"
 
   def index
     @group_images = GroupImage.page(params[:page])

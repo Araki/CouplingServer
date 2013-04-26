@@ -1,21 +1,9 @@
+<% content_for :title do %>レシート一覧<% end %>
 <% if @user.present? %>
-  <div class="bdnavi">
-    <% content_for :title do %><%= "購入したアイテム" %><% end %>
-    <ul class="breadcrumb">
-      <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
-      <li><%= yield :title =%></li>
-    </ul>
-  </div>
   <%= link_to new_admin_user_receipt_path(@user), :class => "btn" do %>
     <i class="icon-pencil"></i><strong><%= "#{@user.profile.nickname}" %>のレシートを作成</strong>
   <% end %>  
 <% else %>
-  <div class="bdnavi">
-    <% content_for :title do %>レシート一覧<% end %>
-    <ul class="breadcrumb">
-      <li><%= yield :title =%></li>
-    </ul>
-  </div>
   <%= link_to new_admin_receipt_path, :class => "btn" do %>
     <i class="icon-pencil"></i><strong>レシートを作成</strong>
   <% end %>

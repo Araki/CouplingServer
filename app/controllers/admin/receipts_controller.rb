@@ -1,4 +1,5 @@
 class Admin::ReceiptsController < AdminController
+  layout "receipt"
   before_filter :load_user
 
   def index
@@ -56,7 +57,11 @@ class Admin::ReceiptsController < AdminController
   def destroy
     @receipt = Receipt.find(params[:id])
     @receipt.destroy
-    redirect_to admin_receipts_url, :notice => "Successfully destroyed receipt."
+    if @user.present?
+      redirect_to admin_user_receipts_path(@user), :notice => "Successfully destroyed info."
+    else
+      redirect_to admin_receipts_url, :notice => "Successfully destroyed info."
+    end
   end
 
   private 

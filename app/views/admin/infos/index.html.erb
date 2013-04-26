@@ -1,21 +1,9 @@
+<% content_for :title do %>通知の一覧<% end %>
 <% if @user.present? %>
-  <div class="bdnavi">
-    <% content_for :title do %><%= "通知の一覧" %><% end %>
-    <ul class="breadcrumb">
-      <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
-      <li><%= yield :title =%></li>
-    </ul>
-  </div>
   <%= link_to new_admin_user_info_path(@user), :class => "btn" do %>
     <i class="icon-pencil"></i><strong><%= "#{@user.profile.nickname}" %>への通知を作成</strong>
   <% end %>  
 <% else %>
-  <div class="bdnavi">
-    <% content_for :title do %>通知の一覧<% end %>
-    <ul class="breadcrumb">
-      <li><%= yield :title =%></li>
-    </ul>
-  </div>
   <%= link_to new_admin_info_path, :class => "btn" do %>
     <i class="icon-pencil"></i><strong>全会員への通知を作成</strong>
   <% end %>

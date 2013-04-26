@@ -1,4 +1,5 @@
 class Admin::HobbiesController < AdminController
+  layout "hobby"
 
   def index
     @hobbies = Hobby.page(params[:page])

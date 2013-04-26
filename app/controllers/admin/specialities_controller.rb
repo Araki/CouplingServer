@@ -1,4 +1,5 @@
 class Admin::SpecialitiesController < AdminController
+  layout "speciality"
 
   def index
     @specialities = Speciality.page(params[:page])

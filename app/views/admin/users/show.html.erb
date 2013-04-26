@@ -1,8 +1,7 @@
-<% content_for :title do %>ユーザー詳細<% end %>
+<% content_for :title do %><%= @user.profile.nickname %><% end %>
 
 <div class="row">
   <div class="span8 well">
-    <h3><%= yield :title %></h3>
     <table class="table table-striped">
       <tbody>
         <tr>
@@ -216,8 +215,8 @@
         </tbody>
       </table>
       <div class="pagination-centered">
-        <%= link_to edit_admin_profile_path(profile), :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
-        <%= link_to admin_profile_path(profile), :confirm => 'プロフィールを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+        <%= link_to [:edit, :admin, @user, profile], :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+        <%= link_to [:admin, @user, profile], :confirm => 'プロフィールを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
       </div>
     </div>
   <% end %>
@@ -293,8 +292,8 @@
         </tbody>
       </table>
       <div class="pagination-centered">
-        <%= link_to edit_admin_group_path(group), :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
-        <%= link_to admin_group_path(group), :confirm => 'グループを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+        <%= link_to [:edit, :admin, @user, group], :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+        <%= link_to [:admin, @user, group], :confirm => 'グループを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
       </div>
     </div>
 
@@ -318,8 +317,8 @@
                 <td><%= friend.gender %></td>
                 <td><%= friend.age %></td>
                 <td>
-                  <%= link_to "詳細", admin_friend_path(friend) %> |
-                  <%= link_to "編集", edit_admin_friend_path(friend) %>
+                  <%= link_to "詳細", [:admin, @user, group, friend] %> |
+                  <%= link_to "編集", [:edit, :admin, @user, group, friend] %>
                 </td>
               </tr>
           <% end %>

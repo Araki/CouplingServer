@@ -1,4 +1,5 @@
 class Admin::InfosController < AdminController
+  layout "info"
   before_filter :load_user
 
   def index

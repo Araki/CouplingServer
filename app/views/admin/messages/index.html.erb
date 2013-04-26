@@ -2,6 +2,8 @@
   <% if @match.present? %>
     <% content_for :title do %><%= "#{@match.profile.nickname}とのトーク" %><% end %>
     <ul class="breadcrumb">
+      <li>ユーザー管理 &gt;</li>
+      <li><%= link_to "ユーザー一覧", [:admin, :users] %> &gt;</li>
       <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
       <li><%= link_to "マッチしたユーザー", admin_user_matches_path(@user) %> &gt;</li>
       <li><%= yield :title =%></li>
@@ -9,6 +11,8 @@
   <% else %>
     <% content_for :title do %>メッセージ一覧<% end %>
     <ul class="breadcrumb">
+      <li>ユーザー管理 &gt;</li>
+      <li><%= link_to "ユーザー一覧", [:admin, :users] %> &gt;</li>
       <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
       <li><%= yield :title =%></li>
     </ul>

@@ -1,4 +1,5 @@
 class Admin::ProfilesController < AdminController
+  layout "profile"
 
   def index
     @profiles = Profile.page(params[:page])
@@ -26,7 +27,8 @@ class Admin::ProfilesController < AdminController
 
   def destroy
     @profile = Profile.find(params[:id])
+    user = @profile.user
     @profile.destroy
-    redirect_to admin_profiles_url, :notice => "Successfully destroyed profile."
+    redirect_to [:admin, user], :notice => "Successfully destroyed profile."
   end
 end
