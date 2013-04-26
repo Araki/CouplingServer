@@ -1,8 +1,25 @@
 <% content_for :title do %>レシート詳細<% end %>
+<% if @user.present? %>
+  <div class="bdnavi">
+    <% content_for :title do %><%= "レシート詳細" %><% end %>
+    <ul class="breadcrumb">
+      <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
+      <li><%= link_to "レシートの一覧", admin_user_receipts_path(@user) %> &gt;</li>
+      <li><%= yield :title =%></li>
+    </ul>
+  </div>
+<% else %>
+  <div class="bdnavi">
+    <% content_for :title do %>レシート詳細<% end %>
+    <ul class="breadcrumb">
+      <li><%= link_to "レシートの一覧", admin_receipts_path %> &gt;</li>
+      <li><%= yield :title =%></li>
+    </ul>
+  </div>
+<% end %>
 
 <div class="row">
   <div class="span8 offset2 well">
-    <h3><%= yield :title %></h3>
     <table class="table table-striped">
       <tbody>
         <tr>

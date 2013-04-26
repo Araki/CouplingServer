@@ -42,13 +42,13 @@
     <div class="control-group <%= 'error' if f.object.errors['invitation_code'].present? %>">
       <%= f.label :invitation_code, :class => "control-label" %>
       <div class="controls">
-        <%= f.text_field :invitation_code, :class => "input-xlarge", :required => "required"%>
+        <%= f.text_field :invitation_code, :class => "input-xlarge" %>
       </div>
     </div>
     <div class="control-group <%= 'error' if f.object.errors['contract_type'].present? %>">
       <%= f.label :contract_type, :class => "control-label" %>
       <div class="controls">
-        <%= f.text_field :contract_type, :class => "input-xlarge", :required => "required"%>
+        <%= f.text_field :contract_type, :class => "input-xlarge" %>
       </div>
     </div>
     <div class="control-group <%= 'error' if f.object.errors['point'].present? %>">

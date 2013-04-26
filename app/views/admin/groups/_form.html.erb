@@ -36,13 +36,13 @@
     <div class="control-group <%= 'error' if f.object.errors['relationship'].present? %>">
       <%= f.label :relationship, :class => "control-label" %>
       <div class="controls">
-        <%= f.text_field :relationship, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+        <%= f.text_field :relationship, :class => "input-xlarge", :maxlength => 10 %>
       </div>
     </div>
     <div class="control-group <%= 'error' if f.object.errors['request'].present? %>">
       <%= f.label :request, :class => "control-label" %>
       <div class="controls">
-        <%= f.text_field :request, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+        <%= f.text_field :request, :class => "input-xlarge", :maxlength => 10 %>
       </div>
     </div>
     <div class="control-group date_select">
@@ -54,7 +54,7 @@
     <div class="control-group <%= 'error' if f.object.errors['area'].present? %>">
       <%= f.label :area, :class => "control-label" %>
       <div class="controls">
-        <%= f.text_field :area, :class => "input-xlarge", :required => "required"%>
+        <%= f.text_field :area, :class => "input-xlarge"%>
       </div>
     </div>
     <div class="control-group <%= 'error' if f.object.errors['group_image_ids'].present? %>">
