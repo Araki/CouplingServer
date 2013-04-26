@@ -5,6 +5,8 @@ class Message < ActiveRecord::Base
   validates :body, :presence => true
   validates :body, :length => { :minimum => 1, :maximum => 500 }
 
+  default_scope order('created_at DESC')
+
   scope :by_user, lambda{|user|
     matches = Match.arel_table
     ids = matches.project(matches[:id]).where(matches[:user_id].eq(user.id))
