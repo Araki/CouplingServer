@@ -1,5 +1,5 @@
 <div class="span8 offset2 well">
-<%= form_for([:admin, @info], :html => {:class => "form-horizontal well"}) do |f| %>
+<%= form_for((@user.present? ? [:admin, @user, @info] : [:admin, @info]), :html => {:class => "form-horizontal well"}) do |f| %>
   <fieldset>
     <% if @info.errors.any? %>
       <ul>

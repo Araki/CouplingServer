@@ -1,0 +1,20 @@
+<% if @user.present? %>
+  <div class="bdnavi">
+    <% content_for :title do %><%= "#{@user.profile.nickname}のレシートの修正" %><% end %>
+    <ul class="breadcrumb">
+      <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
+      <li><%= link_to "レシートの一覧", admin_user_receipts_path(@user) %> &gt;</li>
+      <li><%= yield :title =%></li>
+    </ul>
+  </div>
+<% else %>
+  <div class="bdnavi">
+    <% content_for :title do %>レシートの修正<% end %>
+    <ul class="breadcrumb">
+      <li><%= link_to "レシートの一覧", admin_receipts_path %> &gt;</li>
+      <li><%= yield :title =%></li>
+    </ul>
+  </div>
+<% end %>
+
+<%= render 'form' %>

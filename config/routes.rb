@@ -62,7 +62,7 @@ Coupling::Application.routes.draw do
         resources :messages, :only => [:index, :destroy]
       end
       resources :messages, :only => [:index, :destroy]
-      resources :receipts, :only => [:index, :destroy]
+      resources :receipts
       resources :infos
     end
     resources :friends, :except => [:new, :create]
@@ -75,7 +75,7 @@ Coupling::Application.routes.draw do
     resources :hobbies
     resources :images, :only => [:index, :show, :destroy]
     resources :infos
-    resources :receipts, :only => [:index, :show, :destroy]
+    resources :receipts
   end
 
   get  '/admin' => 'admin/users#index'

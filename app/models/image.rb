@@ -3,6 +3,8 @@ class Image < ActiveRecord::Base
 
   belongs_to :member
 
+  default_scope order('created_at DESC')
+
   IMAGE_DATA_HASH = Pref::AWS::BUCKET_PATH[:image]
 
   validates :member_id,

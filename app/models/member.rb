@@ -26,6 +26,8 @@ class Member < ActiveRecord::Base
   has_many :member_characters, :dependent => :destroy
   has_many :characters, :through => :member_characters
 
+  default_scope order('created_at DESC')
+
   scope :by_statuses, lambda{|statuses| where(status: statuses) unless statuses.nil?}
   # scope :by_gender, lambda{|user|
   #   gender = user.profile.gender == 0 ? 1 : 0

@@ -1,0 +1,38 @@
+<div class="span8 offset2 well">
+<%= form_for((@user.present? ? [:admin, @user, @receipt] : [:admin, @receipt]), :html => {:class => "form-horizontal well"}) do |f| %>
+  <fieldset>
+    <% if @receipt.errors.any? %>
+      <ul>
+        <% @receipt.errors.full_messages.each do |msg| %>
+          <li class="errorMsg"><%= msg %></li>
+        <% end %>
+      </ul>
+    <% end %>
+    <div class="control-group">
+      <%= f.label :item_id, :class => "control-label" %>
+      <div class="controls">
+        <%= f.select(:item_id, Item.all.map { |i| [i.title, i.id] }, {selected: @receipt.item_id}, {:required => "required"}) %>
+      </div>
+    </div>
+    <% if @user.present? %>
+      <%= f.hidden_field :user_id %>
+    <% else %>
+      <div class="control-group <%= 'error' if f.object.errors['user_id'].present? %>">
+        <%= f.label :user_id, :class => "control-label" %>
+        <div class="controls">
+          <%= f.number_field :user_id, :class => "input-xlarge", :required => "required" %>
+        </div>
+      </div>
+    <% end %>
+    <div class="control-group <%= 'error' if f.object.errors['receipt_code'].present? %>">
+      <%= f.label :receipt_code, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :receipt_code, :class => "input-xlarge", :required => "required"%>
+      </div>
+    </div>
+    <div class="form-actions">
+      <%= f.submit(nil, :class => "btn btn-primary", :id => "submitBtn") %>
+      <%= link_to_function "戻る", "history.back()", :class => "btn" %>
+    </div>
+  </fieldset>
+<% end %>

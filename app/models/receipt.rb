@@ -6,6 +6,8 @@ class Receipt < ActiveRecord::Base
   belongs_to :user
   belongs_to :item, :counter_cache => true
 
+  default_scope order('created_at DESC')
+
   #itunes storeで発行されたreceiptコードを受け取り有効なレシートかを調べて確認出来れば
   #ポイントを追加して、Receiptを生成する。
   def valid_and_save

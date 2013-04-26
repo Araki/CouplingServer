@@ -119,6 +119,7 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
     t.boolean  "can_open_profile", :default => false
     t.integer  "unread_count",     :default => 0
     t.datetime "last_read_at"
+    t.datetime "created_at",                          :null => false
   end
 
   add_index "matches", ["user_id", "profile_id"], :name => "index_matches_on_user_id_and_profile_id", :unique => true

@@ -2,6 +2,8 @@
 class Info < ActiveRecord::Base
   attr_accessible :body, :target_id
 
+  default_scope order('created_at DESC')
+
   validates :body, 
     :presence => true,
     :length => { :minimum => 1, :maximum => 500 }
