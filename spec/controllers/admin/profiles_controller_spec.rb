@@ -87,7 +87,7 @@ describe Admin::ProfilesController do
       
     it "redirects to profiles#index" do
       delete :destroy, id: @profile
-      response.should redirect_to admin_profiles_url
+      response.should redirect_to [:admin, @user]
     end  
   end
 end

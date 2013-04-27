@@ -87,7 +87,7 @@ describe Admin::GroupsController do
       
     it "redirects to groups#index" do
       delete :destroy, id: @group
-      response.should redirect_to admin_groups_url
+      response.should redirect_to [:admin, @user]
     end  
   end
 end
