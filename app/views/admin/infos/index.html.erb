@@ -29,7 +29,7 @@
         <td><%= link_to "#{info.target_id}", admin_user_path(info.target_id) %></td>
       <% end %>
       <td><%= truncate(info.body, :length => 30) %></td>
-      <td><%= info.created_at %></td>
+      <td><%= l info.created_at %></td>
       <td>
         <% if @user.present? %>
           <%= link_to "詳細", admin_user_info_path(@user, info) %> |

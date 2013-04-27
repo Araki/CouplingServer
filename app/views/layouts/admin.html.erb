@@ -18,6 +18,7 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">ユーザー管理<b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><%= link_to('ユーザー', admin_users_path) %></a>
+              <li><%= link_to('ユーザー(ID降順)', admin_users_path({field: "id", direction: "DESC"})) %></a>
             </ul>
           </li>
           <li class="dropdown">
@@ -33,6 +34,14 @@
           <li><%= link_to('画像', admin_images_path) %></a>
           <li><%= link_to('レシート', admin_receipts_path) %></a>
           <li><%= link_to('通知', admin_infos_path) %></a>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">統計<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><%= link_to('全体', admin_statics_path) %></a>
+              <li><%= link_to('月次', admin_statics_by_month_path) %></a>
+              <li><%= link_to('日時', admin_statics_by_day_path) %></a>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>

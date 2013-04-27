@@ -54,6 +54,12 @@ class Member < ActiveRecord::Base
   scope :by_characters, lambda{|characters|
     joins(:characters).where("characters.id" => characters) unless characters.nil?
   }
+  scope :by_age_range, lambda{|min, max|
+     where('age > ?', min).where('age < ?', max)
+  }
+  scope :by_created_at, lambda{|date|
+     where('created_at > ?', date)
+  }
 
   validates :type, :inclusion => { :in => ['Friend','Profile'] }, :presence => true
   validates :age, :presence => true
