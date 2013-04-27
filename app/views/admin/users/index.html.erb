@@ -1,4 +1,20 @@
 <% content_for :title do %>ユーザー一覧<% end %>
+
+<div class="input-append">
+  <input class="span3" id="keyword" type="text">
+  <div class="btn-group">
+    <button class="btn dropdown-toggle" data-toggle="dropdown">
+      Action
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="#" class="search" data-type="id">ユーザーIDを検索</a></li>
+      <li><a href="#" class="search" data-type="nickname">ニックネームを検索</a></li>
+      <li><a href="#" class="search" data-type="email">Emailを検索</a></li>
+      <li><a href="#" class="search" data-type="facebook_id">FacebookIDを検索</a></li>
+    </ul>
+  </div>
+</div>
 <table class="table table-striped">
   <thead>
     <tr>

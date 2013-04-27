@@ -2,7 +2,8 @@ class Admin::UsersController < AdminController
   layout "user"
 
   def index
-    @users = User.page(params[:page])
+    @users = User.by_keyword(params[:field], params[:keyword]).
+      order_by(params[:field], params[:direction]).page(params[:page])
   end
 
   def show

@@ -1,0 +1,63 @@
+<% content_for :title do %>統計<% end %>
+<div class="bdnavi">
+  <ul class="breadcrumb">
+    <li><%= yield :title =%></li>
+  </ul>
+</div>
+
+<div class="row">
+
+  <% prefectures = MstPrefecture.order('id').all.collect(&:name) %>
+  <div class="span8 offset2 well">
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td width=130>会員総数</td>
+          <td><%= User.count %></td>
+        </tr>
+        <tr>
+          <td>男性会員</td>
+          <td><%= Profile.by_gender(0).count %></td>
+        </tr>
+        <tr>
+          <td>女性会員</td>
+          <td><%= Profile.by_gender(1).count %></td>
+        </tr>
+        <tr>
+          <td>県別男性会員</td>
+          <td>
+            <% mens = Profile.by_gender(0).count(:group => :prefecture);mens.default = 0 %>
+            <% 47.times do |index| %>
+              <%= prefectures[index] %>(<%= mens[index+1] %>)
+            <% end %>            
+          </td>
+        </tr>
+        <tr>
+          <td>県別女性会員</td>
+          <td>
+            <% ladies = Profile.by_gender(1).count(:group => :prefecture);ladies.default = 0  %>
+            <% 47.times do |index| %>
+              <%= prefectures[index] %>(<%= ladies[index+1] %>)
+            <% end %>            
+          </td>
+        </tr>
+        <tr>
+          <td>年齢別男性会員</td>
+          <td>
+            <% 15.step(80, 5) do |num| %>
+              <%= "#{num}~#{num+5}" %>(<%= Profile.by_gender(0).by_age_range(num-1, num+5).count %>) 
+            <% end %>            
+          </td>
+        </tr>
+        <tr>
+          <td>年齢別男性会員</td>
+          <td>
+            <% 15.step(80, 5) do |num| %>
+              <%= "#{num}~#{num+5}" %>(<%= Profile.by_gender(1).by_age_range(num-1, num+5).count %>) 
+            <% end %>            
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -189,6 +189,10 @@ ja:
   time:
     am: 午前
     pm: 午後
+    formats:
+      default: ! '%Y/%m/%d %H:%M:%S'
+      long: ! '%Y年%m月%d日(%a) %H時%M分'
+      short: ! '%H:%M'      
   activerecord:
     errors:
       messages:

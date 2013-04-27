@@ -23,6 +23,23 @@ class User < ActiveRecord::Base
   validates :email, :presence => true
   validates :facebook_id, :presence => true
 
+  scope :order_by, lambda{|field, direction|
+    if field
+      f = field.blank? ? 'id' : field
+      d = direction == 'DESC' ? 'DESC' : 'ASC'
+      order("#{f} #{d}")
+    end
+  }
+  scope :by_keyword, lambda{|field, keyword|
+    if keyword
+      if ['email', 'facebook_id', 'status', 'access_token', 'email'].include?(field)
+        self.where(field => keyword)
+      else
+        joins(:profile).where("members.#{field}" => keyword)
+      end
+    end
+  }
+
   def self.create_or_find_by_access_token(access_token, device_token)
     graph = Koala::Facebook::API.new(access_token)
     fb_profile = graph.get_object("me") 

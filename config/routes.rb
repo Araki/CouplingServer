@@ -81,6 +81,10 @@ Coupling::Application.routes.draw do
     resources :images, :only => [:index, :show, :destroy]
     resources :infos
     resources :receipts
+    resources :statics, :only => [:index]
+
+    get 'statics/by_month' => 'statics#by_month', :as => :statics_by_month
+    get 'statics/by_day' => 'statics#by_day', :as => :statics_by_day
   end
 
   get  '/admin' => 'admin/users#index'

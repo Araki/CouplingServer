@@ -1,0 +1,30 @@
+<% content_for :title do %>月別統計<% end %>
+<div class="bdnavi">
+  <ul class="breadcrumb">
+    <li><%= yield :title =%></li>
+  </ul>
+</div>
+<div class="row">
+  <div class="span12 well">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>月</th>
+          <th>新規男性</th>
+          <th>新規女性</th>
+        </tr>
+      </thead>
+      <tbody>
+    <% today = Date.today %>
+    <% 0.upto(24) do |num| %>
+        <tr>
+          <% month = @today.months_ago(num).strftime("%Y-%m") %>
+          <td width=130><%= month %></td>
+          <td><%= @men[month] %></td>
+          <td><%= @women[month] %></td>
+        </tr>
+    <% end %>            
+      </tbody>
+    </table>
+  </div>
+</div>
