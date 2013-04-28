@@ -145,7 +145,7 @@ class User < ActiveRecord::Base
   end
 
   def count_unread_messages
-    Match.where('profile_id = ?', self.profile.id).collect(&:unread_count).inject{|s,i|s+=i} || 0
+    Match.where('profile_id = ?', self.profile.id).collect(&:count_unread).inject{|s,i|s+=i} || 0
   end
 
 =begin
