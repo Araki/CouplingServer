@@ -33,4 +33,8 @@ class Match < ActiveRecord::Base
   def reset_unread_count
     self.update_attributes(unread_count: 0, last_read_at: Time.now)
   end
+
+  def count_unread
+    self.messages.where("messages.created_at > ?", self.last_read_at).count
+  end
 end
