@@ -41,6 +41,10 @@
           <td><%= @user.point %></td>
         </tr>
         <tr>
+          <td>likeポイント</td>
+          <td><%= @user.like_point %></td>
+        </tr>
+        <tr>
           <td>最終ログイン</td>
           <td><%= @user.last_login_at %></td>
         </tr>
@@ -66,7 +70,7 @@
       <li><%= link_to "お気に入りのユーザー", admin_user_favorites_path(@user) %>(<%= @user.favorites.count %>)</li>
       <li><%= link_to "いいねしたユーザー", admin_user_likes_path(@user) %>(<%= @user.likes.count %>)</li>
       <li><%= link_to "マッチしたユーザー", admin_user_matches_path(@user) %>(<%= @user.matches.count %>)</li>
-      <li><%= link_to "送ったメッセージ", admin_user_messages_path(@user) %>(<%= Message.by_user(@user).count %>)</li>
+      <li><%= link_to "送ったメッセージ", admin_user_messages_path(@user) %>(<%= @user.messages.count %>)</li>
       <li><%= link_to "購入したアイテム", admin_user_receipts_path(@user) %>(<%= @user.receipts.count %>)</li>
       <li><%= link_to "受信した通知", admin_user_infos_path(@user) %>(<%= @user.received_infos.count %>)</li>
     </ul>
@@ -181,10 +185,6 @@
           <tr>
             <td>県名</td>
             <td><%= profile.prefecture %></td>
-          </tr>
-          <tr>
-            <td>likeポイント</td>
-            <td><%= profile.like_point %></td>
           </tr>
           <tr>
             <td>性格</td>

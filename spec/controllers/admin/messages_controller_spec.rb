@@ -3,10 +3,10 @@ require 'spec_helper'
 
 describe Admin::MessagesController do
   before do
-    profile = FactoryGirl.create(:profile)
+    target = FactoryGirl.create(:user)
     @user = FactoryGirl.create(:user)
-    match = FactoryGirl.create(:match, {user_id: @user.id, profile_id: profile.id})
-    @message = FactoryGirl.create(:message, {match_id: match.id, talk_key: match.talk_key})
+    match = FactoryGirl.create(:match, {user: @user, target: target})
+    @message = FactoryGirl.create(:message, {match: match, user: @user, target: target})
   end
 
   describe "GET 'index'" do

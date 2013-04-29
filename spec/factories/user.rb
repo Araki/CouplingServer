@@ -12,6 +12,11 @@ FactoryGirl.define do
     last_verify_at    { rand(20).days.ago }
     status            1
     point             { rand(300) }
+    like_point        { rand(20) }
+
+    factory :target do
+      email 'target@example.com'
+    end
   end
 
   factory :valid_user, class: User do

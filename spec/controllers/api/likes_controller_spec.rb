@@ -6,9 +6,7 @@ describe Api::LikesController do
 
   before do
     @user = FactoryGirl.create(:user)
-    @profile = FactoryGirl.create(:profile, {user_id: @user.id})
-    @target_user = FactoryGirl.create(:user)
-    @target_user_profile = FactoryGirl.create(:profile, {user_id: @target_user.id})
+    @target = FactoryGirl.create(:user)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
   end
 
@@ -16,8 +14,9 @@ describe Api::LikesController do
     context 'いいねしたユーザーが見つかった場合' do
       before do
         10.times do
-          profile = FactoryGirl.create(:female_profile)
-          FactoryGirl.create(:like, {user_id: @user.id, profile_id: profile.id})
+          target = FactoryGirl.create(:target)
+          FactoryGirl.create(:profile, {user:  target})
+          FactoryGirl.create(:like, {user: @user, target: target})
         end
       end
 
@@ -54,15 +53,15 @@ describe Api::LikesController do
     context 'いいねをしてくれたユーザーが見つかった場合' do
       before do
         10.times do
-          user = FactoryGirl.create(:user)
-          profile = FactoryGirl.create(:female_profile, {user_id: user.id})
-          FactoryGirl.create(:like, {user_id: user.id, profile_id: @user.profile.id})
+          from_user = FactoryGirl.create(:user)
+          FactoryGirl.create(:profile, {user:  from_user})
+          FactoryGirl.create(:like, {user: from_user, target: @user})
         end
       end
 
       context 'いいねをしてくれたユーザーが見つかった場合' do
         before do
-          get :list, {type: 'liked', session_id: @session.key}
+          get :list, {type: 'inverse', session_id: @session.key}
         end
 
         it 'ユーザーのリストが返ること' do
@@ -78,7 +77,7 @@ describe Api::LikesController do
 
       context 'pageを指定した場合' do
         before do
-          get :list, {type: 'liked', page: 2, per: 7, session_id: @session.key}
+          get :list, {type: 'inverse', page: 2, per: 7, session_id: @session.key}
         end
 
         it 'ページネーションされること' do
@@ -96,14 +95,14 @@ describe Api::LikesController do
       context 'いいねが存在していないと' do
         it 'いいねが作成されること' do
           expect{
-            post :create, {profile_id: @target_user_profile.id, session_id: @session.key}
+            post :create, {target_id: @target.id, session_id: @session.key}
           }.to change(Like, :count).by(1)
         end
       end
 
       context 'いいねが存在していないと2' do
         before do
-          post :create, {profile_id: @target_user_profile, session_id: @session.key}
+          post :create, {target_id: @target.id, session_id: @session.key}
         end
 
         it 'okが返されること' do
@@ -115,13 +114,11 @@ describe Api::LikesController do
         before do
           user = session_verified_user(@session)
           User.should_receive(:find_by_id).with(@user.id.to_s).and_return(user)
-          profile = mock('profile')
-          profile.should_receive(:gender).and_return(0)
-          user.should_receive(:profile).and_return(profile)
+          User.should_receive(:find_by_id).with(@target.id.to_s).and_return(@target)
           user.should_receive(:over_likes_limit_per_day?).and_return(false)
-          user.stub!(:create_like).with(@target_user_profile).and_return({message: "internal_server_error"})          
+          user.stub!(:create_like).with(@target).and_return({message: "internal_server_error"})          
 
-          post :create, {profile_id: @target_user_profile.id, session_id: @session.key}
+          post :create, {target_id: @target.id, session_id: @session.key}
         end
 
         it 'internal_server_errorが返されること' do
@@ -132,12 +129,10 @@ describe Api::LikesController do
       context '当日の作成数の上限を超えていると' do
         before do
           user = session_verified_user(@session)
-          profile = mock('profile')
-          profile.should_receive(:gender).and_return(0)
-          user.should_receive(:profile).and_return(profile)
+          target = mock('target')
           user.should_receive(:over_likes_limit_per_day?).and_return(true)
  
-          post :create, {profile_id: @target_user_profile.id, session_id: @session.key}
+          post :create, {target_id: @target.id, session_id: @session.key}
         end
 
         it 'over_limitが返されること' do
@@ -148,7 +143,7 @@ describe Api::LikesController do
 
     context '相手が存在しない場合' do
       before do
-        post :create, {profile_id: 200, session_id: @session.key}
+        post :create, {target_id: 200, session_id: @session.key}
       end
 
       it 'not_foundが返されること' do

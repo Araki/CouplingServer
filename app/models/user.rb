@@ -13,11 +13,19 @@ class User < ActiveRecord::Base
    :dependent => :delete_all, :order => 'created_at desc'
   
   has_many :favorites, :dependent => :delete_all, :order => 'created_at desc'
+  has_many :favorite_users, :through => :favorites, :include => [:profile], :source => :target, :uniq => true
+
   has_many :likes, :dependent => :delete_all, :order => 'created_at desc'
+  has_many :like_users, :through => :likes, :include => [:profile], :source => :target, :uniq => true
+
+  has_many :inverse_likes, :class_name => "Like", :foreign_key => "target_id"
+  has_many :inverse_like_users, :include => [:profile], :through => :inverse_likes, :source => :user
+
   has_many :matches, :dependent => :delete_all, :order => 'created_at desc'
-  has_many :favorite_profiles, :through => :favorites, :source => :profile, :uniq => true
-  has_many :like_profiles, :through => :likes, :source => :profile, :uniq => true
-  has_many :match_profiles, :through => :matches, :source => :profile, :uniq => true
+  has_many :match_users, :through => :matches, :include => [:profile], :source => :target, :uniq => true
+
+  has_many :messages, :dependent => :destroy
+  has_many :received_messages, :class_name => 'Message', :foreign_key => :target_id, :dependent => :destroy
 
   validates :access_token, :presence => true
   validates :email, :presence => true
@@ -54,26 +62,20 @@ class User < ActiveRecord::Base
     user
   end
 
-  def likeds
-    Like.find_all_by_profile_id(self.profile.id)
-  end
-
-  has_many :liked_users, :through => :likeds, :source => :user, :include => [:profile], :uniq => true
-
   def infos
     Info.find(:all, :conditions => ['target_id IN (?,?)', -1, self.id] , :order => 'created_at desc')
   end
 
-  def like?(profile)
-    Like.find_by_user_id_and_profile_id(self.id, profile.id).present?
+  def like?(target)
+    self.likes.exists?(:target_id => target.id)
   end
 
-  def liked?(profile)
-    Like.find_by_user_id_and_profile_id(profile.user_id, self.profile.id).present?
+  def inverse_like?(target)
+    target.likes.exists?(:target_id => self.id)
   end
 
-  def match?(profile)
-    Match.find_by_user_id_and_profile_id(self.id, profile.id).present?
+  def match?(target)
+    self.matches.exists?(:target_id => target.id)
   end
 
   def over_likes_limit_per_day?
@@ -84,16 +86,16 @@ class User < ActiveRecord::Base
   # 既にmatchがあれば何もしない。
   # 相手からLikeされていれば、Matchに切り替える。
   # 上記以外はtargetに対するLikeを作成。
-  def create_like(profile)
-    return {type: "match"} if self.match?(profile)
+  def create_like(target)
+    return {type: "match"} if self.match?(target)
 
-    if liked?(profile)
-      self.create_match(profile)
+    if inverse_like?(target)
+      self.create_match(target)
     else
       begin
-        self.like_profiles << profile
-        profile.like_point += 1
-        profile.save!
+        self.like_users << target
+        target.like_point += 1
+        target.save!
       rescue Exception => e
         ActiveRecord::Rollback
         return {message: "internal_server_error"}
@@ -103,12 +105,11 @@ class User < ActiveRecord::Base
     end
   end
 
-  def create_match(profile)
+  def create_match(target)
     ActiveRecord::Base.transaction do
-      target = profile.user
-      target.like_profiles.delete self.profile
-      self.match_profiles << profile
-      target.match_profiles << self.profile
+      inverse_like = Like.find_by_user_id_and_target_id(target.id, self.id)
+      inverse_like.update_attribute(:type, 'Match')
+      self.match_users << target
     end
       return {type: "match"}
     rescue => e
@@ -146,7 +147,7 @@ class User < ActiveRecord::Base
   end
 
   def count_unread_messages
-    Match.where('profile_id = ?', self.profile.id).collect(&:count_unread).inject{|s,i|s+=i} || 0
+    Match.where('target_id = ?', self.id).collect(&:count_unread).inject{|s,i|s+=i} || 0
   end
 
 =begin

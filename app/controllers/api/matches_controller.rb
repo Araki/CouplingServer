@@ -2,7 +2,7 @@
 class Api::MatchesController < Api::BaseController
   
   def list
-    profiles = Kaminari.paginate_array(@user.match_profiles).page(params[:page]).per(params[:per])
-    render_profiles_list(profiles)
+    users = Kaminari.paginate_array(@user.match_users).page(params[:page]).per(params[:per])
+    render_users_to_profiles_list(users)
   end
 end

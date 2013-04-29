@@ -2,6 +2,8 @@
 class Info < ActiveRecord::Base
   attr_accessible :body, :target_id
 
+  belongs_to :target, :class_name => "User", :foreign_key => "target_id"
+ 
   default_scope order('created_at DESC')
 
   validates :body, 

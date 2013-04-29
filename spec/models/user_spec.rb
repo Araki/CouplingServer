@@ -4,9 +4,7 @@ require 'spec_helper'
 describe User do
   before do
     @user = FactoryGirl.create(:user)
-    @profile = FactoryGirl.create(:profile, {user_id: @user.id})
-    @target_user = FactoryGirl.create(:user)
-    @target_user_profile = FactoryGirl.create(:profile, {user_id: @target_user.id})
+    @target = FactoryGirl.create(:user)
   end
 
   describe ".create_or_find_by_access_token" do
@@ -74,7 +72,7 @@ describe User do
   end
 
   describe "#like?" do
-    subject { @user.like?(@target_user_profile) }
+    subject { @user.like?(@target) }
 
     context 'まだlikeされていないユーザーに対して' do
       it { should be_false }
@@ -82,15 +80,15 @@ describe User do
 
     context 'Likeされたユーザーに対して' do
       before do
-        @user.like_profiles << @target_user_profile
+        @user.like_users << @target
       end
 
       it { should be_true }
     end
   end
 
-  describe "#liked?" do
-    subject { @user.liked?(@target_user_profile) }
+  describe "#inverse_like?" do
+    subject { @user.inverse_like?(@target) }
 
     context 'まだlikeされていないユーザーに対して' do
       it { should be_false }
@@ -98,7 +96,7 @@ describe User do
 
     context 'Likeされたユーザーに対して' do
       before do
-        @target_user.like_profiles << @profile
+        @target.like_users << @user
       end
 
       it { should be_true }
@@ -106,7 +104,7 @@ describe User do
   end
 
   describe "#match?" do
-    subject { @user.match?(@target_user_profile) }
+    subject { @user.match?(@target) }
 
     context 'まだmatchされていないユーザーに対して' do
       let(:target) { FactoryGirl.create(:user) }
@@ -116,8 +114,8 @@ describe User do
 
     context 'matchされたユーザーに対して' do
       before do
-        @target_user.match_profiles << @profile
-        @user.match_profiles << @target_user_profile
+        @target.match_users << @user
+        @user.match_users << @target
       end
 
       it { should be_true }
@@ -126,14 +124,14 @@ describe User do
 
   describe "#over_likes_limit_per_day?" do
     before do
-      @female_profiles = FactoryGirl.create_list(:female_profile, 10)
+      @female_targets = FactoryGirl.create_list(:target, 10)
     end
     subject { @user.over_likes_limit_per_day? }
 
     context '当日のlikeの数がlikes_limit_per_day以下だったら' do
       before do
         (configatron.likes_limit_per_day - 1).times do |n|
-          FactoryGirl.create(:like_target_girls, {user_id: @user.id, profile_id: @female_profiles[n].id})
+          FactoryGirl.create(:like_target_girls, {user_id: @user.id, target_id: @female_targets[n].id})
         end
       end
 
@@ -143,7 +141,7 @@ describe User do
     context '当日のlikeの数がlikes_limit_per_day以上だったら' do
       before do
         configatron.likes_limit_per_day.times do |n|
-          FactoryGirl.create(:like_target_girls, {user_id: @user.id, profile_id: @female_profiles[n].id})
+          FactoryGirl.create(:like_target_girls, {user_id: @user.id, target_id: @female_targets[n].id})
         end
       end
 
@@ -153,42 +151,32 @@ describe User do
 
   describe "#create_match" do
     before do
-      @target_user.like_profiles << @profile
+      @target.like_users << @user
     end
 
     context 'まだmatchされていないユーザーに対して' do
       context 'matchを返すこと' do
-        it { @user.create_match(@target_user_profile).should eq({type: 'match'}) }
+        it { @user.create_match(@target).should eq({type: 'match'}) }
       end
 
       context '相互にmatchされること' do
         before do
-          @user.create_match(@target_user_profile) 
+          @user.create_match(@target) 
         end
 
         it do
-          @user.match?(@target_user_profile).should be_true
-          @target_user.match?(@profile).should be_true
+          @user.match?(@target).should be_true
+          @target.match?(@user).should be_true
         end
       end
       
       context 'matchが2つ増えること' do
-        it {expect{@user.create_match(@target_user_profile) }.to change(Match, :count).by(2)}
+        it {expect{@user.create_match(@target) }.to change(Match, :count).by(2)}
       end
 
       context 'likeが1つ減ること' do
-        it {expect{@user.create_match(@target_user_profile) }.to change(Like, :count).by(-1)}
+        it {expect{@user.create_match(@target) }.to change(Like, :count).by(-1)}
       end
-    end
-
-    context 'すでにmatchされていたら' do
-      before do
-        @target_user.match_profiles << @profile
-        @user.match_profiles << @target_user_profile
-      end
-      subject { @user.create_match(@target_user_profile) }
-
-      it { should eq({:message=>"internal_server_error"}) }
     end
   end
 
@@ -196,74 +184,74 @@ describe User do
     context '相手からLikeされていない場合' do
       context 'まだlikeしていないユーザーに対して' do
         context 'likeを返すこと' do
-          it { @user.create_like(@target_user_profile).should eq({type: 'like'}) }
+          it { @user.create_like(@target).should eq({type: 'like'}) }
         end
 
         context 'like状態になること' do
           before do
-            @user.create_like(@target_user_profile) 
+            @user.create_like(@target) 
           end
 
-          it {@target_user.liked?(@profile).should be_true} 
+          it {@target.inverse_like?(@user).should be_true} 
         end
         
         context 'likeが1つ増えること' do
-          it {expect{@user.create_like(@target_user_profile) }.to change(Like, :count).by(1)}
+          it {expect{@user.create_like(@target) }.to change(Like, :count).by(1)}
         end
         
         context '相手のlike_pointが1つ増えること' do
-          it {expect{@user.create_like(@target_user_profile) }.to change(@target_user_profile, :like_point).by(1)}
+          it {expect{@user.create_like(@target) }.to change(@target, :like_point).by(1)}
         end
       end
 
       context 'すでにlikeしていたら' do
         before do
-          @user.like_profiles << @target_user_profile
+          @user.like_users << @target
         end
-        subject { @user.create_like(@target_user_profile) }
+        subject { @user.create_like(@target) }
 
         context 'likeを返すこと' do
           it { should eq({:message=>"internal_server_error"}) }
         end
         
         context 'likeが増えないこと' do
-          it { expect{ @user.create_like(@target_user_profile) }.to change(Like, :count).by(0)}
+          it { expect{ @user.create_like(@target) }.to change(Like, :count).by(0)}
         end
       end
     end
 
     context '既に相手からLikeされている場合' do
       before do
-        @target_user.like_profiles << @profile
+        @target.like_users << @user
       end
 
       context 'まだlikeしていないユーザーに対して' do
         context 'matchを返すこと' do
-          it { @user.create_like(@target_user_profile).should eq({type: 'match'}) }
+          it { @user.create_like(@target).should eq({type: 'match'}) }
         end
 
-        context 'likedでなくなること' do
+        context 'inverse_likeでなくなること' do
           before do
-            @user.create_like(@target_user_profile) 
+            @user.create_like(@target) 
           end
 
-          it {@target_user.liked?(@profile).should be_false} 
+          it {@target.inverse_like?(@user).should be_false} 
         end
 
         context 'matchになること' do
           before do
-            @user.create_like(@target_user_profile) 
+            @user.create_like(@target) 
           end
 
-          it { @user.match?(@target_user_profile).should be_true } 
+          it { @user.match?(@target).should be_true } 
         end
         
         context 'likeが1つ減ること' do
-          it { expect{@user.create_like(@target_user_profile) }.to change(Like, :count).by(-1) }
+          it { expect{@user.create_like(@target) }.to change(Like, :count).by(-1) }
         end
         
         context 'Matchが2つ増えること' do
-          it { expect{@user.create_like(@target_user_profile) }.to change(Match, :count).by(2) }
+          it { expect{@user.create_like(@target) }.to change(Match, :count).by(2) }
         end
       end
     end
@@ -280,14 +268,14 @@ describe User do
 
     context 'unread messageがあったら' do
       before do
-        FactoryGirl.create(:match, {user_id: 10, profile_id: @profile.id, unread_count: 5})
-        FactoryGirl.create(:match, {user_id: 15, profile_id: @profile.id, unread_count: 7})
-        FactoryGirl.create(:match, {user_id: 20, profile_id: @profile.id, unread_count: 9})
-        FactoryGirl.create(:match, {user_id: 25, profile_id: 10, unread_count: 9})
+        m1 = FactoryGirl.create(:match, {user_id: 10, target: @user, last_read_at: 10.days.ago})
+        FactoryGirl.create_list(:message, 10, {match: m1, user_id: 10, target: @user})
+        m2 = FactoryGirl.create(:match, {user_id: 20, target: @user, last_read_at: (Time.now + 5.days)})
+        FactoryGirl.create_list(:message, 15, {match: m1, user_id: 10, target: @user, created_at: 20.days.ago})
       end
       subject { @user.count_unread_messages }
 
-      it { should eq 21 }
+      it { should eq 10 }
     end
   end
 

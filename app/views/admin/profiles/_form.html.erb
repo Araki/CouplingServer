@@ -158,12 +158,6 @@
         <%= f.number_field :prefecture, :class => "input-xlarge", :maxlength => 10 %>
       </div>
     </div>
-    <div class="control-group <%= 'error' if f.object.errors['like_point'].present? %>">
-      <%= f.label :like_point, :class => "control-label" %>
-      <div class="controls">
-        <%= f.number_field :like_point, :class => "input-xlarge", :maxlength => 10 %>
-      </div>
-    </div>
     <div class="control-group <%= 'error' if f.object.errors['character_ids'].present? %>">
       <%= f.label :character_ids, :class => "control-label" %>
       <div class="controls">

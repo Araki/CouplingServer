@@ -6,17 +6,16 @@ describe Api::FavoritesController do
 
   before do
     @user = FactoryGirl.create(:user)
-    @profile = FactoryGirl.create(:profile, {user_id: @user.id})
-    @target_user = FactoryGirl.create(:user)
-    @target_user_profile = FactoryGirl.create(:profile, {user_id: @target_user.id})
+    @target = FactoryGirl.create(:user)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
   end
 
   describe '#list' do
     before do
       10.times do
-        female_profile = FactoryGirl.create(:female_profile)
-        FactoryGirl.create(:favorite, {user_id: @user.id, profile_id: female_profile.id})
+        target = FactoryGirl.create(:target)
+        FactoryGirl.create(:profile, {user:  target})
+        FactoryGirl.create(:favorite, {user: @user, target: target})
       end
     end
 
@@ -26,7 +25,6 @@ describe Api::FavoritesController do
       end
 
       it 'お気に入りユーザーのリストが返ること' do
-        # response.body.should ==  ''
         parsed_body = JSON.parse(response.body)
         parsed_body["current_page"].should == 1
         parsed_body["profiles"].length.should == 10
@@ -55,14 +53,14 @@ describe Api::FavoritesController do
       context 'お気に入りが存在していないと' do
         it 'お気に入りが作成されること' do
           expect{
-            post :create, {profile_id: @target_user_profile.id, session_id: @session.key}
+            post :create, {target_id: @target.id, session_id: @session.key}
           }.to change(Favorite, :count).by(1)
         end
       end
 
       context 'okが返されること' do
         before do
-          post :create, {profile_id: @target_user_profile, session_id: @session.key}
+          post :create, {target_id: @target, session_id: @session.key}
         end
 
         it {JSON.parse(response.body)["status"].should == "ok"}
@@ -71,10 +69,11 @@ describe Api::FavoritesController do
       context '保存に失敗すると' do
         before do
           user = session_verified_user(@session)
-          user.stub!(:<<).with(@target_user_profile).and_raise(Exception)
+          user.stub!(:<<).with(@target).and_raise(Exception)
           User.should_receive(:find_by_id).with(@user.id.to_s).and_return(user)      
+          User.should_receive(:find_by_id).with(@target.id.to_s).and_return(@target)      
 
-          post :create, {profile_id: @target_user_profile.id, session_id: @session.key}
+          post :create, {target_id: @target.id, session_id: @session.key}
         end
 
         it 'internal_server_errorが返されること' do
@@ -85,7 +84,7 @@ describe Api::FavoritesController do
 
     context '相手が存在しない場合' do
       before do
-        post :create, {profile_id: 200, session_id: @session.key}
+        post :create, {target_id: 200, session_id: @session.key}
       end
 
       it 'not_foundが返されること' do
@@ -96,13 +95,13 @@ describe Api::FavoritesController do
 
   describe '#destroy' do
     before do
-      @user.favorite_profiles << @target_user_profile
+      @user.favorite_users << @target
     end
 
     context 'お気に入りが見つかった場合' do
       it '削除されること' do
         expect{
-          post :destroy, {profile_id: @target_user_profile.id, session_id: @session.key}
+          post :destroy, {target_id: @target.id, session_id: @session.key}
         }.to change(Favorite, :count).by(-1)
       end
     end
@@ -111,10 +110,11 @@ describe Api::FavoritesController do
       before do
         user = session_verified_user(@session)
         User.should_receive(:find_by_id).with(@user.id.to_s).and_return(user)
-        user.stub!(:favorite_profiles).and_return([@target_user_profile])
-        [@target_user_profile].stub!(:delete).with(@target_user_profile)
+        User.should_receive(:find_by_id).with(@target.id.to_s).and_return(@target)
+        user.stub!(:favorite_users).and_return([@target])
+        [@target].stub!(:delete).with(@target)
 
-        post :destroy, {profile_id: @target_user_profile.id, session_id: @session.key}
+        post :destroy, {target_id: @target.id, session_id: @session.key}
       end
 
       it {JSON.parse(response.body)["status"].should == "ok"}

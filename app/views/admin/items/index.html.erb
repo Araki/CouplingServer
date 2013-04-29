@@ -9,6 +9,7 @@
       <th>アイテム名</th>
       <th>プロダクトID</th>
       <th>ポイント</th>
+      <th>販売数</th>
       <th>操作</th>
     </tr>
   </thead>
@@ -19,6 +20,7 @@
       <td><%= item.title %></td>
       <td><%= item.pid %></td>
       <td><%= item.point %></td>
+      <td><%= item.receipts_count %></td>
       <td>
         <%= link_to "詳細", admin_item_path(item) %> |
         <%= link_to "編集", edit_admin_item_path(item) %>

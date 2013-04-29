@@ -24,8 +24,22 @@ class Api::BaseController < ApplicationController
     }    
   end
 
+  def render_users_to_profiles_list(data)
+    profiles = data.map(&:profile)
+    render json: {
+      :status => 'ok',
+      :profiles => profiles.as_json({}),
+      :current_page => data.current_page,
+      :last_page => data.last_page?
+    }    
+  end
+
   def render_profiles_list(data)
     render_pagenate_data(:profiles, data, {})
+  end
+
+  def render_users_list(data)
+    render_pagenate_data(:users, data, {:only =>[:id, :like_point]})
   end
 
   def render_not_found

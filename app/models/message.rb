@@ -1,31 +1,33 @@
 class Message < ActiveRecord::Base
-  attr_accessible :body, :match_id, :talk_key
+  attr_accessible :body, :match_id, :user_id, :target_id
   belongs_to :match
+  belongs_to :user
+  belongs_to :target, :class_name => 'User', :foreign_key => :target_id
 
   validates :body, :presence => true
   validates :body, :length => { :minimum => 1, :maximum => 500 }
 
   default_scope order('created_at DESC')
 
-  scope :by_user, lambda{|user|
-    matches = Match.arel_table
-    ids = matches.project(matches[:id]).where(matches[:user_id].eq(user.id))
-    where(:match_id => ids)    
+  scope :by_matches, lambda{|match_id, inverse_match_id|
+    where(:match_id => [match_id, inverse_match_id])
   }
 
-  def count_and_save(match)
+  scope :since, lambda{|since_id|
+    where('id > ?', since_id) unless since_id.nil?
+  }
+
+  def save_message(match)
     ActiveRecord::Base.transaction do
       self.save!
-      pair = Match.find_by_id_and_profile_id(match.profile.user_id, match.user.profile.id)
       unless match.can_open_profile
-        if match.messages.count > 2 && pair.messages.count > 2
+        if match.messages.count > 2 && match.inverse.messages.count > 2
           match.can_open_profile = true
-          pair.can_open_profile = true
+          match.inverse.can_open_profile = true
           match.save!
         end
       end
-      pair.unread_count += 1
-      pair.save!
+      match.inverse.save!
     end
     true
   rescue ActiveRecord::RecordInvalid => e

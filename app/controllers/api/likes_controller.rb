@@ -2,24 +2,22 @@
 class Api::LikesController < Api::BaseController
   
   def list
-    if params[:type] == 'liked'
-      profiles = Profile.they_likes(@user).page(params[:page]).per(params[:per])
+    if params[:type] == 'inverse'
+      users = @user.inverse_like_users.page(params[:page]).per(params[:per])
     else
-      profiles = @user.like_profiles.page(params[:page]).per(params[:per])
+      users = @user.like_users.page(params[:page]).per(params[:per])
     end
 
-    render_profiles_list(profiles)
+    render_users_to_profiles_list(users)
   end
 
   def create
-    if @user.profile.gender == 0
-      render_ng("over_limit") and return if @user.over_likes_limit_per_day?
-    end
+    render_ng("over_limit") and return if @user.over_likes_limit_per_day?
 
-    profile = Profile.find_by_id(params[:profile_id])
-    render_not_found and return unless profile
+    target = User.find_by_id(params[:target_id])
+    render_not_found and return unless target
 
-    result = @user.create_like(profile)
+    result = @user.create_like(target)
     result.has_key?(:type) ? render_ok(result) : render_ng("internal_server_error")
   end
 end
