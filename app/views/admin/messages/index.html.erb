@@ -1,6 +1,6 @@
 <div class="bdnavi">
   <% if @match.present? %>
-    <% content_for :title do %><%= "#{@match.profile.nickname}とのトーク" %><% end %>
+    <% content_for :title do %><%= "#{@match.target.profile.nickname}とのトーク" %><% end %>
     <ul class="breadcrumb">
       <li>ユーザー管理 &gt;</li>
       <li><%= link_to "ユーザー一覧", [:admin, :users] %> &gt;</li>
@@ -35,12 +35,12 @@
         <tr>
           <td><%= message.id %></td>
           <td><%= message.match.user_id %></td>
-          <td><%= message.match.profile_id %></td>
+          <td><%= message.match.target_id %></td>
           <td><%= message.body %></td>
           <td><%= message.created_at %></td>
           <td>
             <% if @match.present? %>
-              <%= link_to "削除", admin_user_match_message_path(@user, @match.profile, message), :confirm => 'メッセージを削除しますか?', :method=> :delete %>
+              <%= link_to "削除", admin_user_match_message_path(@user, @match, message), :confirm => 'メッセージを削除しますか?', :method=> :delete %>
             <% else %>
               <%= link_to "削除", admin_user_message_path(@user, message), :confirm => 'メッセージを削除しますか?', :method=> :delete %>
             <% end %>

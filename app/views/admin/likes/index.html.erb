@@ -12,25 +12,28 @@
   <thead>
     <tr>
       <th>ID</th>
-      <th>ニックネーム</th>
-      <th>性別</th>
-      <th>年齢</th>
+      <th>ステータス</th>
+      <th>Facebook ID</th>
+      <th>Email</th>
+      <th>ポイント</th>
+      <th>最終ログイン</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <% @profiles.each do |profile| %>
-        <tr>
-          <td><%= profile.id %></td>
-          <td><%= profile.nickname %></td>
-          <td><%= profile.gender %></td>
-          <td><%= profile.age %></td>
-          <td>
-            <%= link_to "詳細", admin_user_path(profile.user) %> |
-            <%= link_to "いいねを解除", admin_user_like_path(@user, profile), :confirm => 'いいねを解除しますか?', :method=> :delete %>
-          </td>
-        </tr>
-    <% end %>
-  </tbody>
-</table>
-<%= paginate @profiles %>
+<% @users.each do |user| %>
+    <tr>
+      <td><%= user.id %></td>
+      <td><%= user.status %></td>
+      <td><%= user.facebook_id %></td>
+      <td><%= user.email %></td>
+      <td><%= user.point %></td>
+      <td><%= user.last_login_at %></td>
+      <td>
+          <%= link_to "詳細", admin_user_path(user) %> |
+          <%= link_to "いいねを解除", admin_user_like_path(@user, user), :confirm => 'お気に入りを削除しますか?', :method=> :delete %>
+      </td>
+    </tr>
+<% end %>
+
+<%= paginate @users %>

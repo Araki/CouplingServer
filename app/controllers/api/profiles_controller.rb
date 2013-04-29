@@ -2,7 +2,7 @@
 class Api::ProfilesController < Api::BaseController
   
   def list
-    profiles = Profile.by_gender(@user).order_by(params[:order]).page(params[:page]).per(params[:per])
+    profiles = Profile.by_gender(@user).order_by(params[:order], params[:direction]).page(params[:page]).per(params[:per])
     render_profiles_list(profiles)
   end
 

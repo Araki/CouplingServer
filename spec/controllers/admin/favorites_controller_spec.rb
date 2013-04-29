@@ -3,15 +3,15 @@ require 'spec_helper'
 
 describe Admin::FavoritesController do
   before do
-    @profile = FactoryGirl.create(:profile)
+    @target = FactoryGirl.create(:target)
     @user = FactoryGirl.create(:user)
-    @favorite = FactoryGirl.create(:favorite, {user_id: @user.id, profile_id: @profile.id})
+    @favorite = FactoryGirl.create(:favorite, {user: @user, target: @target})
   end
 
   describe "GET 'index'" do
-    it "assigns @profiles" do
+    it "assigns @targets" do
       get :index, {user_id: @user.id }
-      assigns(:profiles).should eq([@profile])
+      assigns(:users).should eq([@target])
     end
 
     it "renders the index template" do
@@ -23,12 +23,12 @@ describe Admin::FavoritesController do
   describe "DELETE 'destroy'" do
     it "deletes the favorite" do
       expect{
-        delete :destroy, {id: @profile.id, user_id: @user.id }   
+        delete :destroy, {id: @target.id, user_id: @user.id }   
       }.to change(Favorite,:count).by(-1)
     end
       
     it "redirects to favorites#index" do
-      delete :destroy, {id: @profile.id, user_id: @user.id }  
+      delete :destroy, {id: @target.id, user_id: @user.id }  
       response.should redirect_to admin_user_favorites_url(@user)
     end  
   end

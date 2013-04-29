@@ -2,16 +2,17 @@
 require 'spec_helper'
 
 describe Api::MatchesController do
+  include Helpers
+
   before do
     @user = FactoryGirl.create(:user)
-    @profile = FactoryGirl.create(:profile, {user_id: @user.id})
-    @target_user = FactoryGirl.create(:user)
-    @target_user_profile = FactoryGirl.create(:profile, {user_id: @target_user.id})
+    @target = FactoryGirl.create(:target)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
 
     10.times do
-      profile = FactoryGirl.create(:female_profile)
-      FactoryGirl.create(:match, {user_id: @user.id, profile_id: profile.id})
+      target = FactoryGirl.create(:target)
+      FactoryGirl.create(:profile, {user:  target})
+      FactoryGirl.create(:match, {user_id: @user.id, target_id: target.id})
     end
   end
 

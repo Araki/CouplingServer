@@ -56,6 +56,12 @@
         <%= f.number_field :point, :class => "input-xlarge", :required => "required"%>
       </div>
     </div>
+    <div class="control-group <%= 'error' if f.object.errors['point'].present? %>">
+      <%= f.label :like_point, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :like_point, :class => "input-xlarge", :required => "required"%>
+      </div>
+    </div>
     <div class="form-actions">
       <%= f.submit(nil, :class => "btn btn-primary", :id => "submitBtn") %>
       <%= link_to_function "戻る", "history.back()", :class => "btn" %>

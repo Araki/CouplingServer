@@ -12,7 +12,7 @@ class Member < ActiveRecord::Base
     :dislike, :height, :holiday, :income, :industry, :introduction, :job, 
     :job_description, :marital_history, :marriage_time, :nickname, :prefecture,
     :proportion, :roommate, :school, :smoking, :sociability, :workplace, :status,
-    :gender, :age, :like_point, :birthday_on, :as => :admin  
+    :gender, :age, :birthday_on, :as => :admin  
 
   belongs_to :group
 
