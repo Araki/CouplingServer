@@ -18,7 +18,6 @@ class User < ActiveRecord::Base
   has_many :match_users, :through => :matches, :source => :target_user, :include => [:profile], :uniq => true
 
   validates :access_token, :presence => true
-  validates :email, :presence => true
   validates :facebook_id, :presence => true
 
   def self.create_or_find_by_access_token(access_token, device_token)
