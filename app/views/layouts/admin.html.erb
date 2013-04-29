@@ -19,6 +19,7 @@
             <ul class="dropdown-menu">
               <li><%= link_to('ユーザー', admin_users_path) %></a>
               <li><%= link_to('ユーザー(ID降順)', admin_users_path({field: "id", direction: "DESC"})) %></a>
+              <li><%= link_to('セッション', admin_sessions_path) %></a>
             </ul>
           </li>
           <li class="dropdown">

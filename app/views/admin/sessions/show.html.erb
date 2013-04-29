@@ -1,0 +1,30 @@
+<% content_for :title do %>セッション詳細<% end %>
+
+<div class="row">
+  <div class="span8 offset2 well">
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td><%= @session.id %></td>
+        </tr>
+        <tr>
+          <td>Key</td>
+          <td><%= @session.key %></td>
+        </tr>
+        <tr>
+          <td>ユーザー</td>
+          <td><%= link_to "#{@session.value}", admin_user_path(@session.value) %></td>
+        </tr>
+        <tr>
+          <td>作成日時</td>
+          <td><%= @session.created_at %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination-centered">
+      <%= link_to [:admin, @session], :confirm => 'セッションを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+      <%= link_to "戻る", admin_sessions_path, :class => "btn" %>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 # coding:utf-8
 class Item < ActiveRecord::Base
   attr_accessible :title, :pid, :receipts_count, :point
-　has_many :receipts, :dependent => :destroy
+  has_many :receipts, :dependent => :destroy
 
   validates :title, 
     :presence => true,
