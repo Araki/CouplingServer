@@ -17,12 +17,11 @@ class Api::MessagesController < Api::BaseController
     message = Message.new({
         body: params[:body],
         match_id: match.id,
-        user_id: match.user_id,
-        target_id: match.target_id
+        user_id: match.user_id
         })
     if message.save_message(match)
       render_ok
-      push_notification(target_profile.user, "#{@user.profile.nickname}: #{params[:body]}")
+      push_notification(match.target, "#{@user.profile.nickname}: #{params[:body]}")
     else
       render_ng(message.errors)
     end

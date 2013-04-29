@@ -15,7 +15,7 @@ describe ApplicationController do
         user = FactoryGirl.create(:user)
         target = FactoryGirl.create(:target)
         match = FactoryGirl.create(:match, { user: target, target: user})
-        FactoryGirl.create_list(:message, 10,{ match: match, user: target, target: user})
+        FactoryGirl.create_list(:message, 10,{ match: match, user: target})
 
         push_notification(user, 'abcdefghijklmnopqrstuvwxyz')
         render text: 'ok'

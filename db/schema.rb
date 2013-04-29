@@ -168,11 +168,10 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
     t.string   "body"
     t.integer  "match_id",   :null => false
     t.integer  "user_id",    :null => false
-    t.integer  "target_id",  :null => false
     t.datetime "created_at", :null => false
   end
 
-  add_index "messages", ["target_id"], :name => "index_messages_on_target_id"
+  add_index "messages", ["match_id"], :name => "index_messages_on_match_id"
   add_index "messages", ["user_id"], :name => "index_messages_on_user_id"
 
   create_table "mst_prefectures", :force => true do |t|
