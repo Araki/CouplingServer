@@ -6,9 +6,9 @@ class Group < ActiveRecord::Base
   attr_accessible :gender, :max_age, :min_age, :head_count, :relationship, 
     :request, :opening_hour, :target_age_range, :area, :user_id, :status
 
-  belongs_to  :leader, :class_name => 'User', :foreign_key => :user_id
-  has_many :friends
-  has_many :members
+  belongs_to  :leader, :class_name => 'User', :foreign_key => :user_id, :include => [{:profile => [:images, :hobbies, :characters, :specialities]}]
+  has_many :friends, :include => [:images, :hobbies, :characters, :specialities]
+  has_many :members, :include => [:images, :hobbies, :characters, :specialities]
 
   has_many :group_group_images
   has_many :group_images, :through => :group_group_images
@@ -27,13 +27,13 @@ class Group < ActiveRecord::Base
   scope :by_min_age, lambda{|age| where("min_age > ?", age) unless age.nil?}
   scope :by_head_count, lambda{|head_count| where(head_count: head_count) unless head_count.nil?}
   scope :by_group_images, lambda{|group_images|
-    joins(:group_images).where("group_images.id" => group_images) unless group_images.nil?
+    includes(:group_images).where("group_images.id" => group_images) unless group_images.nil?
   }
   scope :by_days, lambda{|days|
-    joins(:days).where("days.id" => days) unless days.nil?
+    includes(:days).where("days.id" => days) unless days.nil?
   }
   scope :by_mst_prefectures, lambda{|mst_prefectures|
-    joins(:mst_prefectures).where("mst_prefectures.id" => mst_prefectures) unless mst_prefectures.nil?
+    includes(:mst_prefectures).where("mst_prefectures.id" => mst_prefectures) unless mst_prefectures.nil?
   }
 
 
@@ -65,6 +65,9 @@ class Group < ActiveRecord::Base
         by_mst_prefectures(params[:mst_prefectures])
     end
   end
+
+# .includes([:group_images, :mst_prefectures, :days ,:friends => [:images, :hobbies, :characters, :specialities],:leader => [:images, :hobbies, :characters, :specialities]])
+# .includes([:group_images, :mst_prefectures, :days ,:friends => [:hobbies, :characters, :specialities],:leader => [:profile => [:images, :hobbies, :characters, :specialities]]])
 
   def save_group(params)
     [:group_images, :days, :mst_prefectures].each do |association|

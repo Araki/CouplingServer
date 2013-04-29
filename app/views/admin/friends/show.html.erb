@@ -110,10 +110,6 @@
           <td><%= @friend.prefecture %></td>
         </tr>
         <tr>
-          <td>likeポイント</td>
-          <td><%= @friend.like_point %></td>
-        </tr>
-        <tr>
           <td>性格</td>
           <td>
             <%= @friend.characters.map(&:name).join('、') %>
