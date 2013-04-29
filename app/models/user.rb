@@ -159,7 +159,7 @@ class User < ActiveRecord::Base
       # params.picture = graph.get_picture(uid) 
     params[:device_token] = device_token unless device_token.nil?      
     params[:email] =        fb_profile[:email] 
-    params[:facebook_id] =  self.facebook_id || fb_profile[:id]
+    params[:facebook_id] =  self.facebook_id || fb_profile['id']
     params[:gender] =  fb_profile[:gender] == "male" ? 0 : 1
     params[:last_login_at] = Time.now      
     self.assign_attributes(params, :without_protection => true)
