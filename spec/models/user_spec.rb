@@ -58,19 +58,6 @@ describe User do
     end
   end
 
-  describe "#infos" do
-    context '自分宛と全員あてがとれること' do
-      subject { @user.infos() }
-      before do
-        FactoryGirl.create_list(:info, 5, {:body => 'lalala', :target_id => @user.id})
-        FactoryGirl.create_list(:info, 6, {:body => 'lalala', :target_id => -1})
-        FactoryGirl.create_list(:info, 7, {:body => 'lalala', :target_id => 100})
-      end
-
-      its(:count) { should eq 11 }
-    end
-  end
-
   describe "#like?" do
     subject { @user.like?(@target) }
 
@@ -119,6 +106,70 @@ describe User do
       end
 
       it { should be_true }
+    end
+  end
+
+  describe "#uncheck_infos" do
+    before do
+      @un_checked_user = FactoryGirl.create(:user, {check_info_at: 2.days.ago})
+      FactoryGirl.create_list(:info, 5, {target: @un_checked_user})
+      FactoryGirl.create_list(:info, 6, {:body => 'lalala', :target_id => -1})
+      @checked_user = FactoryGirl.create(:user, {check_info_at: Time.now + 1.days})
+      FactoryGirl.create_list(:info, 5, {target: @checked_user})
+    end
+
+    context 'すでにcheckしたユーザーに対して' do
+      subject { @checked_user.uncheck_infos }
+      it { should eq 0 }
+    end
+
+    context 'まだcheckしていないユーザーに対して' do
+      subject { @un_checked_user.uncheck_infos }
+      it { should eq 11 }
+    end
+  end
+
+  describe "#uncheck_likes" do
+    before do
+      users = FactoryGirl.create_list(:user, 5)
+      @un_checked_user = FactoryGirl.create(:user, {check_like_at: 2.days.ago})
+      5.times do |i|
+        FactoryGirl.create(:like, {target_id: @un_checked_user.id, user: users[i]})
+      end
+      @checked_user = FactoryGirl.create(:user, {check_like_at: Time.now + 1.days})
+      5.times do |i|
+        FactoryGirl.create(:like, {target_id: @checked_user.id, user: users[i]})
+      end
+    end
+
+    context 'すでにcheckしたlikeに対して' do
+      subject { @checked_user.uncheck_likes }
+      it { should eq 0 }
+    end
+
+    context 'まだcheckしていないlikeに対して' do
+      subject { @un_checked_user.uncheck_likes }
+      it { should eq 5 }
+    end
+  end
+
+  describe "#uncheck_messages" do
+    context 'unread messageがなかったら' do
+      subject { @user.uncheck_messages }
+
+      it { should eq 0 }
+    end
+
+    context 'unread messageがあったら' do
+      before do
+        m1 = FactoryGirl.create(:match, {user_id: 10, target: @user, last_read_at: 10.days.ago})
+        FactoryGirl.create_list(:message, 10, {match: m1, user_id: 10, target: @user})
+        m2 = FactoryGirl.create(:match, {user_id: 20, target: @user, last_read_at: (Time.now + 5.days)})
+        FactoryGirl.create_list(:message, 15, {match: m2, user_id: 20, target: @user,created_at: 20.days.ago})
+      end
+      subject { @user.uncheck_messages }
+
+      it { should eq 10 }
     end
   end
 
@@ -257,26 +308,6 @@ describe User do
     end
 
     it 'like_pointが増えること'
-  end
-
-  describe "#count_unread_messages" do
-    context 'unread messageがなかったら' do
-      subject { @user.count_unread_messages }
-
-      it { should eq 0 }
-    end
-
-    context 'unread messageがあったら' do
-      before do
-        m1 = FactoryGirl.create(:match, {user_id: 10, target: @user, last_read_at: 10.days.ago})
-        FactoryGirl.create_list(:message, 10, {match: m1, user_id: 10, target: @user})
-        m2 = FactoryGirl.create(:match, {user_id: 20, target: @user, last_read_at: (Time.now + 5.days)})
-        FactoryGirl.create_list(:message, 15, {match: m1, user_id: 10, target: @user, created_at: 20.days.ago})
-      end
-      subject { @user.count_unread_messages }
-
-      it { should eq 10 }
-    end
   end
 
   describe "#add_point" do

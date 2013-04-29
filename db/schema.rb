@@ -224,6 +224,8 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
     t.string   "contract_type"
     t.integer  "point",                        :default => 0
     t.integer  "like_point",                   :default => 0
+    t.datetime "check_info_at"
+    t.datetime "check_like_at"
     t.datetime "last_login_at"
     t.datetime "last_verify_at"
     t.datetime "created_at",                                  :null => false

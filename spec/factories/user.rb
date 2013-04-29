@@ -10,6 +10,8 @@ FactoryGirl.define do
     invitation_code   ''
     last_login_at     { rand(20).days.ago }
     last_verify_at    { rand(20).days.ago }
+    check_info_at     { rand(20).days.ago }
+    check_like_at     { rand(20).days.ago }
     status            1
     point             { rand(300) }
     like_point        { rand(20) }

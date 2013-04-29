@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
 
     params = {device_token: user.device_token}
     params[:alert] = message.size > 20 ? message[0..16] + '...' : message
-    unread_count = user.count_unread_messages
+    unread_count = user.uncheck_infos + user.uncheck_likes + user.uncheck_messages 
     params[:badge] = unread_count if unread_count > 0
     
     pusher.push(Grocer::Notification.new(params))
