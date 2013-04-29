@@ -17,6 +17,8 @@ class Message < ActiveRecord::Base
     where('id > ?', since_id) unless since_id.nil?
   }
 
+  scope :after_created_at, lambda{|check_at| where("created_at > ?", check_at) unless check_at.nil?}
+
   def save_message(match)
     ActiveRecord::Base.transaction do
       self.save!

@@ -4,11 +4,12 @@ class User < ActiveRecord::Base
   # attr_protected :access_token, :age, :email, :facebook_id, :last_verify_at, 
   #   :point, :last_login_at, :invitation_code, :status
   attr_accessible  :access_token, :device_token, :email, :facebook_id, :point, :invitation_code,
-   :status, :contract_type, :as => :admin  
+   :status, :contract_type, :check_info_at, :check_like_at, :as => :admin  
   
   has_one  :profile, :dependent => :destroy
   has_one  :group, :dependent => :destroy
   has_many :receipts, :dependent => :delete_all, :order => 'created_at desc'
+
   has_many :received_infos, :class_name => 'Info', :foreign_key => :target_id,
    :dependent => :delete_all, :order => 'created_at desc'
   
@@ -23,6 +24,7 @@ class User < ActiveRecord::Base
 
   has_many :matches, :dependent => :delete_all, :order => 'created_at desc'
   has_many :match_users, :through => :matches, :include => [:profile], :source => :target, :uniq => true
+  has_many :inverse_matches, :class_name => "Match", :foreign_key => "target_id", :include => [:messages]
 
   has_many :messages, :dependent => :destroy
   has_many :received_messages, :class_name => 'Message', :foreign_key => :target_id, :dependent => :destroy
@@ -60,10 +62,6 @@ class User < ActiveRecord::Base
     profile.assign_fb_attributes(user, fb_profile)
     profile.save!
     user
-  end
-
-  def infos
-    Info.find(:all, :conditions => ['target_id IN (?,?)', -1, self.id] , :order => 'created_at desc')
   end
 
   def like?(target)
@@ -146,8 +144,21 @@ class User < ActiveRecord::Base
     end
   end
 
-  def count_unread_messages
-    Match.where('target_id = ?', self.id).collect(&:count_unread).inject{|s,i|s+=i} || 0
+  def uncheck_likes
+    self.inverse_likes.where("relations.created_at > ?", self.check_like_at).count
+  end
+
+  def uncheck_infos
+    Info.by_target_user(self).after_created_at(self.check_info_at).count
+  end
+  
+  def uncheck_messages
+    counts = self.inverse_matches.collect(&:count_unread)
+    if counts.length > 0
+      counts.inject{|s,i|s+=i}
+    else
+      0
+    end
   end
 
 =begin

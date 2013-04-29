@@ -4,6 +4,7 @@ class Api::LikesController < Api::BaseController
   def list
     if params[:type] == 'inverse'
       users = @user.inverse_like_users.page(params[:page]).per(params[:per])
+      @user.update_attribute(:check_like_at, Time.now)
     else
       users = @user.like_users.page(params[:page]).per(params[:per])
     end
