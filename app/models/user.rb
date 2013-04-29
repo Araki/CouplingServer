@@ -27,7 +27,6 @@ class User < ActiveRecord::Base
   has_many :inverse_matches, :class_name => "Match", :foreign_key => "target_id", :include => [:messages]
 
   has_many :messages, :dependent => :destroy
-  has_many :received_messages, :class_name => 'Message', :foreign_key => :target_id, :dependent => :destroy
 
   validates :access_token, :presence => true
   validates :email, :presence => true

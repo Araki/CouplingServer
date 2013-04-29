@@ -163,9 +163,9 @@ describe User do
     context 'unread messageがあったら' do
       before do
         m1 = FactoryGirl.create(:match, {user_id: 10, target: @user, last_read_at: 10.days.ago})
-        FactoryGirl.create_list(:message, 10, {match: m1, user_id: 10, target: @user})
+        FactoryGirl.create_list(:message, 10, {match: m1, user_id: 10})
         m2 = FactoryGirl.create(:match, {user_id: 20, target: @user, last_read_at: (Time.now + 5.days)})
-        FactoryGirl.create_list(:message, 15, {match: m2, user_id: 20, target: @user,created_at: 20.days.ago})
+        FactoryGirl.create_list(:message, 15, {match: m2, user_id: 20,created_at: 20.days.ago})
       end
       subject { @user.uncheck_messages }
 

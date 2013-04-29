@@ -6,7 +6,7 @@ describe Admin::MessagesController do
     target = FactoryGirl.create(:user)
     @user = FactoryGirl.create(:user)
     match = FactoryGirl.create(:match, {user: @user, target: target})
-    @message = FactoryGirl.create(:message, {match: match, user: @user, target: target})
+    @message = FactoryGirl.create(:message, {match: match, user: @user})
   end
 
   describe "GET 'index'" do

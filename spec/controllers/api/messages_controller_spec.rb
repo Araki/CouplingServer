@@ -6,6 +6,7 @@ describe Api::MessagesController do
 
   before do
     @user = FactoryGirl.create(:user)
+    FactoryGirl.create(:profile, {user: @user, nickname: 'akira'})
     @target = FactoryGirl.create(:user)
     @session = FactoryGirl.create(:session, { value: @user.id.to_s })
   end
@@ -76,24 +77,24 @@ describe Api::MessagesController do
         @replys = FactoryGirl.create_list(:message, 5, {match: @inverse_match})
       end
 
-    #   context '正常な値を送った場合' do
-    #     before do
-    #       @server = Grocer.server(port: 2195)
-    #       @server.accept # starts listening in background
-    #       post :create, {target_id: @target.id, body: 'lalala', session_id: @session.key}
-    #     end
+      context '正常な値を送った場合' do
+        before do
+          @server = Grocer.server(port: 2195)
+          @server.accept # starts listening in background
+          post :create, {target_id: @target.id, body: 'lalala', session_id: @session.key}
+        end
 
-    #     after do
-    #       @server.close
-    #     end
+        after do
+          @server.close
+        end
 
-    #     it {JSON.parse(response.body)["status"].should == "ok"}
+        it {JSON.parse(response.body)["status"].should == "ok"}
 
-    #     it do
-    #       notification = @server.notifications.pop
-    #       expect(notification.alert).to eq("akira: lalala")
-    #     end
-    #   end
+        it do
+          notification = @server.notifications.pop
+          expect(notification.alert).to eq("akira: lalala")
+        end
+      end
 
       context 'messageを作成できなかった場合' do
         before do

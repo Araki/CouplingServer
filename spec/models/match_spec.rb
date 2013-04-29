@@ -25,8 +25,8 @@ describe Match do
 
   describe "#talks" do
     before do
-      @messages = FactoryGirl.create_list(:message, 5, {match: @match, user: @target, target: @user})
-      @replys = FactoryGirl.create_list(:message, 5, {match: @inverse_match, user: @user, target: @target})
+      @messages = FactoryGirl.create_list(:message, 5, {match: @match, user: @target})
+      @replys = FactoryGirl.create_list(:message, 5, {match: @inverse_match, user: @user})
     end
 
     context 'since_idがなければトーク全体を返すこと' do
