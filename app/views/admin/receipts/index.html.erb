@@ -1,0 +1,44 @@
+<% content_for :title do %>レシート一覧<% end %>
+<% if @user.present? %>
+  <%= link_to new_admin_user_receipt_path(@user), :class => "btn" do %>
+    <i class="icon-pencil"></i><strong><%= "#{@user.profile.nickname}" %>のレシートを作成</strong>
+  <% end %>  
+<% else %>
+  <%= link_to new_admin_receipt_path, :class => "btn" do %>
+    <i class="icon-pencil"></i><strong>レシートを作成</strong>
+  <% end %>
+<% end %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>アイテム</th>
+      <th>ユーザーID</th>
+      <th>レシートコード</th>
+      <th>作成日時</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<% @receipts.each do |receipt| %>
+    <tr>
+      <td><%= receipt.id %></td>
+      <td><%= link_to "#{receipt.item.title}", admin_item_path(receipt.item) %></td>
+      <td><%= link_to "#{receipt.user_id}", admin_user_path(receipt.user_id) %></td>
+      <td><%= receipt.receipt_code %></td>
+      <td><%= receipt.created_at %></td>
+      <td>
+        <% if @user.present? %>
+          <%= link_to "詳細", [:admin, @user, receipt] %> |
+          <%= link_to "編集", [:edit, :admin, @user, receipt] %>
+        <% else %>
+          <%= link_to "詳細", [:admin, receipt] %> |
+          <%= link_to "編集", [:edit, :admin, receipt] %>
+        <% end %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+<%= paginate @receipts %>

@@ -1,0 +1,26 @@
+<% content_for :title do %>グループイメージ管理<% end %>
+<%= link_to new_admin_group_image_path, :class => "btn" do %>
+  <i class="icon-pencil"></i><strong>登録</strong>
+<% end %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>名前</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+<% @group_images.each do |group_image| %>
+    <tr>
+      <td><%= group_image.id %></td>
+      <td><%= group_image.name %></td>
+      <td>
+        <%= link_to "詳細", admin_group_image_path(group_image) %> |
+        <%= link_to "編集", edit_admin_group_image_path(group_image) %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+<%= paginate @group_images %>

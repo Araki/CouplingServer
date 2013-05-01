@@ -1,0 +1,26 @@
+<% content_for :title do %>趣味管理<% end %>
+<%= link_to new_admin_hobby_path, :class => "btn" do %>
+  <i class="icon-pencil"></i><strong>登録</strong>
+<% end %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>名前</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+<% @hobbies.each do |hobby| %>
+    <tr>
+      <td><%= hobby.id %></td>
+      <td><%= hobby.name %></td>
+      <td>
+        <%= link_to "詳細", admin_hobby_path(hobby) %> |
+        <%= link_to "編集", edit_admin_hobby_path(hobby) %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+<%= paginate @hobbies %>

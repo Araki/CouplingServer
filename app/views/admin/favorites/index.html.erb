@@ -1,0 +1,38 @@
+<% content_for :title do %>お気に入りのユーザー<% end %>
+<div class="bdnavi">
+  <ul class="breadcrumb">
+    <li>ユーザー管理 &gt;</li>
+    <li><%= link_to "ユーザー一覧", [:admin, :users] %> &gt;</li>
+    <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
+    <li><%= yield :title =%></li>
+  </ul>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>ステータス</th>
+      <th>Facebook ID</th>
+      <th>Email</th>
+      <th>ポイント</th>
+      <th>最終ログイン</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<% @users.each do |user| %>
+    <tr>
+      <td><%= user.id %></td>
+      <td><%= user.status %></td>
+      <td><%= user.facebook_id %></td>
+      <td><%= user.email %></td>
+      <td><%= user.point %></td>
+      <td><%= user.last_login_at %></td>
+      <td>
+          <%= link_to "詳細", admin_user_path(user) %> |
+          <%= link_to "お気に入りを解除", admin_user_favorite_path(@user, user), :confirm => 'お気に入りを削除しますか?', :method=> :delete %>
+      </td>
+    </tr>
+<% end %>
+<%= paginate @users %>

@@ -1,0 +1,15 @@
+<% content_for :content do %>
+  <div class="bdnavi">
+    <ul class="breadcrumb">
+      <li>マスタ管理 &gt;</li>
+      <% if @item.present? %>
+        <li><%= link_to "アイテム", [:admin, :items] %> &gt;</li>
+        <li><%= yield :title =%></li>
+      <% else %>
+        <li><%= yield :title =%></li>
+      <% end %>
+    </ul>
+  </div>
+  <%= yield %>
+<% end %>
+<%= render :file => 'layouts/admin' %>

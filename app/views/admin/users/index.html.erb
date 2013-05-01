@@ -1,0 +1,47 @@
+<% content_for :title do %>ユーザー一覧<% end %>
+
+<div class="input-append">
+  <input class="span3" id="keyword" type="text">
+  <div class="btn-group">
+    <button class="btn dropdown-toggle" data-toggle="dropdown">
+      Action
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="#" class="search" data-type="id">ユーザーIDを検索</a></li>
+      <li><a href="#" class="search" data-type="nickname">ニックネームを検索</a></li>
+      <li><a href="#" class="search" data-type="email">Emailを検索</a></li>
+      <li><a href="#" class="search" data-type="facebook_id">FacebookIDを検索</a></li>
+    </ul>
+  </div>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>ステータス</th>
+      <th>Facebook ID</th>
+      <th>Email</th>
+      <th>ポイント</th>
+      <th>最終ログイン</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<% @users.each do |user| %>
+    <tr>
+      <td><%= user.id %></td>
+      <td><%= user.status %></td>
+      <td><%= user.facebook_id %></td>
+      <td><%= user.email %></td>
+      <td><%= user.point %></td>
+      <td><%= user.last_login_at %></td>
+      <td>
+        <%= link_to "詳細", admin_user_path(user) %> |
+        <%= link_to "編集", edit_admin_user_path(user) %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+<%= paginate @users %>

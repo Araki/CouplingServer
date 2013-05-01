@@ -1,0 +1,329 @@
+<% content_for :title do %><%= @user.profile.nickname %><% end %>
+
+<div class="row">
+  <div class="span8 well">
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td><%= @user.id %></td>
+        </tr>
+        <tr>
+          <td>ステータス</td>
+          <td><%= @user.status %></td>
+        </tr>
+        <tr>
+          <td>Facebook ID</td>
+          <td><%= @user.facebook_id %></td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td><%= @user.email %></td>
+        </tr>
+        <tr>
+          <td>Access Token</td>
+          <td><%= truncate(@user.access_token, :length => 50) %></td>
+        </tr>
+        <tr>
+          <td>Device Token</td>
+          <td><%= @user.device_token %></td>
+        </tr>
+        <tr>
+          <td>招待コード</td>
+          <td><%= @user.invitation_code %></td>
+        </tr>
+        <tr>
+          <td>Contact Type</td>
+          <td><%= @user.contract_type %></td>
+        </tr>
+        <tr>
+          <td>ポイント</td>
+          <td><%= @user.point %></td>
+        </tr>
+        <tr>
+          <td>likeポイント</td>
+          <td><%= @user.like_point %></td>
+        </tr>
+        <tr>
+          <td>最終ログイン</td>
+          <td><%= @user.last_login_at %></td>
+        </tr>
+        <tr>
+          <td>最終Verify</td>
+          <td><%= @user.last_verify_at %></td>
+        </tr>
+        <tr>
+          <td>入会日時</td>
+          <td><%= @user.created_at %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination-centered">
+      <%= link_to edit_admin_user_path(@user), :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+      <%= link_to [:admin, @user], :confirm => 'ユーザーを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+      <%= link_to "戻る", admin_users_path, :class => "btn" %>
+    </div>
+  </div>
+
+  <div class="span3 well">
+    <ul>
+      <li><%= link_to "お気に入りのユーザー", admin_user_favorites_path(@user) %>(<%= @user.favorites.count %>)</li>
+      <li><%= link_to "いいねしたユーザー", admin_user_likes_path(@user) %>(<%= @user.likes.count %>)</li>
+      <li><%= link_to "マッチしたユーザー", admin_user_matches_path(@user) %>(<%= @user.matches.count %>)</li>
+      <li><%= link_to "送ったメッセージ", admin_user_messages_path(@user) %>(<%= @user.messages.count %>)</li>
+      <li><%= link_to "購入したアイテム", admin_user_receipts_path(@user) %>(<%= @user.receipts.count %>)</li>
+      <li><%= link_to "受信した通知", admin_user_infos_path(@user) %>(<%= @user.received_infos.count %>)</li>
+    </ul>
+  </div>
+
+  <% if @user.profile.present? %>
+    <div class="span8 well">
+      <h3>プロフィール</h3>
+      <% profile = @user.profile %>
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <td width=130>ID</td>
+            <td><%= profile.id %></td>
+          </tr>
+          <tr>
+            <td>ステータス</td>
+            <td><%= profile.status %></td>
+          </tr>
+          <tr>
+            <td>ニックネーム</td>
+            <td><%= profile.nickname %></td>
+          </tr>
+          <tr>
+            <td>自己紹介</td>
+            <td><%= profile.introduction %></td>
+          </tr>
+          <tr>
+            <td>性別</td>
+            <td><%= profile.gender %></td>
+          </tr>
+          <tr>
+            <td>年齢</td>
+            <td><%= profile.age %></td>
+          </tr>
+          <tr>
+            <td>誕生日</td>
+            <td><%= profile.birthday_on %></td>
+          </tr>
+          <tr>
+            <td>出身</td>
+            <td><%= profile.birthplace %></td>
+          </tr>
+          <tr>
+            <td>同居人</td>
+            <td><%= profile.roommate %></td>
+          </tr>
+          <tr>
+            <td>身長</td>
+            <td><%= profile.height %></td>
+          </tr>
+          <tr>
+            <td>プロポーション</td>
+            <td><%= profile.proportion %></td>
+          </tr>
+          <tr>
+            <td>血液型</td>
+            <td><%= profile.blood_type %></td>
+          </tr>
+          <tr>
+            <td>婚姻歴</td>
+            <td><%= profile.marital_history %></td>
+          </tr>
+          <tr>
+            <td>婚姻期間</td>
+            <td><%= profile.marriage_time %></td>
+          </tr>
+          <tr>
+            <td>たばこ</td>
+            <td><%= profile.smoking %></td>
+          </tr>
+          <tr>
+            <td>アルコール</td>
+            <td><%= profile.alcohol %></td>
+          </tr>
+          <tr>
+            <td>Industry</td>
+            <td><%= profile.industry %></td>
+          </tr>
+          <tr>
+            <td>職業</td>
+            <td><%= profile.job %></td>
+          </tr>
+          <tr>
+            <td>職業の内容</td>
+            <td><%= profile.job_description %></td>
+          </tr>
+          <tr>
+            <td>勤務地</td>
+            <td><%= profile.workplace %></td>
+          </tr>
+          <tr>
+            <td>収入</td>
+            <td><%= profile.income %></td>
+          </tr>
+          <tr>
+            <td>学歴</td>
+            <td><%= profile.school %></td>
+          </tr>
+          <tr>
+            <td>休日</td>
+            <td><%= profile.holiday %></td>
+          </tr>
+          <tr>
+            <td>社交性</td>
+            <td><%= profile.sociability %></td>
+          </tr>
+          <tr>
+            <td>苦手</td>
+            <td><%= profile.dislike %></td>
+          </tr>
+          <tr>
+            <td>県名</td>
+            <td><%= profile.prefecture %></td>
+          </tr>
+          <tr>
+            <td>性格</td>
+            <td>
+              <%= profile.characters.map(&:name).join('、') %>
+            </td>
+          </tr>
+          <tr>
+            <td>趣味</td>
+            <td>
+              <%= profile.hobbies.map(&:name).join('、') %>
+            </td>
+          </tr>
+          <tr>
+            <td>特技</td>
+            <td>
+              <%= profile.specialities.map(&:name).join('、') %>
+            </td>
+          </tr>
+          <tr>
+            <td>画像</td>
+            <td>
+              <% profile.images.each do |image| %>
+　              <%= link_to(image_tag("#{image.url}"), admin_image_path(image)) %>
+              <% end %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination-centered">
+        <%= link_to [:edit, :admin, @user, profile], :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+        <%= link_to [:admin, @user, profile], :confirm => 'プロフィールを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @user.group.present? %>
+    <div class="span8 well">
+      <h3>グループ</h3>
+      <% group = @user.group %>
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <td width=130>ID</td>
+            <td><%= group.id %></td>
+          </tr>
+          <tr>
+            <td>ステータス</td>
+            <td><%= group.status %></td>
+          </tr>
+          <tr>
+            <td>性別</td>
+            <td><%= group.gender %></td>
+          </tr>
+          <tr>
+            <td>年齢(最年長)</td>
+            <td><%= group.max_age %></td>
+          </tr>
+          <tr>
+            <td>年齢(最年少)</td>
+            <td><%= group.min_age %></td>
+          </tr>
+          <tr>
+            <td>人数</td>
+            <td><%= group.head_count %></td>
+          </tr>
+          <tr>
+            <td>関係</td>
+            <td><%= group.relationship %></td>
+          </tr>
+          <tr>
+            <td>要望</td>
+            <td><%= group.request %></td>
+          </tr>
+          <tr>
+            <td>開始時間</td>
+            <td><%= group.opening_hour %></td>
+          </tr>
+          <tr>
+            <td>対象とする年齢</td>
+            <td><%= group.target_age_range %></td>
+          </tr>
+          <tr>
+            <td>エリア</td>
+            <td><%= group.area %></td>
+          </tr>
+          <tr>
+            <td>グループイメージ</td>
+            <td>
+              <%= group.group_images.map(&:name).join('、') %>
+            </td>
+          </tr>
+          <tr>
+            <td>対象とする県</td>
+            <td>
+              <%= group.mst_prefectures.map(&:name).join('、') %>
+            </td>
+          </tr>
+          <tr>
+            <td>可能な曜日</td>
+            <td>
+              <%= group.days.map(&:name).join('、') %>
+            </td>
+          </tr>          
+        </tbody>
+      </table>
+      <div class="pagination-centered">
+        <%= link_to [:edit, :admin, @user, group], :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+        <%= link_to [:admin, @user, group], :confirm => 'グループを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+      </div>
+    </div>
+
+    <div class="span8 well">
+      <h3>グループの友人</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>ニックネーム</th>
+            <th>性別</th>
+            <th>年齢</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% group.friends.each do |friend| %>
+              <tr>
+                <td><%= friend.id %></td>
+                <td><%= friend.nickname %></td>
+                <td><%= friend.gender %></td>
+                <td><%= friend.age %></td>
+                <td>
+                  <%= link_to "詳細", [:admin, @user, group, friend] %> |
+                  <%= link_to "編集", [:edit, :admin, @user, group, friend] %>
+                </td>
+              </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,30 @@
+<% content_for :title do %>日別統計<% end %>
+<div class="bdnavi">
+  <ul class="breadcrumb">
+    <li><%= yield :title =%></li>
+  </ul>
+</div>
+<div class="row">
+  <div class="span12 well">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>日</th>
+          <th>新規男性</th>
+          <th>新規女性</th>
+        </tr>
+      </thead>
+      <tbody>
+    <% today = Date.today %>
+    <% 0.upto(90) do |num| %>
+        <tr>
+          <% day = num.days.ago.strftime("%Y-%m-%d") %>
+          <td width=130><%= day %></td>
+          <td><%= @men[day] %></td>
+          <td><%= @women[day] %></td>
+        </tr>
+    <% end %>            
+      </tbody>
+    </table>
+  </div>
+</div>

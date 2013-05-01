@@ -1,0 +1,82 @@
+<div class="span8 offset2 well">
+<%= form_for([:admin, @group], :html => {:class => "form-horizontal well"}) do |f| %>
+  <fieldset>
+    <% if @group.errors.any? %>
+      <ul>
+        <% @group.errors.full_messages.each do |msg| %>
+          <li class="errorMsg"><%= msg %></li>
+        <% end %>
+      </ul>
+    <% end %>
+    <div class="control-group <%= 'error' if f.object.errors['status'].present? %>">
+      <%= f.label :status, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :status, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['gender'].present? %>">
+      <%= f.label :gender, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :gender, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['max_age'].present? %>">
+      <%= f.label :max_age, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :max_age, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['min_age'].present? %>">
+      <%= f.label :min_age, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :min_age, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['relationship'].present? %>">
+      <%= f.label :relationship, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :relationship, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['request'].present? %>">
+      <%= f.label :request, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :request, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group date_select">
+      <%= f.label :opening_hour, :class => "control-label" %>
+      <div class="controls">
+        <%= f.time_select :opening_hour, {include_blank: true, selected: @group.opening_hour}, {:class => "input-mini"} %>
+      </div>
+    </div>    
+    <div class="control-group <%= 'error' if f.object.errors['area'].present? %>">
+      <%= f.label :area, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :area, :class => "input-xlarge"%>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['group_image_ids'].present? %>">
+      <%= f.label :group_image_ids, :class => "control-label" %>
+      <div class="controls">
+        <%= f.select :group_image_ids, GroupImage.all.collect {|x| [x.name, x.id]}, {}, :multiple => true %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['mst_prefecture_ids'].present? %>">
+      <%= f.label :mst_prefecture_ids, :class => "control-label" %>
+      <div class="controls">
+        <%= f.select :mst_prefecture_ids, MstPrefecture.all.collect {|x| [x.name, x.id]}, {}, :multiple => true %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['day_ids'].present? %>">
+      <%= f.label :day_ids, :class => "control-label" %>
+      <div class="controls">
+        <%= f.select :day_ids, Day.all.collect {|x| [x.name, x.id]}, {}, :multiple => true %>
+      </div>
+    </div>
+    <div class="form-actions">
+      <%= f.submit(nil, :class => "btn btn-primary", :id => "submitBtn") %>
+      <%= link_to_function "戻る", "history.back()", :class => "btn" %>
+    </div>
+  </fieldset>
+<% end %>

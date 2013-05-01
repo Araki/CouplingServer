@@ -1,0 +1,30 @@
+<% content_for :title do %>グループ管理<% end %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>対象ID</th>
+      <th>本文</th>
+      <th>作成日時</th>
+    </tr>
+  </thead>
+  <tbody>
+<% @infos.each do |info| %>
+    <tr>
+      <td><%= info.id %></td>
+      <% if info.target_id < 0 %>
+        <td>全員</td>
+      <% else %>
+        <td><%= info.target_id %></td>
+      <% end %>
+      <td><%= truncate(info.body, :length => 30) %></td>
+      <td><%= info.created_at %></td>
+      <td>
+        <%= link_to "詳細", admin_info_path(info) %> |
+        <%= link_to "編集", edit_admin_info_path(info) %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+<%= paginate @infos %>

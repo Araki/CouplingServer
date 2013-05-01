@@ -8,13 +8,10 @@ class Api::ReceiptsController < Api::BaseController
 
   def validate
     receipt_data = params[:receipt_data]
-    render_ng("invalid_receipt") and return if Receipt.find_by_receipt_code(receipt_data).present?
+    StandardError.new("Receipt has been used") if Receipt.find_by_receipt_code(receipt_data).present?
 
-    receipt =Receipt.new(:user_id => @user.id, :receipt_code => receipt_data)
-    if receipt.valid_and_save
-      render_ok({item: receipt.item})
-    else
-      render_ng(receipt.errors)
-    end
+    receipt = Receipt.new(:user_id => @user.id, :receipt_code => receipt_data)
+    receipt.valid_and_save
+    render_ok({item: receipt.item})
   end
 end

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 Coupling::Application.routes.draw do
+
   get "index/top"
   get "index/index"
 
@@ -13,15 +14,16 @@ Coupling::Application.routes.draw do
     post '/account/update_profile' => 'user/account#update_profile'
     post '/account/destroy' => 'user/account#destroy'
 
-    get  '/users/list' => 'user/users#list'
-    get  '/users/:id/show' => 'user/users#show'
+    get  '/profiles/list' => 'profiles#list'
+    get  '/profiles/:id/show' => 'profiles#show'
 
     get  '/groups/show' => 'groups#show'
     get  '/groups/list' => 'groups#list'
+    get  '/groups/search' => 'groups#search'
     post '/groups/create' => 'groups#create'
     post '/groups/update' => 'groups#update'
 
-    post '/friends/:id/show' => 'friends#show'
+    get  '/friends/:id/show' => 'friends#show'
     post '/friends/create' => 'friends#create'
     post '/friends/:id/update' => 'friends#update'
     post '/friends/:id/destroy' => 'friends#destroy'
@@ -53,8 +55,40 @@ Coupling::Application.routes.draw do
   end
 
   namespace :admin do
-    get  '/items/list' => 'items#list'
+    resources :users, :except => [:new, :create] do
+      resources :profiles, :except => [:new, :create]
+      resources :groups, :except => [:new, :create] do
+        resources :friends, :except => [:new, :create]
+      end
+
+      resources :favorites, :only => [:index, :destroy]
+      resources :likes, :only => [:index, :destroy]
+      resources :matches, :only => [:index, :destroy] do
+        resources :messages, :only => [:index, :destroy]
+      end
+      resources :messages, :only => [:index, :destroy]
+      resources :receipts
+      resources :infos
+    end
+    resources :friends, :except => [:new, :create]
+    resources :profiles, :except => [:new, :create]
+    resources :groups, :except => [:new, :create]
+    resources :characters
+    resources :items
+    resources :group_images
+    resources :specialities
+    resources :hobbies
+    resources :images, :only => [:index, :show, :destroy]
+    resources :infos
+    resources :receipts
+    resources :sessions
+    resources :statics, :only => [:index]
+
+    get 'statics/by_month' => 'statics#by_month', :as => :statics_by_month
+    get 'statics/by_day' => 'statics#by_day', :as => :statics_by_day
   end
 
+  get  '/admin' => 'admin/users#index'
+  
   root :to => 'index#index'
 end

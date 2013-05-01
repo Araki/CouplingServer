@@ -1,0 +1,27 @@
+<% content_for :title do %>プロフィール管理<% end %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>ニックネーム</th>
+      <th>性別</th>
+      <th>年齢</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @profiles.each do |profile| %>
+        <tr>
+          <td><%= profile.id %></td>
+          <td><%= profile.nickname %></td>
+          <td><%= profile.gender %></td>
+          <td><%= profile.age %></td>
+          <td>
+            <%= link_to "詳細", admin_profile_path(profile) %> |
+            <%= link_to "編集", edit_admin_profile_path(profile) %>
+          </td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= paginate @profiles %>

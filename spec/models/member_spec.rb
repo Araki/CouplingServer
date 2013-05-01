@@ -61,6 +61,34 @@ describe Member do
     end
   end
 
+  describe "#save_profile" do
+    before do
+      @characters = FactoryGirl.create_list(:character, 10)
+      @hobbies = FactoryGirl.create_list(:hobby, 10)
+      @specialities = FactoryGirl.create_list(:speciality, 10)
+      @member.characters << [@characters[0], @characters[1], @characters[2]]
+      @member.hobbies << [@hobbies[0], @hobbies[1], @hobbies[2]]
+      @member.specialities << [@specialities[0], @specialities[1], @specialities[2]]
+    end
+    context '正常な値を渡した場合' do
+      before do
+        @member.save_profile({member: {nickname: 'dada'}, characters: [@characters[3].id, @characters[4].id]})
+      end
+
+      it { @member.nickname.should eq 'dada' }      
+      it { @member.characters.length.should eq 2 }      
+      it { @member.hobbies.length.should eq 3 }      
+    end
+    
+    context '不正な値を渡した場合' do
+      it { expect { @member.save_profile(member: {alcohol: 10}) }.to raise_error(ActiveRecord::RecordInvalid) }
+    end
+
+    context '不正な値を渡した場合2' do
+      it { expect { @member.save_profile(characters: [@characters[3].id, @characters[4].id, @characters[5].id, @characters[6].id]) }.to raise_error(ActiveRecord::RecordInvalid)}
+    end
+  end
+
   describe "#set_main_image" do
     context 'mainでない画像の場合' do
       let(:image) { FactoryGirl.create(:image, {member_id: @member.id, is_main: false}) }

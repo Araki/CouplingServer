@@ -1,0 +1,185 @@
+<div class="span8 offset2 well">
+<%= form_for([:admin, @friend], :html => {:class => "form-horizontal well"}) do |f| %>
+  <fieldset>
+    <% if @friend.errors.any? %>
+      <ul>
+        <% @friend.errors.full_messages.each do |msg| %>
+          <li class="errorMsg"><%= msg %></li>
+        <% end %>
+      </ul>
+    <% end %>
+    <div class="control-group <%= 'error' if f.object.errors['status'].present? %>">
+      <%= f.label :status, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :status, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['nickname'].present? %>">
+      <%= f.label :nickname, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :nickname, :class => "input-xlarge", :required => "required", :maxlength => 50 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['introduction'].present? %>">
+      <%= f.label :introduction, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_area :introduction, :class => "input-xlarge", :required => "required", :maxlength => 500 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['gender'].present? %>">
+      <%= f.label :gender, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :gender, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['age'].present? %>">
+      <%= f.label :age, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :age, :class => "input-xlarge", :required => "required", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group date_select">
+      <%= f.label :birthday_on, :class => "control-label" %>
+      <div class="controls">
+        <%= f.date_select :birthday_on, {include_blank: true, selected: @friend.birthday_on}, {:class => "input-mini"} %>
+      </div>
+    </div>    
+    <div class="control-group <%= 'error' if f.object.errors['birthplace'].present? %>">
+      <%= f.label :birthplace, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :birthplace, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['roommate'].present? %>">
+      <%= f.label :roommate, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :roommate, :class => "input-xlarge", :maxlength => 50 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['height'].present? %>">
+      <%= f.label :height, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :height, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['proportion'].present? %>">
+      <%= f.label :proportion, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :proportion, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['blood_type'].present? %>">
+      <%= f.label :blood_type, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :blood_type, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['marital_history'].present? %>">
+      <%= f.label :marital_history, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :marital_history, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['marriage_time'].present? %>">
+      <%= f.label :marriage_time, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :marriage_time, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['smoking'].present? %>">
+      <%= f.label :smoking, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :smoking, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['alcohol'].present? %>">
+      <%= f.label :alcohol, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :alcohol, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['industry'].present? %>">
+      <%= f.label :industry, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :industry, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['job'].present? %>">
+      <%= f.label :job, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :job, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['job_description'].present? %>">
+      <%= f.label :job_description, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :job_description, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['workplace'].present? %>">
+      <%= f.label :workplace, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :workplace, :class => "input-xlarge", :maxlength => 50 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['income'].present? %>">
+      <%= f.label :income, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :income, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['school'].present? %>">
+      <%= f.label :school, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :school, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['holiday'].present? %>">
+      <%= f.label :holiday, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :holiday, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['sociability'].present? %>">
+      <%= f.label :sociability, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :sociability, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['dislike'].present? %>">
+      <%= f.label :dislike, :class => "control-label" %>
+      <div class="controls">
+        <%= f.text_field :dislike, :class => "input-xlarge", :maxlength => 50 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['prefecture'].present? %>">
+      <%= f.label :prefecture, :class => "control-label" %>
+      <div class="controls">
+        <%= f.number_field :prefecture, :class => "input-xlarge", :maxlength => 10 %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['character_ids'].present? %>">
+      <%= f.label :character_ids, :class => "control-label" %>
+      <div class="controls">
+        <%= f.select :character_ids, Character.all.collect {|x| [x.name, x.id]}, {}, :multiple => true %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['hobby_ids'].present? %>">
+      <%= f.label :hobby_ids, :class => "control-label" %>
+      <div class="controls">
+        <%= f.select :hobby_ids, Hobby.all.collect {|x| [x.name, x.id]}, {}, :multiple => true %>
+      </div>
+    </div>
+    <div class="control-group <%= 'error' if f.object.errors['speciality_ids'].present? %>">
+      <%= f.label :speciality_ids, :class => "control-label" %>
+      <div class="controls">
+        <%= f.select :speciality_ids, Speciality.all.collect {|x| [x.name, x.id]}, {}, :multiple => true %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit(nil, :class => "btn btn-primary", :id => "submitBtn") %>
+      <%= link_to_function "戻る", "history.back()", :class => "btn" %>
+    </div>
+  </fieldset>
+<% end %>

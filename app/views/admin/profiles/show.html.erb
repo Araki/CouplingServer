@@ -1,0 +1,147 @@
+<% content_for :title do %>プロフィールの詳細<% end %>
+
+<div class="row">
+
+  <div class="span8 offset2 well">
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td width=130>ID</td>
+          <td><%= @profile.id %></td>
+        </tr>
+        <tr>
+          <td>ステータス</td>
+          <td><%= @profile.status %></td>
+        </tr>
+        <tr>
+          <td>ニックネーム</td>
+          <td><%= @profile.nickname %></td>
+        </tr>
+        <tr>
+          <td>自己紹介</td>
+          <td><%= @profile.introduction %></td>
+        </tr>
+        <tr>
+          <td>性別</td>
+          <td><%= @profile.gender %></td>
+        </tr>
+        <tr>
+          <td>年齢</td>
+          <td><%= @profile.age %></td>
+        </tr>
+        <tr>
+          <td>誕生日</td>
+          <td><%= @profile.birthday_on %></td>
+        </tr>
+        <tr>
+          <td>出身</td>
+          <td><%= @profile.birthplace %></td>
+        </tr>
+        <tr>
+          <td>同居人</td>
+          <td><%= @profile.roommate %></td>
+        </tr>
+        <tr>
+          <td>身長</td>
+          <td><%= @profile.height %></td>
+        </tr>
+        <tr>
+          <td>プロポーション</td>
+          <td><%= @profile.proportion %></td>
+        </tr>
+        <tr>
+          <td>血液型</td>
+          <td><%= @profile.blood_type %></td>
+        </tr>
+        <tr>
+          <td>婚姻歴</td>
+          <td><%= @profile.marital_history %></td>
+        </tr>
+        <tr>
+          <td>婚姻期間</td>
+          <td><%= @profile.marriage_time %></td>
+        </tr>
+        <tr>
+          <td>たばこ</td>
+          <td><%= @profile.smoking %></td>
+        </tr>
+        <tr>
+          <td>アルコール</td>
+          <td><%= @profile.alcohol %></td>
+        </tr>
+        <tr>
+          <td>Industry</td>
+          <td><%= @profile.industry %></td>
+        </tr>
+        <tr>
+          <td>職業</td>
+          <td><%= @profile.job %></td>
+        </tr>
+        <tr>
+          <td>職業の内容</td>
+          <td><%= @profile.job_description %></td>
+        </tr>
+        <tr>
+          <td>勤務地</td>
+          <td><%= @profile.workplace %></td>
+        </tr>
+        <tr>
+          <td>収入</td>
+          <td><%= @profile.income %></td>
+        </tr>
+        <tr>
+          <td>学歴</td>
+          <td><%= @profile.school %></td>
+        </tr>
+        <tr>
+          <td>休日</td>
+          <td><%= @profile.holiday %></td>
+        </tr>
+        <tr>
+          <td>社交性</td>
+          <td><%= @profile.sociability %></td>
+        </tr>
+        <tr>
+          <td>苦手</td>
+          <td><%= @profile.dislike %></td>
+        </tr>
+        <tr>
+          <td>県名</td>
+          <td><%= @profile.prefecture %></td>
+        </tr>
+        <tr>
+          <td>性格</td>
+          <td>
+            <%= @profile.characters.map(&:name).join('、') %>
+          </td>
+        </tr>
+        <tr>
+          <td>趣味</td>
+          <td>
+            <%= @profile.hobbies.map(&:name).join('、') %>
+          </td>
+        </tr>
+        <tr>
+          <td>特技</td>
+          <td>
+            <%= @profile.specialities.map(&:name).join('、') %>
+          </td>
+        </tr>
+        <tr>
+          <td>画像</td>
+          <td>
+            <% @profile.images.each do |image| %>
+              <%= image_tag "#{image.url}" %>
+            <% end %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination-centered">
+      <%= link_to edit_admin_profile_path(@profile), :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+      <%= link_to admin_profile_path(@profile), :confirm => 'プロフィールを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+      <%= link_to "戻る", admin_user_path(@profile.user), :class => "btn" %>
+    </div>
+  </div>
+
+</div>

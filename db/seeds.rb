@@ -41,7 +41,7 @@ characters = ['優しい','素直','誠実','明るい','社交的','人見知�
   '上品','落ち着いている','謙虚','厳格','冷静','好奇心旺盛','家庭的','仕事好き','責任感がある','包容力がある','面白い','さわやか',
   '行動力かがある','熱い','気か','利く'].map{|character|Character.create({name: character})}
 
-hobbies = ['映画鑑賞','スポーツ','スポーツ観戦','音楽鑑賞','カラオケ','バンド゙','料理','グルメ','お酒','ショッピング゙','ファッション',
+hobbies = ['映画鑑賞','スポーツ','スポーツ観戦','音楽鑑賞','カラオケ','バンド','料理','グルメ','お酒','ショッピング','ファッション',
   'アウトドア','車','バイク','ドライブ','習いごと','語学','読書','漫画','テレビ','ゲーム','インターネット','ギャンブル','ペット',
   'フィットネス','株式投資',' その他','特になし'].map{|hobby|Hobby.create({name: hobby})}
 
@@ -55,148 +55,104 @@ items = [
   {title: "無限ポイント", pid: "com.pairful.products.infinity", point: 0}
 ].map{|item|Item.create(item)}
 
-def create_images(profile_id)
-  0.upto(4) do |num|
+def create_images(profile)
+  rand(5).times do |num|
     is_main = num > 0 ? false : true
-    FactoryGirl.create(:image, {member_id: profile_id, is_main: is_main})
+    FactoryGirl.create(:image, {member: profile, is_main: is_main})
   end
 end
 
 case Rails.env
 when "development"
-  
-  # 主人公:session_id=abc
-  user = FactoryGirl.create(:user, {
-    id: 1,
-    access_token: 'abcdefg',
-    facebook_id: '1234567'
-    })
-  user_profile = FactoryGirl.create(:profile, {
-    user_id: 1,
-    gender: 0, 
-    nickname: 'taro',
-    })
-  session = FactoryGirl.create(:session, {
-   value: user.id.to_s,
-   key: 'abc' 
-   })
-  create_images(user_profile.id)
-  user_profile.hobbies << hobbies.sample(3)
-  user_profile.characters << characters.sample(3)
-  user_profile.specialities << specialities.sample(3)
 
-  # お相手:session_id=xyz
-  target_user = FactoryGirl.create(:user, {
-    id: 2,
-    access_token: 'abcdefgxxx',
-    facebook_id: '1234567xxx'
-    })
-  target_user_profile = FactoryGirl.create(:profile, {
-    user_id: 2,
-    gender: 1, 
-    nickname: 'atsuko',
-    })
-  target_user_session = FactoryGirl.create(:session, {
-   value: user.id.to_s,
-   key: 'xyz'
-   })
-  create_images(target_user_profile.id)
-  target_user_profile.hobbies << hobbies.sample(3)
-  target_user_profile.characters << characters.sample(3)
-  target_user_profile.specialities << specialities.sample(3)
+  male_users = 50.times.collect do
+    user = FactoryGirl.create(:user)
+    profile = FactoryGirl.create(:profile, {user: user, gender: 0})
+    create_images(profile)
+    FactoryGirl.create(:session, {value: user.id.to_s})
+    profile.hobbies << hobbies.sample(3)
+    profile.characters << characters.sample(3)
+    profile.specialities << specialities.sample(3)
 
-  # モブ:男女50人づつ','そのうち20人は画像を準備。
-  boys = FactoryGirl.create_list(:boys, 50, {})
-  girls = FactoryGirl.create_list(:girls, 50, {})
-
-  # 主人公は10人のお気に入りと5人のmatchと10人のlikeと5人のlikedを持つ
-  girls.sample(20).each_with_index do |girl, i|
-    if i < 10
-      user.favorite_users << girl
-    end
-
-    if i < 5
-      user.match_users << girl
-      girl.match_users << user
-    elsif i < 15
-      user.like_users << girl
-    else
-      girl.like_users << user 
-    end    
-  end
-
-  #お相手との間のmatch
-  match = FactoryGirl.create(:match, {user_id: user.id, target_id: target_user.id})
-  target_match = FactoryGirl.create(:match, {user_id: target_user.id, target_id: user.id})
-
-  #20回talkしている
-  20.times do
-    FactoryGirl.create(:message, {talk_key: "#{user.id}_#{target_user.id}", match_id: [match.id, target_match.id].sample})
-  end
-
-  group = FactoryGirl.create(:group, {user_id: user.id})
-  group.group_images << group_images.sample(3)
-  group.days << days.sample(3)
-  group.mst_prefectures << prefectures.sample(3)
-  3.times do
-    friend = FactoryGirl.create(:friend, {group_id: group.id, gender: 1})
-    friend.hobbies << hobbies.sample(3)
-    friend.characters << characters.sample(3)
-    friend.specialities << specialities.sample(3)
-  end
-
-  boys_profiles = []
-  boys.sample(40).each do |boy|
-    boys_profiles << FactoryGirl.create(:profile, {user_id: boy.id})
-  end
-
-  girls_profiles = []
-  girls.sample(40).each do |girl|
-    girls_profiles << FactoryGirl.create(:profile, {user_id: girl.id, gender: girl.gender})
-  end
-
-  boys_groups = []
-  boys_profiles.sample(20).each do |boys_profile|
-    group = FactoryGirl.create(:group, {user_id: boys_profile.user_id})
+    group = FactoryGirl.create(:group, {user_id: user.id, gender: 0})
     group.group_images << group_images.sample(3)
     group.days << days.sample(3)
     group.mst_prefectures << prefectures.sample(3)
     3.times do
-      friend = FactoryGirl.create(:friend, {group_id: group.id, gender: 0})
+      friend = FactoryGirl.create(:female_friend, {group: group})
       friend.hobbies << hobbies.sample(3)
       friend.characters << characters.sample(3)
       friend.specialities << specialities.sample(3)
     end
-    boys_groups << group
-  end
-  boys_profiles.sample(20).each do |boy_profile|
-    create_images(boy_profile.id)
+    user
   end
 
-  girls_groups = []
-  girls_profiles.sample(20).each do |girls_profile|
-    group = FactoryGirl.create(:group, {user_id: girls_profile.user_id})
+  female_users = 50.times.collect do
+    user = FactoryGirl.create(:user)
+    profile = FactoryGirl.create(:profile, {user: user, gender: 1})
+    create_images(profile)
+    FactoryGirl.create(:session, {value: user.id.to_s})
+    profile.hobbies << hobbies.sample(3)
+    profile.characters << characters.sample(3)
+    profile.specialities << specialities.sample(3)
+
+    group = FactoryGirl.create(:group, {user_id: user.id, gender: 1})
     group.group_images << group_images.sample(3)
     group.days << days.sample(3)
     group.mst_prefectures << prefectures.sample(3)
     3.times do
-      friend = FactoryGirl.create(:friend, {group_id: group.id, gender: 1})
+      friend = FactoryGirl.create(:male_friend, {group: group})
       friend.hobbies << hobbies.sample(3)
       friend.characters << characters.sample(3)
       friend.specialities << specialities.sample(3)
     end
-    girls_groups << group
-  end
-  girls_profiles.sample(20).each do |girls_profile|
-    create_images(girls_profile.id)
+    user
   end
 
-  20.times do
-    FactoryGirl.create(:info, {target_id: [-1,-1,-1,1].sample})
+  male_users.each do |user|
+    rand(10).times do
+      target = male_users.sample
+      unless target == user || user.match?(target)
+        match = FactoryGirl.create(:match, {user: user, target: target})
+        inverse_match = FactoryGirl.create(:match, {user: target, target: user})
+      end
+    end
   end
 
-  FactoryGirl.create_list(:receipt, 20)
-  FactoryGirl.create_list(:receipt, 10, {user_id: 1})
+  male_users.each do |user|
+    rand(10).times do
+      user.favorite_users << male_users.sample
+    end
+    rand(10).times do
+      target =  male_users.sample
+      unless target == user || user.like?(target) || user.match?(target)
+        user.like_users << target
+      end
+    end
+  end
+
+  female_users.each do |user|
+    rand(10).times do
+      user.favorite_users << male_users.sample
+    end
+    rand(10).times do
+      target =  male_users.sample
+      unless target == user || user.like?(target) || user.match?(target)
+        user.like_users << target
+      end
+    end
+  end
+
+  50.times do
+    FactoryGirl.create(:info, {target_id: -1})
+    FactoryGirl.create(:info, {target: male_users.sample})
+    FactoryGirl.create(:info, {target: female_users.sample})
+  end
+
+  300.times do
+    FactoryGirl.create(:receipt)
+    FactoryGirl.create(:message)
+  end
 
 when "production"
 end

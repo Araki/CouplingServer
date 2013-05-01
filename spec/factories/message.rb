@@ -2,7 +2,8 @@
 
 FactoryGirl.define do
   factory :message, class: Message do
-    match_id { Match.all.sample.id }
+    match    { Match.all.sample }
+    user     { |a| a.match.user }
     body     { Faker::Lorem.sentence(10) }
   end
 end

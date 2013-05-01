@@ -2,7 +2,6 @@
 
 FactoryGirl.define do
   factory :user do
-    gender            0
     access_token      { Faker::Lorem.characters(100) }
     contract_type    nil
     device_token      { Faker::Lorem.characters(30) }
@@ -10,20 +9,37 @@ FactoryGirl.define do
     facebook_id       { Faker::Base.numerify('##########').to_i }
     invitation_code   ''
     last_login_at     { rand(20).days.ago }
-    like_point        { rand(20) }
+    last_verify_at    { rand(20).days.ago }
+    check_info_at     { rand(20).days.ago }
+    check_like_at     { rand(20).days.ago }
     status            1
     point             { rand(300) }
+    like_point        { rand(20) }
 
-    factory :boys do
-      gender 0
+    factory :target do
+      email 'target@example.com'
     end
 
-    factory :girls do
-      gender 1
+    factory :favorite_user do
+      email 'favorite_user@example.com'
     end
+
+    factory :user_with_favorite_users do
+      ignore do
+        favorite_users 5
+      end
+
+      after(:create) do |user, evaluator|
+        FactoryGirl.create_list(:favorite_user, evaluator.favorite_users)
+      end
+    end    
   end
 
-  # factory :invalid_user, parent: :user do
-  #   nickname nil
-  # end  
+  factory :valid_user, class: User do
+    email 'baz@example.com'
+  end
+
+  factory :invalid_user, class: User do
+    email nil
+  end
 end

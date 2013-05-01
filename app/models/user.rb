@@ -1,30 +1,58 @@
 # -*r coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  # attr_protected :access_token, :age, :email, :facebook_id, :like_point, 
-  #   :gender, :point, :last_login_at, :invitation_code, :status, :public_status
+  # attr_protected :access_token, :age, :email, :facebook_id, :last_verify_at, 
+  #   :point, :last_login_at, :invitation_code, :status
+  attr_accessible  :access_token, :device_token, :email, :facebook_id, :point, :invitation_code,
+   :status, :contract_type, :check_info_at, :check_like_at, :as => :admin  
   
-  has_one  :profile
-  has_one  :group
+  has_one  :profile, :dependent => :destroy
+  has_one  :group, :dependent => :destroy
   has_many :receipts, :dependent => :delete_all, :order => 'created_at desc'
-  has_many :favorites, :dependent => :delete_all, :order => 'created_at desc'
-  has_many :likes, :dependent => :delete_all, :order => 'created_at desc'
-  has_many :likeds, :class_name => "Like", :foreign_key => "target_id", :dependent => :delete_all, :order => 'created_at desc'
-  has_many :matches, :dependent => :delete_all, :order => 'created_at desc'
 
-  has_many :favorite_users, :through => :favorites, :source => :target_user, :include => [:profile], :uniq => true
-  has_many :like_users, :through => :likes, :source => :target_user, :include => [:profile], :uniq => true
-  has_many :liked_users, :through => :likeds, :source => :user, :include => [:profile], :uniq => true
-  has_many :match_users, :through => :matches, :source => :target_user, :include => [:profile], :uniq => true
+  has_many :received_infos, :class_name => 'Info', :foreign_key => :target_id,
+   :dependent => :delete_all, :order => 'created_at desc'
+  
+  has_many :favorites, :dependent => :delete_all, :order => 'created_at desc'
+  has_many :favorite_users, :through => :favorites, :include => [:profile], :source => :target, :uniq => true
+
+  has_many :likes, :dependent => :delete_all, :order => 'created_at desc'
+  has_many :like_users, :through => :likes, :include => [:profile], :source => :target, :uniq => true
+
+  has_many :inverse_likes, :class_name => "Like", :foreign_key => "target_id"
+  has_many :inverse_like_users, :include => [:profile], :through => :inverse_likes, :source => :user
+
+  has_many :matches, :dependent => :delete_all, :order => 'created_at desc'
+  has_many :match_users, :through => :matches, :include => [:profile], :source => :target, :uniq => true
+  has_many :inverse_matches, :class_name => "Match", :foreign_key => "target_id", :include => [:messages]
+
+  has_many :messages, :dependent => :destroy
 
   validates :access_token, :presence => true
   validates :facebook_id, :presence => true
+
+  scope :order_by, lambda{|field, direction|
+    if field
+      f = field.blank? ? 'id' : field
+      d = direction == 'DESC' ? 'DESC' : 'ASC'
+      order("#{f} #{d}")
+    end
+  }
+  scope :by_keyword, lambda{|field, keyword|
+    if keyword
+      if ['email', 'facebook_id', 'status', 'access_token', 'email'].include?(field)
+        self.where(field => keyword)
+      else
+        joins(:profile).where("members.#{field}" => keyword)
+      end
+    end
+  }
 
   def self.create_or_find_by_access_token(access_token, device_token)
     graph = Koala::Facebook::API.new(access_token)
     fb_profile = graph.get_object("me") 
 
-    user = self.find_by_facebook_id(fb_profile[:id].to_i)
+    user = self.find_by_facebook_id(fb_profile['id'].to_i)
     user = self.new if user.nil?
     user.assign_fb_attributes(fb_profile, access_token, device_token)
     user.save!
@@ -34,20 +62,16 @@ class User < ActiveRecord::Base
     user
   end
 
-  def infos
-    Info.find(:all, :conditions => ['target_id IN (?,?)', -1, self.id] , :order => 'created_at desc')
-  end
-
   def like?(target)
-    Like.find_by_user_id_and_target_id(self.id, target.id).present?
+    self.likes.exists?(:target_id => target.id)
   end
 
-  def liked?(target)
-    Like.find_by_user_id_and_target_id(target.id, self.id).present?
+  def inverse_like?(target)
+    target.likes.exists?(:target_id => self.id)
   end
 
   def match?(target)
-    Match.find_by_user_id_and_target_id(self.id, target.id).present?
+    self.matches.exists?(:target_id => target.id)
   end
 
   def over_likes_limit_per_day?
@@ -60,59 +84,61 @@ class User < ActiveRecord::Base
   # 上記以外はtargetに対するLikeを作成。
   def create_like(target)
     return {type: "match"} if self.match?(target)
+    return {type: "like"} if self.like?(target)
 
-    if liked?(target)
+    if inverse_like?(target)
       self.create_match(target)
     else
-      begin
-        self.like_users << target
-      rescue Exception => e
-        ActiveRecord::Rollback
-        return {message: "internal_server_error"}
-      else
-        return {type: "like"}
-      end          
+      self.like_users << target
+      target.like_point += 1
+      target.save!
+      return {type: "like"}
     end
   end
 
   def create_match(target)
     ActiveRecord::Base.transaction do
-      target.like_users.delete self
+      inverse_like = Like.find_by_user_id_and_target_id(target.id, self.id)
+      inverse_like.update_attribute(:type, 'Match')
       self.match_users << target
-      target.match_users << self
     end
-      return {type: "match"}
-    rescue => e
-      return {message: "internal_server_error"}    
+    return {type: "match"}
   end
 
   def add_point(amount)
-    if amount > 0
-      begin
-        self.point += amount
-        self.save!
-      rescue ActiveRecord::RecordInvalid => e
-        self.errors.add :base, "internal_server_error"
-        false
-      end
+    if amount > 0 && amount < configatron.point_limit
+      self.point += amount
+      self.save!
     else
       self.errors.add :base, "invalid_arguments"
-      false
+      raise ActiveRecord::RecordInvalid.new(self)
     end
   end
 
   def consume_point(amount)
     if amount > 0 && amount < self.point
-      begin
-        self.point -= amount
-        self.save!
-      rescue ActiveRecord::RecordInvalid => e
-        self.errors.add :base, "internal_server_error"
-        false
-      end
+      self.point -= amount
+      self.save!
     else
       self.errors.add :base, "invalid_arguments"
-      false
+      raise ActiveRecord::RecordInvalid.new(self)
+    end
+  end
+
+  def uncheck_likes
+    self.inverse_likes.where("relations.created_at > ?", self.check_like_at).count
+  end
+
+  def uncheck_infos
+    Info.by_target_user(self).after_created_at(self.check_info_at).count
+  end
+  
+  def uncheck_messages
+    counts = self.inverse_matches.collect(&:count_unread)
+    if counts.length > 0
+      counts.inject{|s,i|s+=i}
+    else
+      0
     end
   end
 
@@ -157,9 +183,8 @@ class User < ActiveRecord::Base
     params = {access_token: access_token}
       # params.picture = graph.get_picture(uid) 
     params[:device_token] = device_token unless device_token.nil?      
-    params[:email] =        fb_profile[:email] 
+    params[:email] =        fb_profile['email'] 
     params[:facebook_id] =  self.facebook_id || fb_profile['id']
-    params[:gender] =  fb_profile[:gender] == "male" ? 0 : 1
     params[:last_login_at] = Time.now      
     self.assign_attributes(params, :without_protection => true)
     self

@@ -7,33 +7,24 @@ class Api::ImagesController < Api::BaseController
   end
 
   def create
-    render_ng("over_limit") and return if @user.profile.images.count > 4
+    raise StandardError.new("Limit Over") if @user.profile.images.count > configatron.imagess_limit - 1
 
-    begin
-      image = Image.create_member_iamge(@user.profile) 
-    rescue Exception => e
-      ActiveRecord::Rollback
-      render_ng("internal_server_error")
-    else
-      render_ok(image.upload_parameter)
-    end    
+    image = Image.create_member_iamge(@user.profile) 
+
+    render_ok(image.upload_parameter)
   end
 
   def set_main
-    image = Image.find_by_id(params[:id])
-    render_not_found and return unless image
-    render_ng("permission_denied") and return unless @user.profile.id == image.member.id
+    image = Image.find(params[:id])
+    raise PermissionDenied unless @user.profile.id == image.member.id
 
-    if @user.profile.set_main_image(image)
-      render_ok
-    else
-      render_ng("internal_server_error")
-    end
+    @user.profile.set_main_image(image)
+    render_ok
   end
 
   def destroy
-    image = Image.find_by_id(params[:id])
-    render_ng("permission_denied") and return unless @user.profile.id == image.member.id
+    image = Image.find(params[:id])
+    raise PermissionDenied unless @user.profile.id == image.member.id
 
     image.destroy_entity_and_file
     render_ok

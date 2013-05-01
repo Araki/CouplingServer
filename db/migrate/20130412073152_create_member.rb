@@ -9,6 +9,7 @@ class CreateMember < ActiveRecord::Migration
       t.string   :introduction
       t.integer  :gender
       t.integer  :age
+      t.date     :birthday_on
       t.integer  :birthplace
       t.string   :roommate
       t.integer  :height
@@ -31,6 +32,7 @@ class CreateMember < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :members, :gender
     add_index :members, :user_id
     add_index :members, :group_id
   end

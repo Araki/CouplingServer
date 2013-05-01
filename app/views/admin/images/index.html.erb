@@ -1,0 +1,35 @@
+<% content_for :title do %>画像の一覧<% end %>
+<div class="bdnavi">
+  <ul class="breadcrumb">
+    <li><%= yield :title =%></li>
+  </ul>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>メンバーID</th>
+      <th>メイン画像</th>
+      <th>作成日時</th>
+    </tr>
+  </thead>
+  <tbody>
+<% @images.each do |image| %>
+    <tr>
+      <td><%= image.id %></td>
+      <% if image.member.type == 'Profile' %>
+        <td><%= link_to "#{image.member.user_id}", admin_user_path(image.member.user_id) %></td>
+      <% else %>
+        <td><%= link_to "#{image.member_id}", admin_friend_path(image.member_id) %></td>
+      <% end %>
+      <td><%= image.is_main %></td>
+      <td><%= image.created_at %></td>
+      <td>
+        <%= link_to "詳細", admin_image_path(image) %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+<%= paginate @images %>

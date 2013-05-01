@@ -1,0 +1,147 @@
+<% content_for :title do %>友人の詳細<% end %>
+
+<div class="row">
+
+  <div class="span8 offset2 well">
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td width=130>ID</td>
+          <td><%= @friend.id %></td>
+        </tr>
+        <tr>
+          <td>ステータス</td>
+          <td><%= @friend.status %></td>
+        </tr>
+        <tr>
+          <td>ニックネーム</td>
+          <td><%= @friend.nickname %></td>
+        </tr>
+        <tr>
+          <td>自己紹介</td>
+          <td><%= @friend.introduction %></td>
+        </tr>
+        <tr>
+          <td>性別</td>
+          <td><%= @friend.gender %></td>
+        </tr>
+        <tr>
+          <td>年齢</td>
+          <td><%= @friend.age %></td>
+        </tr>
+        <tr>
+          <td>誕生日</td>
+          <td><%= @friend.birthday_on %></td>
+        </tr>
+        <tr>
+          <td>出身</td>
+          <td><%= @friend.birthplace %></td>
+        </tr>
+        <tr>
+          <td>同居人</td>
+          <td><%= @friend.roommate %></td>
+        </tr>
+        <tr>
+          <td>身長</td>
+          <td><%= @friend.height %></td>
+        </tr>
+        <tr>
+          <td>プロポーション</td>
+          <td><%= @friend.proportion %></td>
+        </tr>
+        <tr>
+          <td>血液型</td>
+          <td><%= @friend.blood_type %></td>
+        </tr>
+        <tr>
+          <td>婚姻歴</td>
+          <td><%= @friend.marital_history %></td>
+        </tr>
+        <tr>
+          <td>婚姻期間</td>
+          <td><%= @friend.marriage_time %></td>
+        </tr>
+        <tr>
+          <td>たばこ</td>
+          <td><%= @friend.smoking %></td>
+        </tr>
+        <tr>
+          <td>アルコール</td>
+          <td><%= @friend.alcohol %></td>
+        </tr>
+        <tr>
+          <td>Industry</td>
+          <td><%= @friend.industry %></td>
+        </tr>
+        <tr>
+          <td>職業</td>
+          <td><%= @friend.job %></td>
+        </tr>
+        <tr>
+          <td>職業の内容</td>
+          <td><%= @friend.job_description %></td>
+        </tr>
+        <tr>
+          <td>勤務地</td>
+          <td><%= @friend.workplace %></td>
+        </tr>
+        <tr>
+          <td>収入</td>
+          <td><%= @friend.income %></td>
+        </tr>
+        <tr>
+          <td>学歴</td>
+          <td><%= @friend.school %></td>
+        </tr>
+        <tr>
+          <td>休日</td>
+          <td><%= @friend.holiday %></td>
+        </tr>
+        <tr>
+          <td>社交性</td>
+          <td><%= @friend.sociability %></td>
+        </tr>
+        <tr>
+          <td>苦手</td>
+          <td><%= @friend.dislike %></td>
+        </tr>
+        <tr>
+          <td>県名</td>
+          <td><%= @friend.prefecture %></td>
+        </tr>
+        <tr>
+          <td>性格</td>
+          <td>
+            <%= @friend.characters.map(&:name).join('、') %>
+          </td>
+        </tr>
+        <tr>
+          <td>趣味</td>
+          <td>
+            <%= @friend.hobbies.map(&:name).join('、') %>
+          </td>
+        </tr>
+        <tr>
+          <td>特技</td>
+          <td>
+            <%= @friend.specialities.map(&:name).join('、') %>
+          </td>
+        </tr>
+        <tr>
+          <td>画像</td>
+          <td>
+            <% @friend.images.each do |image| %>
+              <%= image_tag "#{image.url}" %>
+            <% end %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination-centered">
+      <%= link_to edit_admin_friend_path(@friend), :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+      <%= link_to admin_friend_path(@friend), :confirm => 'プロフィールを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+      <%= link_to "戻る", admin_user_path(@friend.group.leader), :class => "btn" %>
+    </div>
+  </div>
+
+</div>

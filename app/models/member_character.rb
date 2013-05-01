@@ -1,4 +1,4 @@
 class MemberCharacter < ActiveRecord::Base
-  belongs_to :member,  :dependent => :destroy
-  belongs_to :character, :dependent => :destroy
+  belongs_to :member
+  belongs_to :character
 end

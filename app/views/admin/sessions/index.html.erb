@@ -1,0 +1,39 @@
+<% content_for :title do %>セッション一覧<% end %>
+<% if @user.present? %>
+  <%= link_to new_admin_user_session_path(@user), :class => "btn" do %>
+    <i class="icon-pencil"></i><strong><%= "#{@user.profile.nickname}" %>のセッションを作成</strong>
+  <% end %>  
+<% else %>
+  <%= link_to new_admin_session_path, :class => "btn" do %>
+    <i class="icon-pencil"></i><strong>セッションを作成</strong>
+  <% end %>
+<% end %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Key</th>
+      <th>ユーザー</th>
+      <th>作成日時</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<% @sessions.each do |session| %>
+    <tr>
+      <td><%= session.id %></td>
+      <td><%= truncate(session.key, :length => 30) %></td>
+      <td><%= link_to "#{session.value}", admin_user_path(session.value) %></td>
+      <td><%= session.created_at %></td>
+      <td>
+        <%= link_to "詳細", [:admin, session] %> |
+        <%= link_to "編集", [:edit, :admin, session] %> |
+        <%= link_to "削除", [:admin, session], :confirm => 'セッションを削除しますか?', :method => :delete %> |
+        <%= link_to "これ以前を削除", admin_session_path(:id => session.id, :before => 'true'), :confirm => 'これ以前のセッションを削除しますか?', :method => :delete %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+<%= paginate @sessions %>

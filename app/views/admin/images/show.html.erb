@@ -1,0 +1,44 @@
+<% content_for :title do %>画像の詳細<% end %>
+<div class="bdnavi">
+  <ul class="breadcrumb">
+    <li><%= link_to "画像の一覧", [:admin, :images] %> &gt;</li>
+    <li><%= yield :title =%></li>
+  </ul>
+</div>
+
+<div class="row">
+  <div class="span8 offset2 well">
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td><%= @image.id %></td>
+        </tr>
+        <tr>
+          <td>メンバーID</td>
+          <% if @image.member.type == 'Profile' %>
+            <td><%= link_to "#{@image.member.user_id}", admin_user_path(@image.member.user_id) %></td>
+          <% else %>
+            <td><%= link_to "#{@image.member_id}", admin_friend_path(@image.member_id) %></td>
+          <% end %>
+        </tr>
+        <tr>
+          <td>メイン画像</td>
+          <td><%= @image.is_main %></td>
+        </tr>
+        <tr>
+          <td>作成日時</td>
+          <td><%= @image.created_at %></td>
+        </tr>
+        <tr>
+          <td>画像</td>
+          <td><%= image_tag "#{@image.url}" %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination-centered">
+      <%= link_to [:admin, @image], :confirm => '画像を削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+      <%= link_to "戻る", admin_images_path, :class => "btn" %>
+    </div>
+  </div>
+</div>

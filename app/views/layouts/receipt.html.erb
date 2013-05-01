@@ -1,0 +1,19 @@
+<% content_for :content do %>
+  <div class="bdnavi">
+    <ul class="breadcrumb">
+      <% if @user.present? %>
+        <li>ユーザー管理 &gt;</li>
+        <li><%= link_to "ユーザー一覧", [:admin, :users] %> &gt;</li>
+        <li><%= link_to "#{@user.profile.nickname}", admin_user_path(@user) %> &gt;</li>
+      <% end %>
+      <% if @receipt.present? %>
+        <li><%= link_to "レシート一覧", [:admin, @user, :receipts] %> &gt;</li>
+        <li><%= yield :title =%></li>
+      <% else %>
+        <li><%= yield :title =%></li>
+      <% end %>
+    </ul>
+  </div>
+  <%= yield %>
+<% end %>
+<%= render :file => 'layouts/admin' %>

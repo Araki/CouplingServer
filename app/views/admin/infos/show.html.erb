@@ -1,0 +1,41 @@
+<% content_for :title do %><%= "通知の詳細" %><% end %>
+
+<div class="row">
+  <div class="span8 offset2 well">
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td><%= @info.id %></td>
+        </tr>
+        <tr>
+          <td>対象ID</td>
+          <% if @info.target_id < 0 %>
+            <td>全員</td>
+          <% else %>
+            <td><%= link_to "#{@info.target_id}", admin_user_path(@info.target_id) %></td>
+          <% end %>
+        </tr>
+        <tr>
+          <td>本文</td>
+          <td><%= @info.body %></td>
+        </tr>
+        <tr>
+          <td>作成日時</td>
+          <td><%= @info.created_at %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination-centered">
+      <% if @user.present? %>
+        <%= link_to [:edit, :admin, @user, @info], :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+        <%= link_to [:admin, @user, @info], :confirm => 'お知らせを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+        <%= link_to "戻る", [:admin, @user, :infos], :class => "btn" %>      
+      <% else %>
+        <%= link_to edit_admin_info_path(@info), :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+        <%= link_to [:admin, @info], :confirm => 'お知らせを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+        <%= link_to "戻る", admin_infos_path, :class => "btn" %>      
+      <% end %>
+    </div>
+  </div>
+</div>

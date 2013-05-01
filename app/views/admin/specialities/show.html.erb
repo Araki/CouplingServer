@@ -1,0 +1,23 @@
+<% content_for :title do %>特技詳細<% end %>
+
+<div class="row">
+  <div class="span8 offset2 well">
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td><%= @speciality.id %></td>
+        </tr>
+        <tr>
+          <td>特技名</td>
+          <td><%= @speciality.name %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination-centered">
+      <%= link_to edit_admin_speciality_path(@speciality), :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+      <%= link_to [:admin, @speciality], :confirm => '特技を削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+      <%= link_to "戻る", admin_specialities_path, :class => "btn" %>
+    </div>
+  </div>
+</div>

@@ -1,25 +1,29 @@
 class Message < ActiveRecord::Base
-  attr_accessible :body, :match_id, :talk_key
-  belongs_to :match, :dependent => :destroy
+  attr_accessible :body, :match_id, :user_id
 
-  validates :body, :presence => true
-  validates :body, :length => { :minimum => 1, :maximum => 500 }
+  belongs_to :match
+  belongs_to :user
 
-  def count_and_save(match)
+  validates :body, :presence => true, :length => { :minimum => 1, :maximum => 500 }
+
+  default_scope order('created_at DESC')
+
+  scope :by_matches, lambda{|match_id, inverse_match_id| where(:match_id => [match_id, inverse_match_id])}
+  scope :since, lambda{|since_id| where('id > ?', since_id) unless since_id.nil? }
+  scope :after_created_at, lambda{|check_at| where("created_at > ?", check_at) unless check_at.nil?}
+
+  def save_message(match)
     ActiveRecord::Base.transaction do
       self.save!
       unless match.can_open_profile
-        if match.messages.count > 2 && match.pair.messages.count > 2
+        inverse_match = match.inverse
+        if match.messages.count > 2 && inverse_match.messages.count > 2
           match.can_open_profile = true
+          inverse_match.can_open_profile = true
           match.save!
-          match.pair.can_open_profile = true
-          match.pair.save!
+          inverse_match.save!
         end
       end
     end
-    true
-  rescue ActiveRecord::RecordInvalid => e
-    self.errors.add :base, "internal_server_error"
-    false
   end
 end

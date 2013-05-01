@@ -1,0 +1,46 @@
+<% content_for :title do %>通知の一覧<% end %>
+<% if @user.present? %>
+  <%= link_to new_admin_user_info_path(@user), :class => "btn" do %>
+    <i class="icon-pencil"></i><strong><%= "#{@user.profile.nickname}" %>への通知を作成</strong>
+  <% end %>  
+<% else %>
+  <%= link_to new_admin_info_path, :class => "btn" do %>
+    <i class="icon-pencil"></i><strong>全会員への通知を作成</strong>
+  <% end %>
+<% end %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>対象ID</th>
+      <th>本文</th>
+      <th>作成日時</th>
+    </tr>
+  </thead>
+  <tbody>
+<% @infos.each do |info| %>
+    <tr>
+      <td><%= info.id %></td>
+      <% if info.target_id < 0 %>
+        <td>全員</td>
+      <% else %>
+
+        <td><%= link_to "#{info.target_id}", admin_user_path(info.target_id) %></td>
+      <% end %>
+      <td><%= truncate(info.body, :length => 30) %></td>
+      <td><%= l info.created_at %></td>
+      <td>
+        <% if @user.present? %>
+          <%= link_to "詳細", admin_user_info_path(@user, info) %> |
+          <%= link_to "編集", edit_admin_user_info_path(@user, info) %>
+        <% else %>
+          <%= link_to "詳細", admin_info_path(info) %> |
+          <%= link_to "編集", edit_admin_info_path(info) %>
+        <% end %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+<%= paginate @infos %>

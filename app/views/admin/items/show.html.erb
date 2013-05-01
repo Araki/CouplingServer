@@ -1,0 +1,31 @@
+<% content_for :title do %>アイテム詳細<% end %>
+
+<div class="row">
+  <div class="span8 offset2 well">
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td><%= @item.id %></td>
+        </tr>
+        <tr>
+          <td>アイテム名</td>
+          <td><%= @item.title %></td>
+        </tr>
+        <tr>
+          <td>プロダクトID</td>
+          <td><%= @item.pid %></td>
+        </tr>
+        <tr>
+          <td>ポイント</td>
+          <td><%= @item.point %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination-centered">
+      <%= link_to edit_admin_item_path(@item), :class => "btn btn-primary" do %><i class="icon-edit icon-white"></i>編集<% end %>
+      <%= link_to [:admin, @item], :confirm => 'アイテムを削除しますか?', :class => "btn btn-danger", :method => :delete do %><i class="icon-trash icon-white"></i>削除<% end %>
+      <%= link_to "戻る", admin_items_path, :class => "btn" %>
+    </div>
+  </div>
+</div>

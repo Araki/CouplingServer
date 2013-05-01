@@ -2,11 +2,15 @@
 
 FactoryGirl.define do
   factory :like, class: Like do
+    user { User.all.sample }
+    target { User.all.sample }
+
     factory :like_target_boys do
-      target_id {User.find_all_by_gender(0).sample.id}
+      target {Profile.find_all_by_gender(0).sample.user}
     end
     factory :like_target_girls do
-      target_id {User.find_all_by_gender(1).sample.id}
+      target {Profile.find_all_by_gender(1).sample.user}
     end
   end
 end
+
