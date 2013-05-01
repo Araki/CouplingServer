@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
     graph = Koala::Facebook::API.new(access_token)
     fb_profile = graph.get_object("me") 
 
-    user = self.find_by_facebook_id(fb_profile[:id].to_i)
+    user = self.find_by_facebook_id(fb_profile['id'].to_i)
     user = self.new if user.nil?
     user.assign_fb_attributes(fb_profile, access_token, device_token)
     user.save!
@@ -183,9 +183,8 @@ class User < ActiveRecord::Base
     params = {access_token: access_token}
       # params.picture = graph.get_picture(uid) 
     params[:device_token] = device_token unless device_token.nil?      
-    params[:email] =        fb_profile[:email] 
+    params[:email] =        fb_profile['email'] 
     params[:facebook_id] =  self.facebook_id || fb_profile['id']
-    params[:gender] =  fb_profile[:gender] == "male" ? 0 : 1
     params[:last_login_at] = Time.now      
     self.assign_attributes(params, :without_protection => true)
     self

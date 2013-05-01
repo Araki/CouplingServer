@@ -5,7 +5,7 @@ class Api::User::SessionsController < Api::BaseController
   def create
     raise BadRequest.new('access_token required') unless params[:access_token]
 
-    @user = User.create_or_find_by_access_token(params[:access_token], params[:device_token])
+    @user = ::User.create_or_find_by_access_token(params[:access_token], params[:device_token])
     @session = Session.create_session(@user)
     render_ok(user_hash)
   end

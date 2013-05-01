@@ -16,9 +16,9 @@ class Profile < Member
   def assign_fb_attributes(user, fb_profile)
     params = {user_id: user.id}
     params[:age] =  get_age(fb_profile)  
-    params[:gender] =  fb_profile[:gender] == "male" ? 0 : 1
+    params[:gender] =  fb_profile["gender"] == "male" ? 0 : 1
     params[:nickname] =  self.nickname || get_initial(fb_profile)
-    params[:birthday_on] =   Date.strptime(fb_profile[:birthday], '%m/%d/%Y')
+    params[:birthday_on] =   Date.strptime(fb_profile["birthday"], '%m/%d/%Y')
     self.assign_attributes(params, :without_protection => true)
     self
   end
@@ -32,11 +32,11 @@ class Profile < Member
   private
 
   def get_initial(fb_profile)
-    "#{fb_profile[:first_name][0, 1].capitalize}.#{fb_profile[:last_name][0, 1].capitalize}"
+    "#{fb_profile['first_name'][0, 1].capitalize}.#{fb_profile['last_name'][0, 1].capitalize}"
   end
 
   #age 誕生日を考慮していないので実際には不正確
   def get_age(fb_profile)
-    Time.now.utc.to_date.year - Date.strptime(fb_profile[:birthday], '%m/%d/%Y').year
+    Time.now.utc.to_date.year - Date.strptime(fb_profile["birthday"], '%m/%d/%Y').year
   end  
 end

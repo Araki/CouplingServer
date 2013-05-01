@@ -13,12 +13,12 @@ describe User do
         graph = mock("graph")
         Koala::Facebook::API.stub!(:new).with('facebookaccesstoken').and_return(graph)
         fb_profile = {
-          id: '1234567890',
-          email: 'test@example.com',
-          first_name: "First", 
-          last_name: "Last", 
-          gender: "male",
-          birthday: 28.years.ago.strftime("%m/%d/%Y")
+          "id" => '1234567890',
+          "email" => 'test@example.com',
+          "first_name" => "First", 
+          "last_name" => "Last", 
+          "gender" => "male",
+          "birthday" => 28.years.ago.strftime("%m/%d/%Y")
         }
         graph.stub!(:get_object).with('me').and_return(fb_profile)
       end
@@ -350,12 +350,12 @@ describe User do
       graph = mock("graph")
       Koala::Facebook::API.stub!(:new).with('facebookaccesstoken').and_return(graph)
       @fb_profile = {
-        id: '1234567890',
-        email: 'test@example.com',
-        first_name: "First", 
-        last_name: "Last", 
-        gender: "male",
-        birthday: 28.years.ago.strftime("%m/%d/%Y")
+        "id" => '1234567890',
+        "email" => 'test@example.com',
+        "first_name" => "First", 
+        "last_name" => "Last", 
+        "gender" => "male",
+        "birthday" => 28.years.ago.strftime("%m/%d/%Y")
       }
     end
 
