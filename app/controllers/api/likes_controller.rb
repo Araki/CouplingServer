@@ -13,12 +13,11 @@ class Api::LikesController < Api::BaseController
   end
 
   def create
-    render_ng("over_limit") and return if @user.over_likes_limit_per_day?
+    raise StandardError.new("Limit Over") if @user.over_likes_limit_per_day?
 
-    target = User.find_by_id(params[:target_id])
-    render_not_found and return unless target
+    target = User.find(params[:target_id])
 
     result = @user.create_like(target)
-    result.has_key?(:type) ? render_ok(result) : render_ng("internal_server_error")
+    render_ok(result)
   end
 end

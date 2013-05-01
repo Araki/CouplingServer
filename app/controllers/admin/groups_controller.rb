@@ -17,7 +17,7 @@ class Admin::GroupsController < AdminController
     @group = Group.find(params[:id])
 
     respond_to do |format|
-      if @group.save_group(params)
+      if @group.update_group_by_admin(params)
         format.html { redirect_to [:admin, @group.leader] }
       else
         format.html { render action: "edit" }

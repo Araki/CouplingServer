@@ -84,20 +84,15 @@ class User < ActiveRecord::Base
   # 上記以外はtargetに対するLikeを作成。
   def create_like(target)
     return {type: "match"} if self.match?(target)
+    return {type: "like"} if self.like?(target)
 
     if inverse_like?(target)
       self.create_match(target)
     else
-      begin
-        self.like_users << target
-        target.like_point += 1
-        target.save!
-      rescue Exception => e
-        ActiveRecord::Rollback
-        return {message: "internal_server_error"}
-      else
-        return {type: "like"}
-      end          
+      self.like_users << target
+      target.like_point += 1
+      target.save!
+      return {type: "like"}
     end
   end
 
@@ -107,38 +102,26 @@ class User < ActiveRecord::Base
       inverse_like.update_attribute(:type, 'Match')
       self.match_users << target
     end
-      return {type: "match"}
-    rescue => e
-      return {message: "internal_server_error"}    
+    return {type: "match"}
   end
 
   def add_point(amount)
-    if amount > 0
-      begin
-        self.point += amount
-        self.save!
-      rescue ActiveRecord::RecordInvalid => e
-        self.errors.add :base, "internal_server_error"
-        false
-      end
+    if amount > 0 && amount < configatron.point_limit
+      self.point += amount
+      self.save!
     else
       self.errors.add :base, "invalid_arguments"
-      false
+      raise ActiveRecord::RecordInvalid.new(self)
     end
   end
 
   def consume_point(amount)
     if amount > 0 && amount < self.point
-      begin
-        self.point -= amount
-        self.save!
-      rescue ActiveRecord::RecordInvalid => e
-        self.errors.add :base, "internal_server_error"
-        false
-      end
+      self.point -= amount
+      self.save!
     else
       self.errors.add :base, "invalid_arguments"
-      false
+      raise ActiveRecord::RecordInvalid.new(self)
     end
   end
 

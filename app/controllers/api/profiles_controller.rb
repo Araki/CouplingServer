@@ -7,8 +7,7 @@ class Api::ProfilesController < Api::BaseController
   end
 
   def show
-    profile = Profile.find_by_id(params[:id])
-    render_not_found and return if profile.nil?
+    profile = Profile.find(params[:id])
     
     render_ok(:profile => profile.as_json)
   end

@@ -98,7 +98,7 @@ describe Api::GroupsController do
       end
 
       it 'internal_server_errorが返されること' do
-        JSON.parse(response.body)["code"].should == "internal_server_error"
+        JSON.parse(response.body)["code"].should == "Exception"
       end 
     end
 
@@ -158,8 +158,8 @@ describe Api::GroupsController do
         post :update, {session_id: @session.key, group: {head_count: 3}}
       end
 
-      it 'internal_server_errorが返されること' do
-        JSON.parse(response.body)["code"].should == "not_found"
+      it 'Group Not Foundが返されること' do
+        JSON.parse(response.body)["code"].should == "Group Not Found"
       end 
     end
 

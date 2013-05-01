@@ -56,7 +56,7 @@ describe Api::ImagesController do
         post :create, {session_id: @session.key}
       end
 
-      it {JSON.parse(response.body)["code"].should == "over_limit"}
+      it {JSON.parse(response.body)["code"].should == "Limit Over"}
     end
 
     context '画像が５枚以下の場合' do
@@ -78,7 +78,7 @@ describe Api::ImagesController do
         post :set_main, {id: 1, session_id: @session.key}
       end
 
-      it {JSON.parse(response.body)["code"].should == "not_found"}
+      it {JSON.parse(response.body)["code"].should include "Couldn't find Image with"}
     end
 
     context '自分の画像ではなかった場合' do
@@ -88,7 +88,7 @@ describe Api::ImagesController do
         post :set_main, {id: 1, session_id: @session.key}
       end
 
-      it {JSON.parse(response.body)["code"].should == "permission_denied"}
+      it {JSON.parse(response.body)["code"].should == "Api::BaseController::PermissionDenied"}
     end
 
     context 'mainにセットされた場合' do
@@ -102,20 +102,16 @@ describe Api::ImagesController do
 
     context 'mainのセットに失敗すると' do
       before do
-        image = FactoryGirl.create(:image, {member_id: @profile.id})
+        image = Image.create
+        Image.stub!(:find).with('1').and_return(image)
 
-        user = session_verified_user(@session)
-        profile = mock(:profile)
-        user.stub!(:==).with(@user).and_return(true)          
-        user.stub!(:profile).and_return(profile)          
-        profile.stub!(:id).and_return(@profile.id)          
-        profile.stub!(:set_main_image).with(image).and_return(false)          
+        ActiveRecord::Base.connection.should_receive(:rollback_db_transaction).once
 
         post :set_main, {id: 1, session_id: @session.key}
       end
 
       it 'internal_server_errorが返されること' do
-        JSON.parse(response.body)["code"].should == "internal_server_error"
+        JSON.parse(response.body)["code"].should_not be_nil
       end 
     end
   end
@@ -137,7 +133,7 @@ describe Api::ImagesController do
         post :destroy, {id: 1, session_id: @session.key}
       end
 
-      it {JSON.parse(response.body)["code"].should == "permission_denied"}
+      it {JSON.parse(response.body)["code"].should == "Api::BaseController::PermissionDenied"}
     end
   end
 end

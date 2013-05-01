@@ -3,19 +3,11 @@ class Api::User::SessionsController < Api::BaseController
   skip_before_filter :verify_session, :only => [:create]
 
   def create
-    render_ng('invalid_access_token') and return unless params[:access_token]
+    raise BadRequest.new('access_token required') unless params[:access_token]
 
-    begin
-      @user = ::User.create_or_find_by_access_token(params[:access_token], params[:device_token])
-      @session = Session.create_session(@user)
-    rescue ActiveRecord::RecordInvalid => e
-      ActiveRecord::Rollback
-      render_ng(e.record.errors) and return
-    rescue Exception => e
-      render_ng(e) and return
-    else
-      render_ok(user_hash)
-    end
+    @user = User.create_or_find_by_access_token(params[:access_token], params[:device_token])
+    @session = Session.create_session(@user)
+    render_ok(user_hash)
   end
 
   #セッションIDをverifyする

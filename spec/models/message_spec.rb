@@ -13,26 +13,31 @@ describe Message do
     end
 
     context 'save_messageについて' do
-      before do
-        @message = Message.new(:match_id => @match.id, :user_id => @user.id, :body => 'lalala' )
-        @inverse_message = Message.new(:match_id => @inverse_match.id, :user_id => @target.id, :body => 'hahaha' )
-      end
-
-      context '成功した場合' do
-        it {@message.save_message(@match).should be_true }
-      end
-
-      context 'messageが作成されること' do
-        it {expect{@message.save_message(@match) }.to change(Message, :count).by(1)}
-      end
-
-      context 'targetからもmessageが取得できること' do
+      context '正常な値を送ると' do
         before do
-          @message.save_message(@match)
+          @message = Message.new(:match_id => @match.id, :user_id => @user.id, :body => 'lalala' )
         end
-        subject { Message.by_matches(@inverse_match.id, @inverse_match.inverse.id) }
 
-        its (:size) { should eq 1 }
+        context 'messageが作成されること' do
+          it {expect{@message.save_message(@match) }.to change(Message, :count).by(1)}
+        end
+
+        context 'targetからもmessageが取得できること' do
+          before do
+            @message.save_message(@match)
+          end
+          subject { Message.by_matches(@inverse_match.id, @inverse_match.inverse.id) }
+
+          its (:size) { should eq 1 }
+        end
+      end
+
+      context '異常な値を送ると' do
+        before do
+          @message = Message.new(:match_id => @match.id, :user_id => @user.id, :body => '' )
+        end
+
+        it { expect { @message.save_message(@match) }.to raise_error(ActiveRecord::RecordInvalid) }
       end
     end
 

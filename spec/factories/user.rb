@@ -19,6 +19,20 @@ FactoryGirl.define do
     factory :target do
       email 'target@example.com'
     end
+
+    factory :favorite_user do
+      email 'favorite_user@example.com'
+    end
+
+    factory :user_with_favorite_users do
+      ignore do
+        favorite_users 5
+      end
+
+      after(:create) do |user, evaluator|
+        FactoryGirl.create_list(:favorite_user, evaluator.favorite_users)
+      end
+    end    
   end
 
   factory :valid_user, class: User do

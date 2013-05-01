@@ -174,15 +174,12 @@ describe User do
   end
 
   describe "#over_likes_limit_per_day?" do
-    before do
-      @female_targets = FactoryGirl.create_list(:target, 10)
-    end
     subject { @user.over_likes_limit_per_day? }
 
     context '当日のlikeの数がlikes_limit_per_day以下だったら' do
       before do
         (configatron.likes_limit_per_day - 1).times do |n|
-          FactoryGirl.create(:like_target_girls, {user_id: @user.id, target_id: @female_targets[n].id})
+          FactoryGirl.create(:like_target_girls, {user: @user, target_id: n})
         end
       end
 
@@ -192,7 +189,7 @@ describe User do
     context '当日のlikeの数がlikes_limit_per_day以上だったら' do
       before do
         configatron.likes_limit_per_day.times do |n|
-          FactoryGirl.create(:like_target_girls, {user_id: @user.id, target_id: @female_targets[n].id})
+          FactoryGirl.create(:like_target_girls, {user: @user, target_id: n})
         end
       end
 
@@ -262,7 +259,7 @@ describe User do
         subject { @user.create_like(@target) }
 
         context 'likeを返すこと' do
-          it { should eq({:message=>"internal_server_error"}) }
+          it { should eq({:type=>"like"}) }
         end
         
         context 'likeが増えないこと' do
@@ -323,11 +320,7 @@ describe User do
     end
 
     context '負の整数を渡されたら' do
-      before do
-        user.add_point(-50)
-      end
-
-      it { should eq 100 }
+      it { expect { user.consume_point(-50) }.to raise_error(ActiveRecord::RecordInvalid) }
     end
   end
 
@@ -344,19 +337,11 @@ describe User do
     end
 
     context '持ちポイントより多く使われたら' do
-      before do
-        user.consume_point(150)
-      end
-
-      it { should eq 100 }
+      it { expect { user.consume_point(150) }.to raise_error(ActiveRecord::RecordInvalid) }
     end
 
     context '負の整数を渡されたら' do
-      before do
-        user.consume_point(-50)
-      end
-
-      it { should eq 100 }
+      it { expect { user.consume_point(-50) }.to raise_error(ActiveRecord::RecordInvalid) }
     end
   end
 

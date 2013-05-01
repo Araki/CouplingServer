@@ -18,24 +18,18 @@ class Api::GroupsController < Api::BaseController
   end
 
   def create
-    render_ng("internal_server_error") and return if @user.group.present?
+    raise Exception if @user.group.present?
 
     params[:group][:user_id] = @user.id
     group = Group.new(params[:group])
-    if group.save_group(params)
-      render_ok({group: group})
-    else
-      render_ng(group.errors)
-    end
+    group.save_group(params)
+    render_ok({group: group})
   end
 
   def update
-    render_not_found and return unless @user.group.present?
+    raise ActionController::RoutingError.new('Group Not Found') if @user.group.nil?
 
-    if @user.group.save_group(params)
-      render_ok({group: @user.group})
-    else
-      render_ng(@user.group.errors)
-    end
+    @user.group.save_group(params)
+    render_ok({group: @user.group})
   end  
 end

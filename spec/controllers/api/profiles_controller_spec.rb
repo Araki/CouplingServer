@@ -50,7 +50,7 @@ describe Api::ProfilesController do
       end
       subject { JSON.parse(response.body) }
 
-      its (["code"]) {should ==  "not_found"}
+      its (["code"]) {should include "Couldn't find Profile with id="}
     end
   end
 end

@@ -25,15 +25,11 @@ describe Api::PointsController do
 
     context '不正な値だった場合' do
       before do
-        user = session_verified_user(@session)
-        user.should_receive(:errors).and_return({base: ["invalid_arguments"]})
-        user.should_receive(:add_point).with(-44).and_return(false)
-
         post :add, {amount: -44, session_id: @session.key}
       end
 
       it 'invalid_argumentsが返ること' do
-        JSON.parse(response.body)['code']["base"][0].should == 'invalid_arguments'
+        JSON.parse(response.body)['code'].should_not be_nil
       end
     end
 
@@ -57,21 +53,7 @@ describe Api::PointsController do
       end
 
       it 'invalid_argumentsが返ること' do
-        JSON.parse(response.body)['code']["base"][0].should == 'invalid_arguments'
-      end
-    end
-
-    context '保存に失敗した場合' do
-      before do
-        user = session_verified_user(@session)
-        user.should_receive(:errors).and_return({base: ["internal_server_error"]})
-        user.should_receive(:consume_point).with(99).and_return(false)
-
-        post :consume, {amount: 99, session_id: @session.key}
-      end
-
-      it 'internal_server_errorが返ること' do
-        JSON.parse(response.body)['code']["base"][0].should == 'internal_server_error'
+        JSON.parse(response.body)['code'].should_not be_nil
       end
     end
   end

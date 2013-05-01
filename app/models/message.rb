@@ -25,9 +25,5 @@ class Message < ActiveRecord::Base
         end
       end
     end
-    true
-  rescue ActiveRecord::RecordInvalid => e
-    self.errors.add :base, "internal_server_error"
-    false
   end
 end

@@ -1,47 +1,38 @@
 class Api::FriendsController < Api::BaseController
   
   def show
-    friend = Friend.find_by_id(params[:id])
-
-    if friend
-      render_ok({friend: friend})
-    else
-      render_not_found
-    end
+    friend = Friend.find(params[:id])
+    
+    render_ok({friend: friend})
   end
   
   def create
-    render_ng("internal_server_error") and return if @user.group.nil?
+    raise ActionController::RoutingError.new('Group Not Found') if @user.group.nil?
 
     friend = Friend.new(params[:friend])
     @user.group.friends << friend
-    if friend.save_profile(params)
-      render_ok({friend: friend})
-    else
-      render_ng(friend.errors)
-    end
+    friend.save_profile(params)
+
+    render_ok({friend: friend})
   end
 
   def update
-    friend = Friend.find_by_id(params[:id])
-    render_not_found and return if friend.nil?
-    render_ng("internal_server_error") and return if @user.group.nil?
-    render_ng("permission_denied") and return unless friend.group == @user.group
+    friend = Friend.find(params[:id])
+    raise ActionController::RoutingError.new('Group Not Found') if @user.group.nil?
+    raise PermissionDenied unless friend.group == @user.group
 
-    if friend.save_profile(params)
-      render_ok({friend: friend})
-    else
-      render_ng(friend.errors)
-    end
+    friend.save_profile(params)
+
+    render_ok({friend: friend})
   end  
 
   def destroy
-    friend = Friend.find_by_id(params[:id])
-    render_not_found and return if friend.nil?
-    render_ng("internal_server_error") and return if @user.group.nil?
-    render_ng("permission_denied") and return unless friend.group == @user.group
+    friend = Friend.find(params[:id])
+    raise ActionController::RoutingError.new('Group Not Found') if @user.group.nil?
+    raise PermissionDenied unless friend.group == @user.group
 
     friend.destroy
+
     render_ok
   end  
 end

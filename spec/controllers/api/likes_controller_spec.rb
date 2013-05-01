@@ -105,24 +105,57 @@ describe Api::LikesController do
           post :create, {target_id: @target.id, session_id: @session.key}
         end
 
-        it 'okが返されること' do
-          JSON.parse(response.body)["status"].should == "ok"
+        it 'likeが返されること' do
+          JSON.parse(response.body)["type"].should == "like"
         end 
+      end
+
+      context '相手からのいいねが存在していると' do
+        before do
+          FactoryGirl.create(:like, {user: @target, target: @user})
+        end
+
+        context '相手からのいいねが存在していると' do
+          it 'Matchが作成されること' do
+            expect{
+              post :create, {target_id: @target.id, session_id: @session.key}
+            }.to change(Match, :count).by(2)
+          end
+        end
+
+        context '相手からのいいねが存在していると2' do
+          it 'Likeが減ることこと' do
+            expect{
+              post :create, {target_id: @target.id, session_id: @session.key}
+            }.to change(Like, :count).by(-1)
+          end
+        end
+
+        context '相手からのいいねが存在していると' do
+          before do
+            post :create, {target_id: @target.id, session_id: @session.key}
+          end
+
+          it 'matchが返されること' do
+            JSON.parse(response.body)["type"].should == "match"
+          end 
+        end
       end
 
       context '作成に失敗すると' do
         before do
           user = session_verified_user(@session)
+          invalid_user = FactoryGirl.build(:invalid_user)
           User.should_receive(:find_by_id).with(@user.id.to_s).and_return(user)
-          User.should_receive(:find_by_id).with(@target.id.to_s).and_return(@target)
+          User.should_receive(:find).with(@target.id.to_s).and_return(@target)
           user.should_receive(:over_likes_limit_per_day?).and_return(false)
-          user.stub!(:create_like).with(@target).and_return({message: "internal_server_error"})          
+          user.stub!(:create_like).with(@target).and_raise(ActiveRecord::RecordInvalid.new(invalid_user))          
 
           post :create, {target_id: @target.id, session_id: @session.key}
         end
 
         it 'internal_server_errorが返されること' do
-          JSON.parse(response.body)["code"].should == "internal_server_error"
+          JSON.parse(response.body)["code"].should_not be_nil
         end 
       end
 
@@ -135,8 +168,8 @@ describe Api::LikesController do
           post :create, {target_id: @target.id, session_id: @session.key}
         end
 
-        it 'over_limitが返されること' do
-          JSON.parse(response.body)["code"].should == "over_limit"
+        it 'Limit Overが返されること' do
+          JSON.parse(response.body)["code"].should == "Limit Over"
         end 
       end
     end
@@ -147,7 +180,7 @@ describe Api::LikesController do
       end
 
       it 'not_foundが返されること' do
-        JSON.parse(response.body)["code"].should == "not_found"
+        JSON.parse(response.body)["code"].should include "Couldn't find User with id="
       end 
     end
   end

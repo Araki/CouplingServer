@@ -72,7 +72,26 @@ class Group < ActiveRecord::Base
   def save_group(params)
     [:group_images, :days, :mst_prefectures].each do |association|
       ids = (association.to_s.singularize + '_ids').to_sym
-      if params[:group][ids]
+      if params[:group] && params[:group][ids]
+        params[association] = params[:group][ids] 
+        params[:group].delete(ids)
+        params[association].delete('')
+      end
+    end
+    self.class.transaction do
+      if self.persisted?
+        self.update_attributes!(params[:group])
+      else
+        self.save!
+      end
+      [:group_images, :days, :mst_prefectures].each{|association| update_associations(association, params)}
+    end
+  end
+
+  def update_group_by_admin(params)
+    [:group_images, :days, :mst_prefectures].each do |association|
+      ids = (association.to_s.singularize + '_ids').to_sym
+      if params[:group] && params[:group][ids]
         params[association] = params[:group][ids] 
         params[:group].delete(ids)
         params[association].delete('')

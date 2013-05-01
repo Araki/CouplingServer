@@ -95,9 +95,6 @@ class Member < ActiveRecord::Base
       self.main_image.update_attribute(:is_main, false ) if self.main_image.present?
       image.update_attribute(:is_main, true )
     end
-      return true
-    rescue => e
-      return false
   end
 
   def save_profile(params)
@@ -110,12 +107,6 @@ class Member < ActiveRecord::Base
       end
       [:hobbies, :characters, :specialities].each{|association| update_associations(association, params)}
     end
-    true
-  rescue ActiveRecord::RecordInvalid => e
-    false
-  rescue => e
-    self.errors.add :base, e.message
-    false
   end
 
   def update_profile_by_admin(params)

@@ -32,11 +32,12 @@ describe Api::User::SessionsController do
 
       context 'FBで認証できなかった場合' do
         before do
+          Koala::Facebook::API.stub!(:new).with('abc').and_raise(Koala::Facebook::APIError.new(400, '', 'Facebook is down.'))
           post :create, {:access_token => 'abc', :device_token => 'yyy'}
         end
         subject { JSON.parse(response.body)['code'] }
 
-        its (['response_body']){should include "Invalid OAuth access token."}
+        it {should include "Facebook is down."}
       end
 
       context 'ユーザーを保存できなかった場合' do
@@ -67,18 +68,27 @@ describe Api::User::SessionsController do
       end
       subject { JSON.parse(response.body) }
 
-      its (["code"]) {should ==  "invalid_access_token"}
+      its (["code"]) {should ==  "access_token required"}
     end
   end
 
   describe '#verify' do
-    context 'Sessionが見つからなかった場合' do
+    context 'session_idがなかった場合' do
       before do
         get :verify, {}
       end      
       subject { JSON.parse(response.body) }
 
-      its (["code"]) {should ==  "invalid_session"}
+      its (["code"]) {should ==  "session_id required"}
+    end
+
+    context 'sessionがなかった場合' do
+      before do
+        get :verify, {session_id: 99999}
+      end      
+      subject { JSON.parse(response.body) }
+
+      its (["code"]) {should ==  "Session Not Found"}
     end
 
     context '自分のアカウントが見つかった場合' do
@@ -97,7 +107,7 @@ describe Api::User::SessionsController do
       end
       subject { JSON.parse(response.body) }
 
-      its (["code"]) {should ==  "invalid_session"}
+      its (["code"]) {should ==  "Invalid session. Please create session again."}
     end
 
     context '本日はじめてのログイン後の場合' do

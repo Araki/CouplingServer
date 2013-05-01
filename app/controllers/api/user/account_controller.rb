@@ -6,11 +6,8 @@ class Api::User::AccountController < Api::BaseController
   end
 
   def update_profile
-    if @user.profile.save_profile(params)
-      render_ok(:profile => @user.profile.as_json)
-    else
-      render_ng(@user.profile.errors)
-    end
+    @user.profile.save_profile(params)
+    render_ok(:profile => @user.profile.as_json)
   end
 
   def destroy

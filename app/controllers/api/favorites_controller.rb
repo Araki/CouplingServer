@@ -7,22 +7,15 @@ class Api::FavoritesController < Api::BaseController
   end
 
   def create
-    target = User.find_by_id(params[:target_id])
-    render_not_found and return if target.nil?
+    target = User.find(params[:target_id])
 
-    begin
-      @user.favorite_users << target
-    rescue Exception => e
-      ActiveRecord::Rollback
-      render_ng("internal_server_error") and return
-    else
-      render_ok
-    end
+    @user.favorite_users << target
+    render_ok
   end
 
   def destroy
-    target = User.find_by_id(params[:target_id])
-    @user.favorite_users.delete(target) if target.present?
+    target = User.find(params[:target_id])
+    @user.favorite_users.delete(target)
     render_ok
   end
 end

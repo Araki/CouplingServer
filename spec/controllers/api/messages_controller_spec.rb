@@ -17,7 +17,7 @@ describe Api::MessagesController do
         get :list, {target_id: 100, session_id: @session.key}
       end
 
-      it {JSON.parse(response.body)["code"].should == "permission_denied"}
+      it {JSON.parse(response.body)["code"].should == "Api::BaseController::PermissionDenied"}
     end
 
     context 'matchの関係がある場合' do
@@ -65,7 +65,7 @@ describe Api::MessagesController do
         post :create, {target_id: 100, body: 'lalala', session_id: @session.key}
       end
 
-      it {JSON.parse(response.body)["code"].should == "permission_denied"}
+      it {JSON.parse(response.body)["code"].should == "Api::BaseController::PermissionDenied"}
     end
 
     context 'matchの関係がある場合' do
@@ -101,7 +101,7 @@ describe Api::MessagesController do
           post :create, {target_id: @target.id, body: '', session_id: @session.key}
         end
 
-        it { JSON.parse(response.body)["code"]["base"][0].should == "internal_server_error" }
+        it { JSON.parse(response.body)["code"].should_not be_nil }
       end      
     end
   end

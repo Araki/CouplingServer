@@ -12,6 +12,7 @@ describe Receipt do
       before do
         iap_receipt = mock(:iap_receipt)
         iap_receipt.stub!(:product_id).and_return( 'com.example.products.300pt')
+        iap_receipt.stub!(:quantity).and_return(1)
         Itunes::Receipt.should_receive(:verify!).with('abcde', :allow_sandbox).and_return(iap_receipt)
         @receipt = Receipt.new({user_id:@user.id, receipt_code: 'abcde'})
       end
@@ -45,23 +46,17 @@ describe Receipt do
       before do
         iap_receipt = mock(:iap_receipt)
         iap_receipt.stub!(:product_id).and_return( 'com.example.products.300pt')
-        Itunes::Receipt.should_receive(:verify!).with('abcde', :allow_sandbox).and_raise(StandardError)
+        iap_receipt.stub!(:quantity).and_return(1)
+        Itunes::Receipt.should_receive(:verify!).with('abcde', :allow_sandbox).and_raise(Itunes::Receipt::VerificationFailed.new)
         @receipt = Receipt.new({user_id:@user.id, receipt_code: 'abcde'})
       end
 
-      it 'Receiptが作成されないこと' do
-        expect{
-          @receipt.valid_and_save
-        }.to change(Receipt, :count).by(0)
-      end
-
       context 'iap_server_errorになること' do
-        before do
-          @receipt.valid_and_save
+        it 'Receiptが作成されないこと' do
+          expect{
+            @receipt.valid_and_save
+          }.to raise_error(Itunes::Receipt::VerificationFailed)
         end
-        subject { @receipt.errors.messages[:base][0]}
-
-        it { should eq 'iap_server_error'}
       end
     end
 
@@ -69,6 +64,7 @@ describe Receipt do
       before do
         iap_receipt = mock(:iap_receipt)
         iap_receipt.stub!(:product_id).and_return( 'com.example.products.xxxxxxx')
+        iap_receipt.stub!(:quantity).and_return(1)
         Itunes::Receipt.should_receive(:verify!).with('abcde', :allow_sandbox).and_return(iap_receipt)
         @receipt = Receipt.new({user_id:@user.id, receipt_code: 'abcde'})
       end
@@ -76,16 +72,7 @@ describe Receipt do
       it 'Receiptが作成されないこと' do
         expect{
           @receipt.valid_and_save
-        }.to change(Receipt, :count).by(0)
-      end
-
-      context 'iap_server_errorになること' do
-        before do
-          @receipt.valid_and_save
-        end
-        subject { @receipt.errors.messages[:base][0]}
-
-        it { should eq 'item_not_found'}
+        }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
@@ -94,6 +81,7 @@ describe Receipt do
          FactoryGirl.create(:item, { title: "300point", point: 300, pid: 'com.example.products.-300pt' })
         iap_receipt = mock(:iap_receipt)
         iap_receipt.stub!(:product_id).and_return( 'com.example.products.-300pt')
+        iap_receipt.stub!(:quantity).and_return(1)
         Itunes::Receipt.should_receive(:verify!).with('abcde', :allow_sandbox).and_return(iap_receipt)
         @receipt = Receipt.new({user_id:@user.id, receipt_code: 'abcde'})
         @receipt.stub!(:save!).and_raise(ActiveRecord::RecordInvalid.new(@receipt))
@@ -104,16 +92,7 @@ describe Receipt do
       it 'Receiptが作成されないこと' do
         expect{
           @receipt.valid_and_save
-        }.to change(Receipt, :count).by(0)
-      end
-
-      context 'iap_server_errorになること' do
-        before do
-          @receipt.valid_and_save
-        end
-        subject { @receipt.errors.messages[:base][0]}
-
-        it { should eq 'internal_server_error'}
+        }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
   end

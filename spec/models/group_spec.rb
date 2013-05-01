@@ -60,13 +60,13 @@ describe Group do
       it { @group.group_images.length.should eq 2 }      
       it { @group.mst_prefectures.length.should eq 3 }      
     end
-    
+
     context '不正な値を渡した場合' do
-      it {@group.save_group(group: {target_age_range: 100}).should be_false}
+      it { expect { @group.save_group(group: {target_age_range: 100}) }.to raise_error(ActiveRecord::RecordInvalid) }
     end
 
     context '不正な値を渡した場合2' do
-      it {@group.save_group(group_images: [@group_images[3].id, @group_images[4].id, @group_images[5].id, @group_images[6].id]).should be_false}
+      it { expect { @group.save_group(group: {}, group_images: [@group_images[3].id, @group_images[4].id, @group_images[5].id, @group_images[6].id] ) }.to raise_error(ActiveRecord::RecordInvalid) }
     end
   end
 

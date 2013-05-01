@@ -69,15 +69,17 @@ describe Api::FavoritesController do
       context '保存に失敗すると' do
         before do
           user = session_verified_user(@session)
-          user.stub!(:<<).with(@target).and_raise(Exception)
-          User.should_receive(:find_by_id).with(@user.id.to_s).and_return(user)      
-          User.should_receive(:find_by_id).with(@target.id.to_s).and_return(@target)      
+          favorite_users = mock(:favorite_users)
+          User.should_receive(:find_by_id).with(@user.id.to_s).and_return(user)
+          User.should_receive(:find).with(@target.id.to_s).and_return(@target)
+          user.stub!(:favorite_users).and_return(favorite_users)
+          favorite_users.stub!(:<<).with(@target).and_raise(Exception)
 
           post :create, {target_id: @target.id, session_id: @session.key}
         end
 
-        it 'internal_server_errorが返されること' do
-          JSON.parse(response.body)["code"].should == "internal_server_error"
+        it 'Exceptionが返されること' do
+          JSON.parse(response.body)["code"].should == "Exception"
         end 
       end
     end
@@ -88,7 +90,7 @@ describe Api::FavoritesController do
       end
 
       it 'not_foundが返されること' do
-        JSON.parse(response.body)["code"].should == "not_found"
+        JSON.parse(response.body)["code"].should == "Couldn't find User with id=200"
       end 
     end
   end
@@ -110,7 +112,7 @@ describe Api::FavoritesController do
       before do
         user = session_verified_user(@session)
         User.should_receive(:find_by_id).with(@user.id.to_s).and_return(user)
-        User.should_receive(:find_by_id).with(@target.id.to_s).and_return(@target)
+        User.should_receive(:find).with(@target.id.to_s).and_return(@target)
         user.stub!(:favorite_users).and_return([@target])
         [@target].stub!(:delete).with(@target)
 

@@ -38,6 +38,7 @@ describe Api::ReceiptsController do
         before do
           iap_receipt = mock(:iap_receipt)
           iap_receipt.stub!(:product_id).and_return( 'com.example.products.300pt')
+          iap_receipt.stub!(:quantity).and_return(1)
           Itunes::Receipt.should_receive(:verify!).with('abcde', :allow_sandbox).and_return(iap_receipt)
         end
 
@@ -54,6 +55,7 @@ describe Api::ReceiptsController do
         before do
           iap_receipt = mock(:iap_receipt)
           iap_receipt.stub!(:product_id).and_return( 'com.example.products.300pt')
+          iap_receipt.stub!(:quantity).and_return(1)
           Itunes::Receipt.should_receive(:verify!).with('abcde', :allow_sandbox).and_return(iap_receipt)
           post :validate, {receipt_data: 'abcde',session_id: @session.key}
         end
@@ -67,12 +69,12 @@ describe Api::ReceiptsController do
 
       context '不正なレシートの場合' do
         before do
-          Itunes::Receipt.stub!(:verify!).with('abcde', :allow_sandbox).and_raise(StandardError)
+          Itunes::Receipt.stub!(:verify!).with('abcde', :allow_sandbox).and_raise(Itunes::Receipt::VerificationFailed.new)
           post :validate, {receipt_data: 'abcde', session_id: @session.key}
         end
 
         it 'ngが返ること' do
-          JSON.parse(response.body)['status'].should == 'ng'
+          JSON.parse(response.body)['code'].should == 'Itunes::Receipt::VerificationFailed'
         end
       end
     end
@@ -84,7 +86,7 @@ describe Api::ReceiptsController do
       end
 
       it 'invalid_receiptが返ること' do
-        JSON.parse(response.body)['code'].should == 'invalid_receipt'
+        JSON.parse(response.body)['code'].should == 'Itunes::Receipt::VerificationFailed'
       end
     end
   end

@@ -26,12 +26,12 @@ describe Api::FriendsController do
 
     context 'Friendが存在していない場合' do
       before do
-        get :show, {session_id: @session.key, id: 1000}
+        get :show, {session_id: @session.key, id: 200}
       end
 
       it 'NotFoundが返ること' do
         parsed_body = JSON.parse(response.body)
-        parsed_body["code"].should == 'not_found'
+        parsed_body["code"].should include "Couldn't find Friend with id=200"
       end
     end
   end
@@ -42,8 +42,8 @@ describe Api::FriendsController do
         post :create, {session_id: @session.key, friend: {nickname: 'taro', age: 25}}
       end
 
-      it 'internal_server_errorが返されること' do
-        JSON.parse(response.body)["code"].should == "internal_server_error"
+      it 'Group Not Foundが返されること' do
+        JSON.parse(response.body)["code"].should == "Group Not Found"
       end 
     end
 
@@ -86,7 +86,7 @@ describe Api::FriendsController do
         end
 
         it 'エラーが返されること' do
-          JSON.parse(response.body)["code"]["nickname"].should_not be_nil
+          JSON.parse(response.body).should be_a_kind_of(Hash)
         end 
       end
 
@@ -101,29 +101,35 @@ describe Api::FriendsController do
   end
 
   describe '#update' do
-    context 'グループがなかった場合' do
+    context 'Friendがなかった場合' do
       before do
         post :update, {session_id: @session.key, friend: {nickname: 'taro'}, id: 1}
       end
 
-      it 'internal_server_errorが返されること' do
-        JSON.parse(response.body)["code"].should == "not_found"
-      end 
+      it 'not_foundが返されること' do
+        JSON.parse(response.body)["code"].should include "Couldn't find Friend with id="
+     end 
     end
+
+    context 'Friendがあった場合' do
+      before do
+        @friend = FactoryGirl.create(:friend, {group_id: 999, nickname: 'donald'})
+      end
+
+      context 'グループがなかった場合' do
+        before do
+          post :update, {session_id: @session.key, friend: {nickname: 'taro'}, id: @friend.id}
+        end
+
+        it 'Group Not Foundが返されること' do
+          JSON.parse(response.body)["code"].should == "Group Not Found"
+        end 
+      end
+   end
 
     context 'グループがあった場合' do
       before do
         @group = FactoryGirl.create(:group, {user_id: @user.id})
-      end
-
-      context 'Friendがなかった場合' do
-        before do
-          post :update, {session_id: @session.key, friend: {nickname: 'taro'}, id: 1}
-        end
-
-        it 'not_foundが返されること' do
-          JSON.parse(response.body)["code"].should == "not_found"
-        end 
       end
 
       context 'Friendがあった場合' do
@@ -133,8 +139,8 @@ describe Api::FriendsController do
             post :update, {session_id: @session.key, friend: {nickname: 'taro'}, id: @friend.id}
           end
 
-          it 'permission_deniedが返されること' do
-            JSON.parse(response.body)["code"].should == "permission_denied"
+          it 'Api::BaseController::PermissionDeniedが返されること' do
+            JSON.parse(response.body)["code"].should == "Api::BaseController::PermissionDenied"
           end 
         end
 
@@ -169,7 +175,7 @@ describe Api::FriendsController do
             end
 
             it 'internal_server_errorが返されること' do
-              JSON.parse(response.body)["code"]["nickname"].should_not be_nil
+              JSON.parse(response.body).should be_a_kind_of(Hash)
             end 
           end
         end
@@ -178,14 +184,20 @@ describe Api::FriendsController do
   end
 
   describe '#destroy' do
-    context 'グループがなかった場合' do
+    context 'Friendがあった場合' do
       before do
-        post :destroy, {session_id: @session.key, id: 1}
+        @friend = FactoryGirl.create(:friend, {group_id: 9999, nickname: 'donald'})
       end
 
-      it 'internal_server_errorが返されること' do
-        JSON.parse(response.body)["code"].should == "not_found"
-      end 
+      context 'グループがなかった場合' do
+        before do
+          post :destroy, {session_id: @session.key, id: @friend.id}
+        end
+
+        it 'Group Not Foundが返されること' do
+          JSON.parse(response.body)["code"].should == "Group Not Found"
+        end 
+      end
     end
 
     context 'グループがあった場合' do
@@ -199,7 +211,7 @@ describe Api::FriendsController do
         end
 
         it 'not_foundが返されること' do
-          JSON.parse(response.body)["code"].should == "not_found"
+          JSON.parse(response.body)["code"].should include "Couldn't find Friend with id="
         end 
       end
 
@@ -210,8 +222,8 @@ describe Api::FriendsController do
             post :destroy, {session_id: @session.key, id: @friend.id}
           end
 
-          it 'permission_deniedが返されること' do
-            JSON.parse(response.body)["code"].should == "permission_denied"
+          it 'Api::BaseController::PermissionDeniedが返されること' do
+            JSON.parse(response.body)["code"].should == "Api::BaseController::PermissionDenied"
           end 
         end
 

@@ -25,7 +25,7 @@ describe Api::User::AccountController do
       end
       subject { JSON.parse(response.body)["code"] }
 
-      it { should ==  "invalid_session"  }
+      it { should ==  "Invalid session. Please create session again."  }
     end
   end
 

@@ -1,4 +1,6 @@
 
+configatron.point_limit = 100000
+configatron.imagess_limit = 5
 configatron.likes_limit_per_day = 5
 configatron.login_bonus = 10
 

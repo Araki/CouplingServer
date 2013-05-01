@@ -81,11 +81,11 @@ describe Member do
     end
     
     context '不正な値を渡した場合' do
-      it {@member.save_profile(member: {alcohol: 10}).should be_false}
+      it { expect { @member.save_profile(member: {alcohol: 10}) }.to raise_error(ActiveRecord::RecordInvalid) }
     end
 
     context '不正な値を渡した場合2' do
-      it {@member.save_profile(characters: [@characters[3].id, @characters[4].id, @characters[5].id, @characters[6].id]).should be_false}
+      it { expect { @member.save_profile(characters: [@characters[3].id, @characters[4].id, @characters[5].id, @characters[6].id]) }.to raise_error(ActiveRecord::RecordInvalid)}
     end
   end
 
