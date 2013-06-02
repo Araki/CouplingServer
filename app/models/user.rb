@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
     profile = user.profile.nil? ? Profile.new : user.profile
     profile.assign_fb_attributes(user, fb_profile)
     profile.save!
+    user.profile = profile
     user
   end
 
