@@ -19,6 +19,12 @@ group :development, :test do
   gem 'simplecov', '0.7.1', :require => false
   gem 'simplecov-rcov', '0.2.3'
   # gem "binding_of_caller", ">= 0.7.1", :platforms => [:mri_19, :rbx]
+
+  # Capistrano
+  gem 'capistrano'
+  gem 'capistrano-ext'
+  gem 'capistrano_colors'
+  gem 'rvm-capistrano'
 end
 
 group :assets do
