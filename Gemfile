@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.12'
 gem 'mysql2'
 gem 'jquery-rails'
+gem 'unicorn'
 
 group :development, :test do
   gem "rspec-rails", ">= 2.12.2"
