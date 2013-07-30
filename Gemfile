@@ -4,6 +4,13 @@ gem 'rails', '3.2.12'
 gem 'mysql2'
 gem 'jquery-rails'
 gem 'unicorn'
+gem 'configatron'
+gem 'koala'
+gem 'rb-readline'
+gem 'aws-sdk'
+gem 'kaminari', '0.14.1'
+gem 'itunes-receipt'
+gem 'engineyard'
 
 group :development, :test do
   gem "rspec-rails", ">= 2.12.2"
@@ -38,9 +45,3 @@ group :assets do
   gem 'therubyracer', :platforms => :ruby
 end
 
-gem 'configatron'
-gem 'koala'
-gem 'rb-readline'
-gem 'aws-sdk'
-gem 'kaminari', '0.14.1'
-gem 'itunes-receipt'
