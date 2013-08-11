@@ -12,7 +12,7 @@ gem 'kaminari', '0.14.1'
 gem 'itunes-receipt'
 gem 'engineyard'
 
-group :development, :test do
+group :development, :test, :staging do
   gem "rspec-rails", ">= 2.12.2"
   gem 'spork', '0.9.2'
   gem "database_cleaner", ">= 0.9.1"
