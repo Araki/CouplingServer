@@ -11,6 +11,7 @@ gem 'aws-sdk'
 gem 'kaminari', '0.14.1'
 gem 'itunes-receipt'
 gem 'engineyard'
+gem 'yaml_db'
 
 group :development, :test, :staging do
   gem "rspec-rails", ">= 2.12.2"
