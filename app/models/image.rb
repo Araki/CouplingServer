@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Image < ActiveRecord::Base
   attr_accessible :member_id, :is_main
 
@@ -21,11 +22,7 @@ class Image < ActiveRecord::Base
   end
 
   def upload_parameter
-    presinged_post = uploader(IMAGE_DATA_HASH).publish_url(self.id.to_s)
-    {
-      url: presinged_post.url.to_s,
-      fields: presinged_post.fields
-    }
+    uploader(IMAGE_DATA_HASH).presigned_post(self.id.to_s)
   end
 
   def destroy_entity_and_file
@@ -42,6 +39,6 @@ class Image < ActiveRecord::Base
   private
 
   def uploader(hash)
-    S3IndirectUploader.new(hash[:path] + File::SEPARATOR + self.created_at.strftime("%Y%m%d"), hash[:extension])
+    S3IndirectUploader.new(hash[:path], hash[:extension])
   end
 end

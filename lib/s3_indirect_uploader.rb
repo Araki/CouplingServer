@@ -17,24 +17,24 @@ class S3IndirectUploader
     }
   end
 
-  def full_path key
-    ret = "#{@path}/#{key}"
+  def full_path(id)
+    ret = "#{@path}/#{id}"
     ret << ".#{@extension}" unless @extension.nil?
     return ret
   end
 
-  def url(key)
-    @bucket.objects[full_path(key)].url_for(:read, :expires => EXPIRE_DOWNLOAD).to_s
+  def url(id)
+    @bucket.objects[full_path(id)].url_for(:read, :expires => EXPIRE_DOWNLOAD).to_s
   end
 
-  def publish_url(key, options = {})
+  def presigned_post(id, options = {})
     expires = options[:expires] || default_options[:expires]
     acl     = options[:acl]     || default_options[:acl]
 
-    form = @bucket.presigned_post(
-      key: full_path(key),
-      expires: expires,
-      acl: acl
-    )
+    form = @bucket.presigned_post(key: full_path(id), expires: expires, acl: acl)
+    { 
+      url: form.url.to_s,
+      fields: form.fields
+    }
   end
 end
