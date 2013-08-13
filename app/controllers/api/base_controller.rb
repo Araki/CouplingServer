@@ -25,7 +25,7 @@ class Api::BaseController < ApplicationController
   end
 
   def render_users_list(data)
-    render_pagenate_data(:users, data, {:only => [:id]})
+    render_pagenate_data(:users, data, {:only => [:id, :last_login_at]})
   end
 
   def render_not_found
