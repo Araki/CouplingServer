@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130412073152) do
+ActiveRecord::Schema.define(:version => 20130813064735) do
 
   create_table "characters", :force => true do |t|
     t.string "name", :null => false
@@ -144,35 +144,24 @@ ActiveRecord::Schema.define(:version => 20130412073152) do
   add_index "member_specialities", ["speciality_id"], :name => "index_member_specialities_on_speciality_id"
 
   create_table "members", :force => true do |t|
-    t.string   "type",                           :null => false
-    t.integer  "status",          :default => 0
+    t.string   "type",                        :null => false
+    t.integer  "status",       :default => 0
     t.integer  "user_id"
     t.integer  "group_id"
     t.string   "nickname"
     t.string   "introduction"
     t.integer  "gender"
     t.integer  "age"
-    t.integer  "birthplace"
-    t.string   "roommate"
-    t.integer  "height"
     t.integer  "proportion"
     t.string   "blood_type"
-    t.integer  "marital_history"
-    t.integer  "marriage_time"
-    t.integer  "smoking"
-    t.integer  "alcohol"
     t.integer  "industry"
     t.integer  "job"
-    t.string   "job_description"
-    t.string   "workplace"
     t.integer  "income"
     t.integer  "school"
     t.integer  "holiday"
-    t.integer  "sociability"
-    t.string   "dislike"
     t.integer  "prefecture"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
   end
 
   add_index "members", ["group_id"], :name => "index_members_on_group_id"
