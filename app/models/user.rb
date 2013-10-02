@@ -35,6 +35,23 @@ class User < ActiveRecord::Base
     user
   end
 
+  def self.where_cond(params)
+    cond = self.where(gender: params[:gender])
+    if params[:prefecture].present?
+      ids = Profile.where(prefecture: params[:prefecture]).map(&:user_id)
+      cond = cond.where(["id in (?)", ids])
+    end
+    if params[:age].present?
+      ids = Profile.where(age: params[:age]).map(&:user_id)
+      cond = cond.where(["id in (?)", ids])
+    end
+    if params[:income].present?
+      ids = Profile.where(sincome: params[:income]).map(&:user_id)
+      cond = cond.where(["id in (?)", ids])
+    end
+    cond
+  end
+
   def infos
     Info.find(:all, :conditions => ['target_id IN (?,?)', -1, self.id] , :order => 'created_at desc')
   end

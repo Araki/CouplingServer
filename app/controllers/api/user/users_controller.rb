@@ -3,7 +3,14 @@ class Api::User::UsersController < Api::BaseController
   
   def list
     gender = @user.gender == 0 ? 1 : 0
-    users = Kaminari.paginate_array(User.where(gender: gender)).page(params[:page]).per(params[:per])
+    cond_param = { 
+      gender: gender,
+      prefecture: params[:prefecture],
+      age: params[:age],
+      income: params[:income]
+    }
+    cond = User.where_cond(cond_param)
+    users = Kaminari.paginate_array(cond).page(params[:page]).per(params[:per])
     render_users_list(users)
   end
 
