@@ -134,6 +134,36 @@ class User < ActiveRecord::Base
     end
   end
 
+  def add_like_point(amount)
+    if amount > 0
+      begin
+        self.like_point += amount
+        self.save!
+      rescue ActiveRecord::RecordInvalid => e
+        self.errors.add :base, "internal_server_error"
+        false
+      end
+    else
+      self.errors.add :base, "invalid_arguments"
+      false
+    end
+  end
+
+  def consume_like_point(amount)
+    if amount > 0 && amount < self.like_point
+      begin
+        self.like_point -= amount
+        self.save!
+      rescue ActiveRecord::RecordInvalid => e
+        self.errors.add :base, "internal_server_error"
+        false
+      end
+    else
+      self.errors.add :base, "invalid_arguments"
+      false
+    end
+  end
+
 =begin
     FacebookIDとアクセストークンを渡すとプロフィールの情報を更新する。
     TODO 最終ログインの更新

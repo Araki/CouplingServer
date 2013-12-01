@@ -41,6 +41,9 @@ Coupling::Application.routes.draw do
     post '/points/add' => 'points#add'
     post '/points/consume' => 'points#consume'
 
+    post '/like_points/add' => 'like_points#add'
+    post '/like_points/consume' => 'like_points#consume'
+
     get  '/matches/list' => 'matches#list'
 
     get  '/messages/list' => 'messages#list'
